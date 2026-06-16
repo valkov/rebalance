@@ -5,12 +5,7 @@ export default defineType({
   title: 'Session (1:1 / therapy)',
   type: 'document',
   fields: [
-    defineField({
-      name: 'title',
-      title: 'Title',
-      type: 'string',
-      validation: (r) => r.required(),
-    }),
+    defineField({name: 'title', title: 'Title', type: 'localeString'}),
     defineField({
       name: 'order',
       title: 'Sort order',
@@ -18,13 +13,12 @@ export default defineType({
       description: 'Lower numbers appear first.',
       initialValue: 10,
     }),
-    defineField({name: 'format', title: 'Format', type: 'string', description: 'e.g. Online · 20 min, or In person · 60 min'}),
-    defineField({name: 'price', title: 'Price', type: 'string', description: 'e.g. kr 750 / session, or Free'}),
+    defineField({name: 'format', title: 'Format', type: 'localeString', description: 'e.g. Online · 20 min, or In person · 60 min'}),
+    defineField({name: 'price', title: 'Price', type: 'localeString', description: 'e.g. kr 750 / session, or Free'}),
     defineField({
       name: 'blurb',
       title: 'Description',
-      type: 'text',
-      rows: 3,
+      type: 'localeText',
     }),
     defineField({
       name: 'image',
@@ -52,6 +46,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'title', subtitle: 'price', media: 'image'},
+    select: {title: 'title.en', subtitle: 'price.en', media: 'image'},
   },
 })

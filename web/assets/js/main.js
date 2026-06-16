@@ -23,7 +23,22 @@
     return String(s).replace(/[<>&]/g, function (c) { return { "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]; });
   }
   function slugify(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
-  function eventHref(t) { return "event.html?id=" + encodeURIComponent(t._id || slugify(t.title)); }
+  // pick the active language from a localized {en,da,uk} value; fall back to en.
+  // legacy plain strings/numbers pass through unchanged.
+  function loc(v) {
+    if (v == null) return v;
+    if (Array.isArray(v)) return v;
+    if (typeof v === "object") {
+      var L = window.getLocale ? window.getLocale() : "en";
+      var ok = function (x) { return x != null && !(typeof x === "string" && x.trim() === "") && !(Array.isArray(x) && x.length === 0); };
+      if (ok(v[L])) return v[L];
+      if (ok(v.en)) return v.en;
+      var ks = ["en", "da", "uk"]; for (var i = 0; i < ks.length; i++) if (ok(v[ks[i]])) return v[ks[i]];
+      return v.en != null ? v.en : "";
+    }
+    return v;
+  }
+  function eventHref(t) { return "event.html?id=" + encodeURIComponent(t._id || slugify(loc(t.title))); }
   function escapeXml(s) {
     return String(s).replace(/[<>&'"]/g, function (c) {
       return { "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[c];
@@ -93,24 +108,25 @@
     var wrap = $("#events-grid");
     if (!wrap) return;
     var list = CFG.events || CFG.trips || [];
+    wrap.innerHTML = "";
     list.forEach(function (t) {
-      var href = eventHref(t);
+      var href = eventHref(t), title = loc(t.title), price = loc(t.price);
       var actions = el("div", { class: "card__actions" }, [
         t.stripeUrl ? btnLink("book_pay", t.stripeUrl, true) : btnBook("enquire", t.schedulerUrl, true),
         btnBook("reserve_spot", t.schedulerUrl, false),
       ]);
       var card = el("article", { class: "card reveal" }, [
         el("div", { class: "card__media" }, [
-          el("a", { href: href, "aria-label": t.title }, [makeImg(t, t.title)]),
-          t.price ? el("span", { class: "card__price", text: t.price }) : null,
+          el("a", { href: href, "aria-label": title }, [makeImg({ src: t.image, label: title, hue: t.hue }, title)]),
+          price ? el("span", { class: "card__price", text: price }) : null,
         ]),
         el("div", { class: "card__body" }, [
-          el("h3", { class: "card__title" }, [el("a", { href: href, text: t.title })]),
+          el("h3", { class: "card__title" }, [el("a", { href: href, text: title })]),
           el("p", { class: "card__meta", html:
-            (t.location ? '<span>📍 ' + escapeHtml(t.location) + '</span>' : "") +
-            (t.dates ? '<span>🗓 ' + escapeHtml(t.dates) + '</span>' : "") +
-            (t.duration ? '<span>⏱ ' + escapeHtml(t.duration) + '</span>' : "") }),
-          el("p", { class: "card__blurb", text: t.blurb || "" }),
+            (loc(t.location) ? '<span>📍 ' + escapeHtml(loc(t.location)) + '</span>' : "") +
+            (loc(t.dates) ? '<span>🗓 ' + escapeHtml(loc(t.dates)) + '</span>' : "") +
+            (loc(t.duration) ? '<span>⏱ ' + escapeHtml(loc(t.duration)) + '</span>' : "") }),
+          el("p", { class: "card__blurb", text: loc(t.blurb) || "" }),
           el("a", { class: "card__more", href: href, "data-i18n": "view_details", text: tr("view_details") }),
           actions,
         ]),
@@ -123,8 +139,9 @@
   function renderSessions() {
     var wrap = $("#sessions-grid");
     if (!wrap) return;
+    wrap.innerHTML = "";
     (CFG.sessions || []).forEach(function (s) {
-      var isFree = /free/i.test(s.price || "");
+      var price = loc(s.price), format = loc(s.format), isFree = /free/i.test(price || "");
       var primary, secondary = null;
       if (s.schedulerUrl) {
         primary = btnBook(isFree ? "book_free_call" : "book_time", s.schedulerUrl, true);
@@ -137,11 +154,11 @@
       var card = el("article", { class: "card card--session reveal" }, [
         el("div", { class: "card__body" }, [
           el("div", { class: "session__head" }, [
-            el("h3", { class: "card__title", text: s.title }),
-            s.price ? el("span", { class: "session__price", text: s.price }) : null,
+            el("h3", { class: "card__title", text: loc(s.title) }),
+            price ? el("span", { class: "session__price", text: price }) : null,
           ]),
-          s.format ? el("p", { class: "card__meta", html: '<span>🌿 ' + escapeHtml(s.format) + '</span>' }) : null,
-          el("p", { class: "card__blurb", text: s.blurb || "" }),
+          format ? el("p", { class: "card__meta", html: '<span>🌿 ' + escapeHtml(format) + '</span>' }) : null,
+          el("p", { class: "card__blurb", text: loc(s.blurb) || "" }),
           el("div", { class: "card__actions" }, [primary, secondary]),
         ]),
       ]);
@@ -154,14 +171,15 @@
   function renderGallery() {
     var wrap = $("#gallery-grid");
     if (!wrap) return;
+    wrap.innerHTML = "";
     var items = (CFG.gallery || []).slice();
     var limit = parseInt(wrap.getAttribute("data-limit") || "0", 10);
     if (limit > 0) items = items.slice(0, limit);
-    galleryItems = items;
-    items.forEach(function (g, i) {
-      var fig = el("button", { class: "tile reveal", type: "button", "aria-label": "Open photo: " + (g.label || ("Photo " + (i + 1))) }, [
-        makeImg(g, g.label || ("Photo " + (i + 1))),
-        el("span", { class: "tile__cap", text: g.label || "" }),
+    galleryItems = items.map(function (g, i) { return { src: g.src, label: loc(g.label) || ("Photo " + (i + 1)), hue: g.hue }; });
+    galleryItems.forEach(function (g, i) {
+      var fig = el("button", { class: "tile reveal", type: "button", "aria-label": "Open photo: " + g.label }, [
+        makeImg(g, g.label),
+        el("span", { class: "tile__cap", text: g.label }),
       ]);
       fig.addEventListener("click", function () { openLightbox(i); });
       wrap.appendChild(fig);
@@ -340,19 +358,19 @@
     var wrap = $("#event-detail");
     if (!wrap) return;
     var id = (new URLSearchParams(location.search)).get("id");
-    var ev = (CFG.events || []).filter(function (e) { return (e._id || slugify(e.title)) === id; })[0];
+    var ev = (CFG.events || []).filter(function (e) { return (e._id || slugify(loc(e.title))) === id; })[0];
     if (!ev) {
       wrap.innerHTML = '<p class="detail__empty" data-i18n="detail_notfound">' + tr("detail_notfound") + '</p>';
       wrap.appendChild(el("a", { class: "btn btn--solid", href: "index.html#events", "data-i18n": "detail_see_all", text: tr("detail_see_all") }));
       return;
     }
-    document.title = ev.title + " — Trail to Thriving";
+    document.title = loc(ev.title) + " — Trail to Thriving";
 
     var meta =
-      (ev.location ? '<span>📍 ' + escapeHtml(ev.location) + '</span>' : "") +
-      (ev.dates ? '<span>🗓 ' + escapeHtml(ev.dates) + '</span>' : "") +
-      (ev.duration ? '<span>⏱ ' + escapeHtml(ev.duration) + '</span>' : "") +
-      (ev.price ? '<span>💰 ' + escapeHtml(ev.price) + '</span>' : "");
+      (loc(ev.location) ? '<span>📍 ' + escapeHtml(loc(ev.location)) + '</span>' : "") +
+      (loc(ev.dates) ? '<span>🗓 ' + escapeHtml(loc(ev.dates)) + '</span>' : "") +
+      (loc(ev.duration) ? '<span>⏱ ' + escapeHtml(loc(ev.duration)) + '</span>' : "") +
+      (loc(ev.price) ? '<span>💰 ' + escapeHtml(loc(ev.price)) + '</span>' : "");
 
     var actions = el("div", { class: "card__actions detail__actions" }, [
       ev.stripeUrl ? btnLink("book_pay", ev.stripeUrl, true) : btnBook("enquire", ev.schedulerUrl, true),
@@ -361,26 +379,26 @@
 
     wrap.innerHTML = "";
     wrap.appendChild(el("a", { class: "detail__back", href: "index.html#events", "data-i18n": "detail_back", text: tr("detail_back") }));
-    wrap.appendChild(el("h1", { class: "detail__title", text: ev.title }));
+    wrap.appendChild(el("h1", { class: "detail__title", text: loc(ev.title) }));
     wrap.appendChild(el("p", { class: "card__meta detail__meta", html: meta }));
     wrap.appendChild(actions);
     var heroSrc = ev.detailImage || ev.image; // only show a media block when there's a real photo
-    if (heroSrc) wrap.appendChild(el("div", { class: "detail__media" }, [makeImg({ src: heroSrc, label: ev.title, hue: ev.hue }, ev.title)]));
+    if (heroSrc) wrap.appendChild(el("div", { class: "detail__media" }, [makeImg({ src: heroSrc, label: loc(ev.title), hue: ev.hue }, loc(ev.title))]));
 
-    var ld = ev.longDescription, desc = el("div", { class: "detail__desc" }), hasDesc = false;
+    var ld = loc(ev.longDescription), desc = el("div", { class: "detail__desc" }), hasDesc = false;
     if (Array.isArray(ld) && ld.length) { desc.innerHTML = ptToHtml(ld); hasDesc = true; }
     else if (typeof ld === "string" && ld.trim()) { ld.split(/\n{2,}/).forEach(function (p) { if (p.trim()) desc.appendChild(el("p", { text: p.trim() })); }); hasDesc = true; }
-    else if (ev.blurb) { desc.appendChild(el("p", { text: ev.blurb })); hasDesc = true; }
+    else if (loc(ev.blurb)) { desc.appendChild(el("p", { text: loc(ev.blurb) })); hasDesc = true; }
     if (hasDesc) wrap.appendChild(desc);
 
     if (ev.itinerary && ev.itinerary.length) {
       var itin = el("section", { class: "detail__itinerary" }, [el("h2", { "data-i18n": "detail_daybyday", text: tr("detail_daybyday") })]);
       ev.itinerary.forEach(function (d) {
         itin.appendChild(el("div", { class: "itin" }, [
-          d.label ? el("span", { class: "itin__day", text: d.label }) : null,
+          loc(d.label) ? el("span", { class: "itin__day", text: loc(d.label) }) : null,
           el("div", { class: "itin__body" }, [
-            d.title ? el("h3", { class: "itin__title", text: d.title }) : null,
-            d.text ? el("p", { text: d.text }) : null,
+            loc(d.title) ? el("h3", { class: "itin__title", text: loc(d.title) }) : null,
+            loc(d.text) ? el("p", { text: loc(d.text) }) : null,
           ]),
         ]));
       });
@@ -388,17 +406,23 @@
     }
   }
 
-  function render() {
-    applyBrand();
+  function renderContent() {
     renderEvents();
     renderSessions();
     renderGallery();
     renderEventDetail();
     if (window.applyI18n) window.applyI18n();
+    initReveal();
+  }
+  // re-render CMS content (titles, blurbs, itineraries…) in the chosen language
+  window.__onLocaleChange = function () { renderContent(); };
+
+  function render() {
+    applyBrand();
+    renderContent();
     initNav();
     initBookingButtons();
     initKeys();
-    initReveal();
     // content renders after an async fetch, so re-honour a #hash deep link
     // on the next frame, once card/gallery heights exist (instant, not smooth)
     if (location.hash.length > 1) {

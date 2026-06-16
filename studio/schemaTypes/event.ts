@@ -5,12 +5,7 @@ export default defineType({
   title: 'Event / Trip',
   type: 'document',
   fields: [
-    defineField({
-      name: 'title',
-      title: 'Title',
-      type: 'string',
-      validation: (r) => r.required(),
-    }),
+    defineField({name: 'title', title: 'Title', type: 'localeString'}),
     defineField({
       name: 'order',
       title: 'Sort order',
@@ -18,22 +13,20 @@ export default defineType({
       description: 'Lower numbers appear first.',
       initialValue: 10,
     }),
-    defineField({name: 'location', title: 'Location', type: 'string', description: 'e.g. Geiranger, Norway'}),
-    defineField({name: 'dates', title: 'Dates', type: 'string', description: 'e.g. 11–18 July 2026'}),
-    defineField({name: 'duration', title: 'Duration', type: 'string', description: 'e.g. 8 days'}),
-    defineField({name: 'price', title: 'Price', type: 'string', description: 'e.g. From kr 8,900'}),
+    defineField({name: 'location', title: 'Location', type: 'localeString', description: 'e.g. Geiranger, Norway'}),
+    defineField({name: 'dates', title: 'Dates', type: 'localeString', description: 'e.g. 11–18 July 2026'}),
+    defineField({name: 'duration', title: 'Duration', type: 'localeString', description: 'e.g. 8 days'}),
+    defineField({name: 'price', title: 'Price', type: 'localeString', description: 'e.g. From kr 8,900'}),
     defineField({
       name: 'blurb',
       title: 'Short description',
-      type: 'text',
-      rows: 3,
+      type: 'localeText',
       description: 'Shown on the card. Keep it to a couple of sentences.',
     }),
     defineField({
       name: 'longDescription',
       title: 'Long description',
-      type: 'array',
-      of: [{type: 'block'}],
+      type: 'localeBlock',
       description: 'Rich text shown on the event detail page (replaces the short description there).',
     }),
     defineField({
@@ -46,11 +39,11 @@ export default defineType({
           type: 'object',
           name: 'day',
           fields: [
-            {name: 'label', title: 'Day / label', type: 'string', description: 'e.g. Day 1, or Days 3–4'},
-            {name: 'title', title: 'Title', type: 'string'},
-            {name: 'text', title: 'Description', type: 'text', rows: 3},
+            {name: 'label', title: 'Day / label', type: 'localeString', description: 'e.g. Day 1, or Days 3–4'},
+            {name: 'title', title: 'Title', type: 'localeString'},
+            {name: 'text', title: 'Description', type: 'localeText'},
           ],
-          preview: {select: {title: 'title', subtitle: 'label'}},
+          preview: {select: {title: 'title.en', subtitle: 'label.en'}},
         },
       ],
     }),
@@ -88,6 +81,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'title', subtitle: 'dates', media: 'thumbnail'},
+    select: {title: 'title.en', subtitle: 'dates.en', media: 'thumbnail'},
   },
 })

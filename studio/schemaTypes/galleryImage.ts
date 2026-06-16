@@ -12,7 +12,7 @@ export default defineType({
       options: {hotspot: true},
       validation: (r) => r.required(),
     }),
-    defineField({name: 'caption', title: 'Caption', type: 'string', description: 'e.g. Lofoten, Norway · 2024'}),
+    defineField({name: 'caption', title: 'Caption', type: 'localeString', description: 'e.g. Lofoten, Norway · 2024'}),
     defineField({
       name: 'order',
       title: 'Sort order',
@@ -27,6 +27,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'caption', media: 'image'},
+    select: {title: 'caption.en', media: 'image'},
   },
 })
