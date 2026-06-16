@@ -81,6 +81,11 @@ p { margin: 0 0 1em; }
 .lang-switch button { border: 0; background: none; cursor: pointer; font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); padding: 0.28rem 0.55rem; border-radius: 999px; line-height: 1; }
 .lang-switch button:hover:not(.is-active) { color: var(--forest); }
 .lang-switch button.is-active { background: var(--forest); color: #fff; }
+
+/* paid / booked state + confirmation toast */
+.btn--booked { background: var(--sage); color: var(--forest-d); cursor: default; pointer-events: none; }
+.toast { position: fixed; left: 50%; bottom: 1.5rem; transform: translate(-50%, 1rem); background: var(--forest-d); color: #fff; padding: 0.8rem 1.3rem; border-radius: 999px; box-shadow: var(--shadow); font-weight: 600; opacity: 0; transition: opacity .3s ease, transform .3s ease; z-index: 100; cursor: pointer; max-width: 90vw; text-align: center; }
+.toast.is-in { opacity: 1; transform: translate(-50%, 0); }
 .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 0.4rem; }
 .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--forest-d); margin: 5px 0; border-radius: 2px; }
 

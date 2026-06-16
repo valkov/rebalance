@@ -39,6 +39,17 @@
     return v;
   }
   function eventHref(t) { return "event.html?id=" + encodeURIComponent(t._id || slugify(loc(t.title))); }
+  // remember a paid booking client-side. Test/demo only — not server-verified;
+  // a real one-time-purchase guard needs accounts + a Stripe webhook.
+  function isPaid(id) { try { return !!id && localStorage.getItem("ttt_paid_" + id) === "1"; } catch (e) { return false; } }
+  function markPaidFromUrl() {
+    var p = new URLSearchParams(location.search).get("paid");
+    if (!p) return null;
+    try { localStorage.setItem("ttt_paid_" + p, "1"); } catch (e) {}
+    history.replaceState(null, "", location.pathname + location.hash); // drop ?paid
+    return p;
+  }
+  function bookedBtn() { return el("span", { class: "btn btn--booked", "data-i18n": "booked", text: tr("booked") }); }
   function escapeXml(s) {
     return String(s).replace(/[<>&'"]/g, function (c) {
       return { "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[c];
@@ -111,10 +122,12 @@
     wrap.innerHTML = "";
     list.forEach(function (t) {
       var href = eventHref(t), title = loc(t.title), price = loc(t.price);
-      var actions = el("div", { class: "card__actions" }, [
-        t.stripeUrl ? btnLink("book_pay", t.stripeUrl, true) : btnBook("enquire", t.schedulerUrl, true),
-        btnBook("reserve_spot", t.schedulerUrl, false),
-      ]);
+      var actions = isPaid(t._id)
+        ? el("div", { class: "card__actions" }, [bookedBtn()])
+        : el("div", { class: "card__actions" }, [
+            t.stripeUrl ? btnLink("book_pay", t.stripeUrl, true) : btnBook("enquire", t.schedulerUrl, true),
+            btnBook("reserve_spot", t.schedulerUrl, false),
+          ]);
       var card = el("article", { class: "card reveal" }, [
         el("div", { class: "card__media" }, [
           el("a", { href: href, "aria-label": title }, [makeImg({ src: t.image, label: title, hue: t.hue }, title)]),
@@ -151,6 +164,7 @@
       } else {
         primary = btnBook(isFree ? "book_free_call" : "enquire", "", true);
       }
+      if (isPaid(s._id)) { primary = bookedBtn(); secondary = null; }
       var card = el("article", { class: "card card--session reveal" }, [
         el("div", { class: "card__body" }, [
           el("div", { class: "session__head" }, [
@@ -298,7 +312,7 @@
         '"events":*[_type=="event"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{_id,title,location,dates,duration,price,blurb,longDescription,"itinerary":itinerary[]{label,title,text},"image":coalesce(thumbnail.asset->url,images[0].asset->url),"detailImage":coalesce(detailImage.asset->url,images[1].asset->url,images[0].asset->url),"stripeUrl":paymentUrl,"schedulerUrl":bookingUrl,hue},' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
+          '{_id,title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,hue}' +
       '}';
@@ -372,10 +386,12 @@
       (loc(ev.duration) ? '<span>⏱ ' + escapeHtml(loc(ev.duration)) + '</span>' : "") +
       (loc(ev.price) ? '<span>💰 ' + escapeHtml(loc(ev.price)) + '</span>' : "");
 
-    var actions = el("div", { class: "card__actions detail__actions" }, [
-      ev.stripeUrl ? btnLink("book_pay", ev.stripeUrl, true) : btnBook("enquire", ev.schedulerUrl, true),
-      btnBook("reserve_spot", ev.schedulerUrl, false),
-    ]);
+    var actions = isPaid(ev._id)
+      ? el("div", { class: "card__actions detail__actions" }, [bookedBtn()])
+      : el("div", { class: "card__actions detail__actions" }, [
+          ev.stripeUrl ? btnLink("book_pay", ev.stripeUrl, true) : btnBook("enquire", ev.schedulerUrl, true),
+          btnBook("reserve_spot", ev.schedulerUrl, false),
+        ]);
 
     wrap.innerHTML = "";
     wrap.appendChild(el("a", { class: "detail__back", href: "index.html#events", "data-i18n": "detail_back", text: tr("detail_back") }));
@@ -430,5 +446,15 @@
       if (target) requestAnimationFrame(function () { target.scrollIntoView({behavior: "auto"}); });
     }
   }
-  document.addEventListener("DOMContentLoaded", function () { loadFromSanity().then(render); });
+  function showToast(msg) {
+    var n = el("div", { class: "toast", text: msg });
+    document.body.appendChild(n);
+    requestAnimationFrame(function () { n.classList.add("is-in"); });
+    setTimeout(function () { n.classList.remove("is-in"); setTimeout(function () { n.remove(); }, 400); }, 5000);
+    n.addEventListener("click", function () { n.remove(); });
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    var paidId = markPaidFromUrl();
+    loadFromSanity().then(function () { render(); if (paidId) showToast(tr("paid_thanks")); });
+  });
 })();

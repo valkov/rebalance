@@ -54,6 +54,8 @@
       modal_hint: "Tip: add a Cal.com or Calendly link to this event/session in the CMS to embed a live calendar here.",
       page_title_home: "Trail to Thriving — Guided wellbeing hikes & nature retreats",
       page_title_gallery: "Gallery — Trail to Thriving",
+      booked: "✓ Booked",
+      paid_thanks: "Thanks — your test booking is confirmed.",
     },
     da: {
       nav_events: "Begivenheder", nav_sessions: "Sessioner", nav_gallery: "Galleri", nav_about: "Om os", nav_book: "Book",
@@ -95,6 +97,8 @@
       modal_hint: "Tip: tilføj et Cal.com- eller Calendly-link til denne begivenhed/session i CMS’et for at indlejre en live-kalender her.",
       page_title_home: "Trail to Thriving — Guidede trivselsvandringer & naturretreats",
       page_title_gallery: "Galleri — Trail to Thriving",
+      booked: "✓ Booket",
+      paid_thanks: "Tak — din test-booking er bekræftet.",
     },
     uk: {
       nav_events: "Події", nav_sessions: "Сесії", nav_gallery: "Галерея", nav_about: "Про нас", nav_book: "Бронювати",
@@ -136,6 +140,8 @@
       modal_hint: "Порада: додайте посилання Cal.com або Calendly до цієї події/сесії в CMS, щоб вбудувати живий календар тут.",
       page_title_home: "Trail to Thriving — оздоровчі походи та ретрити на природі",
       page_title_gallery: "Галерея — Trail to Thriving",
+      booked: "✓ Заброньовано",
+      paid_thanks: "Дякуємо — вашу тестову бронь підтверджено.",
     },
   };
 

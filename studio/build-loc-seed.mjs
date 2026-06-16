@@ -42,7 +42,7 @@ const T = {
     location: {da: 'Chamonix, Frankrig', uk: 'Шамоні, Франція'},
     dates: {da: '2026 · datoer følger', uk: '2026 · дати уточнюються'},
     duration: {da: '7 dage', uk: '7 днів'},
-    price: {da: 'Fra €1.150', uk: 'від €1 150'},
+    price: {en: 'From kr 8,500', da: 'Fra 8.500 kr.', uk: 'від 8 500 крон'},
     blurb: {da: 'Alpine enge, gletsjerudsigter og højfjeldsluft. Daglige guidede vandringer i et tempo til nærvær, ikke præstation.', uk: 'Альпійські луки, краєвиди льодовиків і високогірне повітря. Щоденні походи з гідом у темпі присутності, а не результату.'},
   },
   'session-free-intro': {
@@ -71,6 +71,11 @@ const T = {
   },
 }
 
+const ORDER = {
+  'event-geirangerfjord': 1, 'event-preikestolen': 2, 'event-lofoten': 3, 'event-chamonix': 4,
+  'session-free-intro': 1, 'session-nature-assisted': 2, 'session-psychomotor': 3, 'session-package-5': 4,
+}
+
 const q = async (query) => {
   const r = await fetch(`https://${PID}.api.sanity.io/v${V}/data/query/${DS}?query=${encodeURIComponent(query)}`)
   return (await r.json()).result
@@ -82,7 +87,7 @@ for (const d of docs) {
   const t = T[d._id] || {}
   if (d._type === 'event') {
     out.push({
-      _id: d._id, _type: 'event', order: d.order, hue: d.hue,
+      _id: d._id, _type: 'event', order: ORDER[d._id] || d.order || 10, hue: d.hue,
       ...(d.paymentUrl ? {paymentUrl: d.paymentUrl} : {}),
       ...(d.bookingUrl ? {bookingUrl: d.bookingUrl} : {}),
       ...(d.thumbnail ? {thumbnail: d.thumbnail} : {}),
@@ -91,7 +96,7 @@ for (const d of docs) {
       location: ls(strOf(d.location), t.location),
       dates: ls(strOf(d.dates), t.dates),
       duration: ls(strOf(d.duration), t.duration),
-      price: ls(strOf(d.price), t.price),
+      price: ls((t.price && t.price.en) || strOf(d.price), t.price),
       blurb: lt(strOf(d.blurb), t.blurb),
       longDescription: lb(d.longDescription),
       itinerary: (d.itinerary || []).map((day, i) => ({
@@ -103,18 +108,18 @@ for (const d of docs) {
     })
   } else if (d._type === 'session') {
     out.push({
-      _id: d._id, _type: 'session', order: d.order, hue: d.hue,
+      _id: d._id, _type: 'session', order: ORDER[d._id] || d.order || 10, hue: d.hue,
       ...(d.schedulerUrl ? {schedulerUrl: d.schedulerUrl} : {}),
       ...(d.paymentUrl ? {paymentUrl: d.paymentUrl} : {}),
       ...(d.image ? {image: d.image} : {}),
       title: ls(strOf(d.title), t.title),
       format: ls(strOf(d.format), t.format),
-      price: ls(strOf(d.price), t.price),
+      price: ls((t.price && t.price.en) || strOf(d.price), t.price),
       blurb: lt(strOf(d.blurb), t.blurb),
     })
   } else if (d._type === 'galleryImage') {
     out.push({
-      _id: d._id, _type: 'galleryImage', order: d.order, hue: d.hue,
+      _id: d._id, _type: 'galleryImage', order: ORDER[d._id] || d.order || 10, hue: d.hue,
       ...(d.image ? {image: d.image} : {}),
       caption: ls(strOf(d.caption), t.caption),
     })
