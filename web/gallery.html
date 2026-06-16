@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gallery — Trail to Thriving</title>
+  <title data-i18n="page_title_gallery">Gallery — Trail to Thriving</title>
   <meta name="description" content="Photos from Trail to Thriving hikes and retreats across Scandinavia and the Alps." />
   <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=6" />
 </head>
 <body>
   <header class="site-header">
@@ -18,15 +18,20 @@
         <img src="assets/images/logo.svg" alt="" />
         <span data-brand-name>Trail to Thriving</span>
       </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="da">DA</button>
+        <button type="button" data-lang="uk">UK</button>
+      </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <a href="index.html#events">Events</a>
-        <a href="index.html#sessions">Sessions</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="index.html#about">About</a>
-        <a class="btn btn--solid" href="index.html#sessions">Book</a>
+        <a href="index.html#events" data-i18n="nav_events">Events</a>
+        <a href="index.html#sessions" data-i18n="nav_sessions">Sessions</a>
+        <a href="gallery.html" data-i18n="nav_gallery">Gallery</a>
+        <a href="index.html#about" data-i18n="nav_about">About</a>
+        <a class="btn btn--solid" href="index.html#sessions" data-i18n="nav_book">Book</a>
       </nav>
     </div>
   </header>
@@ -34,9 +39,9 @@
   <section class="section">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow"><a href="index.html">← Back home</a></p>
-        <h2>Gallery</h2>
-        <p class="muted">Moments from our hikes and retreats. Tap any photo to enlarge.</p>
+        <p class="eyebrow"><a href="index.html" data-i18n="gallery_back_home">← Back home</a></p>
+        <h2 data-i18n="gallery_heading">Gallery</h2>
+        <p class="muted" data-i18n="gallery_intro">Moments from our hikes and retreats. Tap any photo to enlarge.</p>
       </div>
       <div class="gallery-grid" id="gallery-grid"><!-- filled by main.js --></div>
     </div>
@@ -45,11 +50,11 @@
   <section class="section section--tint">
     <div class="wrap">
       <div class="cta-band reveal">
-        <h2>Like what you see?</h2>
-        <p>Come and experience it for yourself — join an event or book a 1:1 session with Tanya.</p>
+        <h2 data-i18n="gallery_cta_heading">Like what you see?</h2>
+        <p data-i18n="gallery_cta_text">Come and experience it for yourself — join an event or book a 1:1 session with Tanya.</p>
         <div class="hero__cta" style="justify-content:center;margin-top:1.4rem">
-          <a class="btn btn--light btn--lg" href="index.html#events">See events</a>
-          <a class="btn btn--solid btn--lg" href="index.html#sessions">Book a session</a>
+          <a class="btn btn--light btn--lg" href="index.html#events" data-i18n="see_events">See events</a>
+          <a class="btn btn--solid btn--lg" href="index.html#sessions" data-i18n="hero_book_session">Book a session</a>
         </div>
       </div>
     </div>
@@ -67,17 +72,18 @@
             <a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>
             <a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>
             <a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>
-            <a href="#" data-link-email>Email</a>
+            <a href="#" data-link-email data-i18n="label_email">Email</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© <span data-year>2026</span> <span data-brand-name>Trail to Thriving</span>. All rights reserved.</span>
+        <span>© <span data-year>2026</span> <span data-brand-name>Trail to Thriving</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>
       </div>
     </div>
   </footer>
 
-  <script src="assets/js/config.js?v=5"></script>
-  <script src="assets/js/main.js?v=5"></script>
+  <script src="assets/js/config.js?v=6"></script>
+  <script src="assets/js/i18n.js?v=6"></script>
+  <script src="assets/js/main.js?v=6"></script>
 </body>
 </html>

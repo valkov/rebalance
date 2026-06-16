@@ -60,11 +60,12 @@
     img.src = (item.src || item.image) || ph;
     return img;
   }
-  function btnLink(label, href, solid) {
-    return el("a", { class: "btn " + (solid ? "btn--solid" : "btn--ghost"), href: href, target: "_blank", rel: "noopener", text: label });
+  function tr(key) { return (window.t ? window.t(key) : key); }
+  function btnLink(key, href, solid) {
+    return el("a", { class: "btn " + (solid ? "btn--solid" : "btn--ghost"), href: href, target: "_blank", rel: "noopener", "data-i18n": key, text: tr(key) });
   }
-  function btnBook(label, schedulerUrl, solid) {
-    return el("button", { class: "btn " + (solid ? "btn--solid" : "btn--ghost"), type: "button", "data-book": "1", "data-scheduler": schedulerUrl || "", text: label });
+  function btnBook(key, schedulerUrl, solid) {
+    return el("button", { class: "btn " + (solid ? "btn--solid" : "btn--ghost"), type: "button", "data-book": "1", "data-scheduler": schedulerUrl || "", "data-i18n": key, text: tr(key) });
   }
 
   /* ---------- brand text / links ------------------------------------------- */
@@ -95,8 +96,8 @@
     list.forEach(function (t) {
       var href = eventHref(t);
       var actions = el("div", { class: "card__actions" }, [
-        t.stripeUrl ? btnLink("Book & pay", t.stripeUrl, true) : btnBook("Enquire", t.schedulerUrl, true),
-        btnBook("Reserve a spot", t.schedulerUrl, false),
+        t.stripeUrl ? btnLink("book_pay", t.stripeUrl, true) : btnBook("enquire", t.schedulerUrl, true),
+        btnBook("reserve_spot", t.schedulerUrl, false),
       ]);
       var card = el("article", { class: "card reveal" }, [
         el("div", { class: "card__media" }, [
@@ -110,7 +111,7 @@
             (t.dates ? '<span>🗓 ' + escapeHtml(t.dates) + '</span>' : "") +
             (t.duration ? '<span>⏱ ' + escapeHtml(t.duration) + '</span>' : "") }),
           el("p", { class: "card__blurb", text: t.blurb || "" }),
-          el("a", { class: "card__more", href: href, html: "View details →" }),
+          el("a", { class: "card__more", href: href, "data-i18n": "view_details", text: tr("view_details") }),
           actions,
         ]),
       ]);
@@ -126,12 +127,12 @@
       var isFree = /free/i.test(s.price || "");
       var primary, secondary = null;
       if (s.schedulerUrl) {
-        primary = btnBook(isFree ? "Book free call" : "Book a time", s.schedulerUrl, true);
-        if (s.stripeUrl) secondary = btnLink("Pay online", s.stripeUrl, false);
+        primary = btnBook(isFree ? "book_free_call" : "book_time", s.schedulerUrl, true);
+        if (s.stripeUrl) secondary = btnLink("pay_online", s.stripeUrl, false);
       } else if (s.stripeUrl) {
-        primary = btnLink(isFree ? "Get started" : "Buy", s.stripeUrl, true);
+        primary = btnLink(isFree ? "get_started" : "buy", s.stripeUrl, true);
       } else {
-        primary = btnBook(isFree ? "Book free call" : "Enquire", "", true);
+        primary = btnBook(isFree ? "book_free_call" : "enquire", "", true);
       }
       var card = el("article", { class: "card card--session reveal" }, [
         el("div", { class: "card__body" }, [
@@ -214,10 +215,10 @@
       var email = (CFG.brand || {}).email || "";
       modalBody.innerHTML =
         '<div class="modal__msg">' +
-          '<h3>Request a time</h3>' +
-          '<p>Online booking is being set up. In the meantime, send an enquiry and we’ll get back to you with dates and details.</p>' +
-          (email ? '<a class="btn btn--solid" href="mailto:' + email + '?subject=Booking%20enquiry">Email us</a>' : "") +
-          '<p class="modal__hint">Tip: add a Cal.com or Calendly link to this event/session in <code>config.js</code> to embed a live calendar here.</p>' +
+          '<h3>' + tr("modal_title") + '</h3>' +
+          '<p>' + tr("modal_text") + '</p>' +
+          (email ? '<a class="btn btn--solid" href="mailto:' + email + '?subject=Booking%20enquiry">' + tr("modal_email") + '</a>' : "") +
+          '<p class="modal__hint">' + tr("modal_hint") + '</p>' +
         '</div>';
     }
     modal.classList.add("is-open");
@@ -341,8 +342,8 @@
     var id = (new URLSearchParams(location.search)).get("id");
     var ev = (CFG.events || []).filter(function (e) { return (e._id || slugify(e.title)) === id; })[0];
     if (!ev) {
-      wrap.innerHTML = '<p class="detail__empty">Sorry, we couldn’t find that trip.</p>';
-      wrap.appendChild(el("a", { class: "btn btn--solid", href: "index.html#events", text: "See all events" }));
+      wrap.innerHTML = '<p class="detail__empty" data-i18n="detail_notfound">' + tr("detail_notfound") + '</p>';
+      wrap.appendChild(el("a", { class: "btn btn--solid", href: "index.html#events", "data-i18n": "detail_see_all", text: tr("detail_see_all") }));
       return;
     }
     document.title = ev.title + " — Trail to Thriving";
@@ -354,12 +355,12 @@
       (ev.price ? '<span>💰 ' + escapeHtml(ev.price) + '</span>' : "");
 
     var actions = el("div", { class: "card__actions detail__actions" }, [
-      ev.stripeUrl ? btnLink("Book & pay", ev.stripeUrl, true) : btnBook("Enquire", ev.schedulerUrl, true),
-      btnBook("Reserve a spot", ev.schedulerUrl, false),
+      ev.stripeUrl ? btnLink("book_pay", ev.stripeUrl, true) : btnBook("enquire", ev.schedulerUrl, true),
+      btnBook("reserve_spot", ev.schedulerUrl, false),
     ]);
 
     wrap.innerHTML = "";
-    wrap.appendChild(el("a", { class: "detail__back", href: "index.html#events", html: "← All events" }));
+    wrap.appendChild(el("a", { class: "detail__back", href: "index.html#events", "data-i18n": "detail_back", text: tr("detail_back") }));
     wrap.appendChild(el("h1", { class: "detail__title", text: ev.title }));
     wrap.appendChild(el("p", { class: "card__meta detail__meta", html: meta }));
     wrap.appendChild(actions);
@@ -373,7 +374,7 @@
     if (hasDesc) wrap.appendChild(desc);
 
     if (ev.itinerary && ev.itinerary.length) {
-      var itin = el("section", { class: "detail__itinerary" }, [el("h2", { text: "Day by day" })]);
+      var itin = el("section", { class: "detail__itinerary" }, [el("h2", { "data-i18n": "detail_daybyday", text: tr("detail_daybyday") })]);
       ev.itinerary.forEach(function (d) {
         itin.appendChild(el("div", { class: "itin" }, [
           d.label ? el("span", { class: "itin__day", text: d.label }) : null,
@@ -393,6 +394,7 @@
     renderSessions();
     renderGallery();
     renderEventDetail();
+    if (window.applyI18n) window.applyI18n();
     initNav();
     initBookingButtons();
     initKeys();
