@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Trail to Thriving emblem">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fbf86"/>
+      <stop offset="1" stop-color="#2f5d3a"/>
+    </linearGradient>
+    <clipPath id="badge"><circle cx="60" cy="60" r="53"/></clipPath>
+  </defs>
+
+  <circle cx="60" cy="60" r="57" fill="#21422b"/>
+  <circle cx="60" cy="60" r="54.5" fill="none" stroke="#f5f2e7" stroke-width="1.5" opacity="0.65"/>
+
+  <g clip-path="url(#badge)">
+    <rect x="0" y="0" width="120" height="120" fill="url(#sky)"/>
+    <circle cx="86" cy="40" r="11" fill="#f3cd84" opacity="0.92"/>
+    <path d="M-6 88 L26 50 L50 80 L74 44 L102 82 L126 58 L126 126 L-6 126 Z" fill="#1f3f29" opacity="0.5"/>
+    <path d="M-6 98 L42 44 L90 98 Z" fill="#21422b"/>
+    <path d="M42 44 L54 59 L48 62 L42 56 L36 62 L30 59 Z" fill="#eef4ea"/>
+    <path d="M28 112 C 44 96, 34 84, 50 76 S 66 58, 60 46"
+          fill="none" stroke="#f5f2e7" stroke-width="3.2" stroke-linecap="round"
+          stroke-dasharray="0.5 7.5" opacity="0.92"/>
+  </g>
+</svg>

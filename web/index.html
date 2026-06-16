@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trail to Thriving — Guided wellbeing hikes & nature retreats</title>
+  <meta name="description" content="Guided nature hikes and retreats for better mental health, wellbeing and self-knowledge — across Scandinavia and the Alps. Join us in the wild." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Trail to Thriving — Guided wellbeing hikes & nature retreats" />
+  <meta property="og:description" content="We hike for better mental health, wellbeing and self-knowledge. Join us in the wild." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/logo.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <img src="assets/images/logo.svg" alt="" />
+        <span data-brand-name>Trail to Thriving</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+        <a href="#events">Events</a>
+        <a href="#sessions">Sessions</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="#about">About</a>
+        <a class="btn btn--solid" href="#sessions">Book</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero__inner">
+      <span class="hero__badge">🌿 Nature-assisted wellbeing · Denmark &amp; Sweden</span>
+      <h1 data-brand-name>Trail to Thriving</h1>
+      <p class="hero__tag" data-brand-tagline>We hike for better mental health, well-being and self-knowledge.</p>
+      <p class="hero__intro" data-brand-intro></p>
+      <div class="hero__cta">
+        <a class="btn btn--solid btn--lg" href="#events">Find an event</a>
+        <a class="btn btn--light btn--lg" href="#sessions">Book a session</a>
+      </div>
+    </div>
+    <svg class="hero__mountains" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 140 L240 60 L420 120 L650 30 L900 120 L1120 55 L1440 110 L1440 140 Z" fill="#f7f5ec" opacity="0.45"/>
+      <path d="M0 140 L300 95 L520 130 L760 70 L1010 130 L1240 90 L1440 130 L1440 140 Z" fill="#f7f5ec"/>
+    </svg>
+  </section>
+
+  <!-- FEATURED PHOTOS -->
+  <section class="section" id="moments">
+    <div class="wrap">
+      <div class="featured__top">
+        <div class="section__head" style="margin-bottom:0">
+          <p class="eyebrow">Moments on the trail</p>
+          <h2>Where we’ve wandered</h2>
+        </div>
+        <a class="btn btn--ghost" href="gallery.html">View full gallery →</a>
+      </div>
+      <div class="mosaic" id="gallery-grid" data-limit="6"><!-- filled by main.js --></div>
+    </div>
+  </section>
+
+  <!-- EVENTS (group hikes / retreats you buy) -->
+  <section class="section section--tint" id="events">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow">Upcoming events</p>
+        <h2>Hikes &amp; retreats you can book</h2>
+        <p class="muted">Small groups, paced for presence rather than performance. Reserve your spot or pay securely online.</p>
+      </div>
+      <div class="trips-grid" id="events-grid"><!-- filled by main.js --></div>
+    </div>
+  </section>
+
+  <!-- SESSIONS (1:1 with Tanya, incl. therapy) -->
+  <section class="section" id="sessions">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow">Work 1:1 with Tanya</p>
+        <h2>Sessions &amp; therapy</h2>
+        <p class="muted">Tanya Ekelin is a therapist working with psychomotor and nature-assisted therapy. Pick a session, choose a time that suits you, and pay securely — online or in person.</p>
+      </div>
+      <div class="trips-grid" id="sessions-grid"><!-- filled by main.js --></div>
+      <p class="muted sessions-note" data-sessions-note></p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section section--tint" id="about">
+    <div class="wrap about">
+      <div>
+        <p class="eyebrow">About</p>
+        <h2>Nature-assisted therapy, on foot</h2>
+        <p>Trail to Thriving is led by <strong>Tanya Ekelin</strong>, a therapist working with psychomotor and nature-assisted therapy. Alongside group hikes and retreats, Tanya offers 1:1 sessions — blending movement, body awareness and time in the wild to help you slow down, reconnect and come home to yourself.</p>
+        <p class="muted">Group events welcome all levels; 1:1 sessions and therapy are available online or in person, in several languages.</p>
+        <div class="hero__cta" style="margin:0.4rem 0 0.2rem">
+          <a class="btn btn--solid" href="#sessions">Book a session</a>
+          <a class="btn btn--ghost" href="#events">See events</a>
+        </div>
+        <div class="chips">
+          <span class="chip">📍 <span data-locations>Copenhagen · Aarhus · Odense · Malmö · Gothenburg</span></span>
+          <span class="chip">🗣 <span data-languages>Danish, English, Ukrainian</span></span>
+        </div>
+      </div>
+      <div class="about__media">
+        <img src="" alt="On the trail" id="about-photo" />
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section" id="reviews">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow">Kind words</p>
+        <div class="reviews__score">
+          <strong data-review-score>100%</strong>
+          <span class="muted">recommend · based on <span data-review-count>32</span> reviews on Facebook</span>
+        </div>
+      </div>
+      <div class="quotes" id="quotes"><!-- filled below via inline script --></div>
+    </div>
+  </section>
+
+  <!-- BOOKING CTA -->
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>Ready to join us in the wild?</h2>
+        <p>Book a guided hike, reserve a place on a retreat, or start with a 1:1 session. Spaces are limited to keep groups small.</p>
+        <div class="hero__cta" style="justify-content:center;margin-top:1.4rem">
+          <a class="btn btn--light btn--lg" href="#events">See events</a>
+          <a class="btn btn--solid btn--lg" href="#sessions">Book a session</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <img src="assets/images/logo.svg" alt="" />
+            <span data-brand-name>Trail to Thriving</span>
+          </div>
+          <p class="muted" style="color:rgba(255,255,255,0.7);max-width:280px;margin-top:0.6rem">Guided wellbeing hikes &amp; nature retreats across Scandinavia and the Alps.</p>
+          <div class="socials">
+            <a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>
+            <a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>
+            <a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>
+            <a href="#" data-link-email>Email</a>
+          </div>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="#events">Events</a></li>
+              <li><a href="#sessions">Sessions</a></li>
+              <li><a href="gallery.html">Gallery</a></li>
+              <li><a href="#about">About</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Get in touch</h4>
+            <ul>
+              <li><a href="#" data-link-email data-brand-email>hello@trailtothriving.com</a></li>
+              <li><a href="#sessions">Book a session</a></li>
+              <li><a href="#events">Find an event</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> <span data-brand-name>Trail to Thriving</span>. All rights reserved.</span>
+        <span>Made with care for the outdoors 🌲</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js?v=5"></script>
+  <script src="assets/js/main.js?v=5"></script>
+  <script>
+    /* Render review quotes + the About photo from config (kept here so all
+       content stays in config.js). */
+    (function () {
+      var CFG = window.SITE_CONFIG || {};
+      var r = (CFG.reviews || {}), q = r.quotes || [];
+      var box = document.getElementById("quotes");
+      if (box) q.forEach(function (item) {
+        var card = document.createElement("figure");
+        card.className = "quote reveal";
+        card.innerHTML =
+          '<div class="stars">★★★★★</div>' +
+          '<p>“' + (item.text || "") + '”</p>' +
+          '<cite>— ' + (item.author || "Guest") + '</cite>';
+        box.appendChild(card);
+      });
+      // About photo: use the first trip/gallery image with a real src, else a placeholder.
+      var about = document.getElementById("about-photo");
+      if (about) {
+        var pool = (CFG.gallery || []).concat(CFG.events || []).concat(CFG.sessions || []);
+        var withSrc = pool.filter(function (x) { return x.src || x.image; })[0];
+        var phAbout = "data:image/svg+xml," + encodeURIComponent(
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl(150,42%,70%)"/><stop offset="1" stop-color="hsl(168,38%,40%)"/></linearGradient></defs><rect width="640" height="800" fill="url(#g)"/><path d="M-20 620 L200 320 L420 620 Z" fill="hsl(162,42%,28%)"/><path d="M200 320 L260 400 L228 418 L200 388 L172 418 L140 400 Z" fill="#f3f6f1" opacity="0.9"/><text x="40" y="56" fill="#fff" font-family="Arial" font-size="22" opacity="0.85">Add your photo</text></svg>'
+        );
+        about.addEventListener("error", function () { if (about.getAttribute("src") !== phAbout) about.src = phAbout; });
+        about.src = withSrc ? (withSrc.src || withSrc.image) : phAbout;
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+import {defineField, defineType} from 'sanity'
+
+export default defineType({
+  name: 'session',
+  title: 'Session (1:1 / therapy)',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'order',
+      title: 'Sort order',
+      type: 'number',
+      description: 'Lower numbers appear first.',
+      initialValue: 10,
+    }),
+    defineField({name: 'format', title: 'Format', type: 'string', description: 'e.g. Online · 20 min, or In person · 60 min'}),
+    defineField({name: 'price', title: 'Price', type: 'string', description: 'e.g. kr 750 / session, or Free'}),
+    defineField({
+      name: 'blurb',
+      title: 'Description',
+      type: 'text',
+      rows: 3,
+    }),
+    defineField({
+      name: 'image',
+      title: 'Photo (optional)',
+      type: 'image',
+      options: {hotspot: true},
+    }),
+    defineField({
+      name: 'schedulerUrl',
+      title: 'Booking calendar (Book a time)',
+      type: 'url',
+      description: 'A Cal.com / Calendly link for this session. Leave empty to fall back to an email enquiry.',
+    }),
+    defineField({
+      name: 'paymentUrl',
+      title: 'Payment link (optional)',
+      type: 'url',
+      description: 'A Stripe Payment Link — e.g. to prepay or to sell a package. Shows a "Pay online" button.',
+    }),
+    defineField({
+      name: 'hue',
+      title: 'Accent colour (optional)',
+      type: 'number',
+      description: 'A number 0–360, used only as a placeholder colour if there is no photo.',
+    }),
+  ],
+  preview: {
+    select: {title: 'title', subtitle: 'price', media: 'image'},
+  },
+})

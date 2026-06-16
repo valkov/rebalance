@@ -1,0 +1,10 @@
+# dependencies & build output
+node_modules/
+dist/
+.sanity/
+
+# os / editor
+.DS_Store
+*.log
+.vscode/
+.idea/
