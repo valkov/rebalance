@@ -72,7 +72,7 @@ const T = {
 }
 
 const ORDER = {
-  'event-geirangerfjord': 1, 'event-preikestolen': 2, 'event-lofoten': 3, 'event-chamonix': 4,
+  'event-chamonix': 1, 'event-geirangerfjord': 2, 'event-preikestolen': 3, 'event-lofoten': 4,
   'session-free-intro': 1, 'session-nature-assisted': 2, 'session-psychomotor': 3, 'session-package-5': 4,
 }
 
