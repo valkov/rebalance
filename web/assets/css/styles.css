@@ -264,6 +264,9 @@ p { margin: 0 0 1em; }
   .mosaic .tile:nth-child(1) { grid-column: span 2; grid-row: span 1; }
   .mosaic .tile:nth-child(6) { grid-column: span 1; }
   .cta-band { padding: 2.2rem 1.4rem; }
+  /* hero: show full image as a top banner, text stacked below (no zoom) */
+  .hero { aspect-ratio: auto; min-height: 0; display: block; background-color: var(--forest-d); background-size: 100% auto; background-position: top center; background-repeat: no-repeat; padding-top: calc(100vw * 677 / 1500); }
+  .hero__inner { padding: 1.6rem 0 2.4rem; }
 }
 @media (max-width: 480px) {
   .gallery-grid { grid-template-columns: 1fr; }
