@@ -15,15 +15,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=8" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=9" />
 </head>
 <body>
   <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
-        <img src="assets/images/logo.svg" alt="" />
+        <img src="assets/images/logo.png" alt="" onerror="this.onerror=null;this.src='assets/images/logo.svg'" />
         <span data-brand-name>Trail to Thriving</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
@@ -37,7 +37,7 @@
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
         <a href="#events" data-i18n="nav_events">Events</a>
         <a href="#sessions" data-i18n="nav_sessions">Sessions</a>
-        <a href="gallery.html" data-i18n="nav_gallery">Gallery</a>
+        <a href="#moments" data-i18n="nav_gallery">Gallery</a>
         <a href="#about" data-i18n="nav_about">About</a>
         <a class="btn btn--solid" href="#sessions" data-i18n="nav_book">Book</a>
       </nav>
@@ -65,14 +65,12 @@
   <!-- FEATURED PHOTOS -->
   <section class="section" id="moments">
     <div class="wrap">
-      <div class="featured__top">
-        <div class="section__head" style="margin-bottom:0">
-          <p class="eyebrow" data-i18n="moments_eyebrow">Moments on the trail</p>
-          <h2 data-i18n="moments_heading">Where we’ve wandered</h2>
-        </div>
-        <a class="btn btn--ghost" href="gallery.html" data-i18n="view_full_gallery">View full gallery →</a>
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="moments_eyebrow">Moments on the trail</p>
+        <h2 data-i18n="moments_heading">Where we’ve wandered</h2>
+        <p class="muted" data-i18n="gallery_intro">Moments from our hikes and retreats. Open a folder to explore.</p>
       </div>
-      <div class="mosaic" id="gallery-grid" data-limit="6"><!-- filled by main.js --></div>
+      <div class="gallery-grid" id="gallery-folders"><!-- filled by main.js: one tile per folder --></div>
     </div>
   </section>
 
@@ -158,7 +156,7 @@
       <div class="footer-grid">
         <div>
           <div class="footer-brand">
-            <img src="assets/images/logo.svg" alt="" />
+            <img src="assets/images/logo.png" alt="" onerror="this.onerror=null;this.src='assets/images/logo.svg'" />
             <span data-brand-name>Trail to Thriving</span>
           </div>
           <p class="muted" style="color:rgba(255,255,255,0.7);max-width:280px;margin-top:0.6rem" data-i18n="footer_tagline">Guided wellbeing hikes &amp; nature retreats across Scandinavia and the Alps.</p>
@@ -175,7 +173,7 @@
             <ul>
               <li><a href="#events" data-i18n="nav_events">Events</a></li>
               <li><a href="#sessions" data-i18n="nav_sessions">Sessions</a></li>
-              <li><a href="gallery.html" data-i18n="nav_gallery">Gallery</a></li>
+              <li><a href="#moments" data-i18n="nav_gallery">Gallery</a></li>
               <li><a href="#about" data-i18n="nav_about">About</a></li>
             </ul>
           </div>
