@@ -182,22 +182,50 @@
 
   /* ---------- gallery ------------------------------------------------------ */
   var galleryItems = [];
+  function galleryTile(g, index) {
+    var fig = el("button", { class: "tile reveal", type: "button", "aria-label": "Open photo: " + g.label }, [
+      makeImg(g, g.label),
+      el("span", { class: "tile__cap", text: g.label }),
+    ]);
+    fig.addEventListener("click", function () { openLightbox(index); });
+    return fig;
+  }
   function renderGallery() {
-    var wrap = $("#gallery-grid");
-    if (!wrap) return;
-    wrap.innerHTML = "";
-    var items = (CFG.gallery || []).slice();
-    var limit = parseInt(wrap.getAttribute("data-limit") || "0", 10);
-    if (limit > 0) items = items.slice(0, limit);
-    galleryItems = items.map(function (g, i) { return { src: g.src, label: loc(g.label) || ("Photo " + (i + 1)), hue: g.hue }; });
-    galleryItems.forEach(function (g, i) {
-      var fig = el("button", { class: "tile reveal", type: "button", "aria-label": "Open photo: " + g.label }, [
-        makeImg(g, g.label),
-        el("span", { class: "tile__cap", text: g.label }),
-      ]);
-      fig.addEventListener("click", function () { openLightbox(i); });
-      wrap.appendChild(fig);
+    var flat = $("#gallery-grid");      // home mosaic (flat, limited)
+    var grouped = $("#gallery-groups"); // gallery page (folders)
+    var items = (CFG.gallery || []).map(function (g, i) {
+      return { src: g.src, label: loc(g.label) || ("Photo " + (i + 1)), hue: g.hue, groupId: g.groupId };
     });
+    if (flat) {
+      flat.innerHTML = "";
+      var limit = parseInt(flat.getAttribute("data-limit") || "0", 10);
+      galleryItems = limit > 0 ? items.slice(0, limit) : items;
+      galleryItems.forEach(function (g, i) { flat.appendChild(galleryTile(g, i)); });
+    }
+    if (grouped) {
+      grouped.innerHTML = "";
+      var groups = (CFG.galleryGroups || []);
+      var known = {};
+      var buckets = [];
+      groups.forEach(function (grp) {
+        known[grp._id] = 1;
+        var b = items.filter(function (g) { return g.groupId === grp._id; });
+        if (b.length) buckets.push({ title: loc(grp.title) || "", items: b });
+      });
+      var rest = items.filter(function (g) { return !g.groupId || !known[g.groupId]; });
+      if (rest.length) buckets.push({ title: tr("gallery_more"), items: rest });
+      // flatten in display order so the lightbox steps through folders naturally
+      galleryItems = [];
+      buckets.forEach(function (b) { b.items.forEach(function (g) { g._idx = galleryItems.length; galleryItems.push(g); }); });
+      buckets.forEach(function (b) {
+        var grid = el("div", { class: "gallery-grid" });
+        b.items.forEach(function (g) { grid.appendChild(galleryTile(g, g._idx)); });
+        grouped.appendChild(el("section", { class: "gallery-group reveal" }, [
+          el("h3", { class: "gallery-group__title", text: b.title }),
+          grid,
+        ]));
+      });
+    }
   }
 
   /* ---------- lightbox ----------------------------------------------------- */
@@ -314,7 +342,9 @@
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{_id,title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{"label":caption,"src":image.asset->url,hue}' +
+          '{"label":caption,"src":image.asset->url,hue,"groupId":group._ref},' +
+        '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
+          '{_id,"title":title,hue}' +
       '}';
     var ver = s.apiVersion || "2024-01-01";
     var url = "https://" + s.projectId + ".api.sanity.io/v" + ver + "/data/query/" +
@@ -326,6 +356,7 @@
         if (d.events && d.events.length) CFG.events = d.events.map(withImageParams);
         if (d.sessions && d.sessions.length) CFG.sessions = d.sessions.map(withImageParams);
         if (d.gallery && d.gallery.length) CFG.gallery = d.gallery.map(withImageParams);
+        if (d.galleryGroups && d.galleryGroups.length) CFG.galleryGroups = d.galleryGroups;
       })
       .catch(function (e) { if (window.console) console.warn("CMS load failed — using built-in content.", e); });
   }

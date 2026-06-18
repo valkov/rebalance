@@ -87,6 +87,29 @@ const LINKS = {
   'session-package-5': 'https://buy.stripe.com/test_7sYcN7fadgNvgwv0Mk4ZG06',
 }
 
+// Gallery folders (new docs) + which folder each existing photo belongs to.
+const GROUPS = [
+  {_id: 'group-hikes', order: 1, en: 'Group hikes', da: 'Gruppevandringer', uk: 'Групові походи'},
+  {_id: 'group-retreats', order: 2, en: 'Retreats', da: 'Retreater', uk: 'Ретрити'},
+  {_id: 'group-moments', order: 3, en: 'Moments & community', da: 'Øjeblikke & fællesskab', uk: 'Моменти та спільнота'},
+]
+const IMG2GROUP = {
+  '31b342ae-eb8b-4181-9fe7-a2a5a6f37988': 'group-hikes',
+  'baf82831-4283-4c12-8a35-23bfda616bc5': 'group-hikes',
+  '055499d8-2cd0-4d2a-a992-e0bdad902968': 'group-retreats',
+  'b161d25e-5c59-4254-87fb-054d8288c540': 'group-retreats',
+  'f6e64615-2c6e-49c4-94a3-b3d80842cc52': 'group-moments',
+  '88b4b2d0-0751-4d5f-ab4d-cb66eb7eb3e4': 'group-moments',
+}
+const GALLERY_ORDER = {
+  '31b342ae-eb8b-4181-9fe7-a2a5a6f37988': 1,
+  'baf82831-4283-4c12-8a35-23bfda616bc5': 2,
+  '055499d8-2cd0-4d2a-a992-e0bdad902968': 1,
+  'b161d25e-5c59-4254-87fb-054d8288c540': 2,
+  'f6e64615-2c6e-49c4-94a3-b3d80842cc52': 1,
+  '88b4b2d0-0751-4d5f-ab4d-cb66eb7eb3e4': 2,
+}
+
 const q = async (query) => {
   const r = await fetch(`https://${PID}.api.sanity.io/v${V}/data/query/${DS}?query=${encodeURIComponent(query)}`)
   return (await r.json()).result
@@ -94,6 +117,9 @@ const q = async (query) => {
 
 const docs = await q('*[_type in ["event","session","galleryImage"]]')
 const out = []
+for (const g of GROUPS) {
+  out.push({_id: g._id, _type: 'galleryGroup', order: g.order, title: ls(g.en, {da: g.da, uk: g.uk})})
+}
 for (const d of docs) {
   const t = T[d._id] || {}
   if (d._type === 'event') {
@@ -130,7 +156,8 @@ for (const d of docs) {
     })
   } else if (d._type === 'galleryImage') {
     out.push({
-      _id: d._id, _type: 'galleryImage', order: ORDER[d._id] || d.order || 10, hue: d.hue,
+      _id: d._id, _type: 'galleryImage', order: GALLERY_ORDER[d._id] || d.order || 10, hue: d.hue,
+      ...(IMG2GROUP[d._id] ? {group: {_type: 'reference', _ref: IMG2GROUP[d._id]}} : {}),
       ...(d.image ? {image: d.image} : {}),
       caption: ls(strOf(d.caption), t.caption),
     })

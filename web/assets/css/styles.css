@@ -113,6 +113,11 @@ p { margin: 0 0 1em; }
 /* full gallery grid */
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 240px; gap: 16px; }
 
+/* gallery folders */
+.gallery-group { margin-bottom: 2.8rem; }
+.gallery-group:last-child { margin-bottom: 0; }
+.gallery-group__title { font-family: "Fraunces", Georgia, serif; font-size: 1.45rem; font-weight: 600; margin: 0 0 1.1rem; }
+
 /* ---- trips --------------------------------------------------------------- */
 .trips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.6rem; }
 .card { background: var(--cream-2); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--line); display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; }

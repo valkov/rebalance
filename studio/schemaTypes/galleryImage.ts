@@ -14,6 +14,13 @@ export default defineType({
     }),
     defineField({name: 'caption', title: 'Caption', type: 'localeString', description: 'e.g. Lofoten, Norway · 2024'}),
     defineField({
+      name: 'group',
+      title: 'Folder',
+      type: 'reference',
+      to: [{type: 'galleryGroup'}],
+      description: 'Which folder this photo belongs to. Leave empty to show it under “More”.',
+    }),
+    defineField({
       name: 'order',
       title: 'Sort order',
       type: 'number',
