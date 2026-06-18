@@ -90,7 +90,7 @@ p { margin: 0 0 1em; }
 .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--forest-d); margin: 5px 0; border-radius: 2px; }
 
 /* ---- hero ---------------------------------------------------------------- */
-.hero { position: relative; overflow: hidden; background-image: url("../images/hero-bg.jpg"); background-size: cover; background-position: center; color: #fff; aspect-ratio: 1500 / 677; min-height: 460px; display: flex; align-items: flex-start; }
+.hero { position: relative; overflow: hidden; background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.30) 42%, rgba(0, 0, 0, 0) 75%), url("../images/hero-bg.jpg"); background-size: cover; background-position: center; color: #fff; aspect-ratio: 1500 / 677; min-height: 460px; display: flex; align-items: flex-start; }
 .hero__inner { position: relative; z-index: 2; padding: 3.25rem 0; max-width: 720px; }
 .hero h1, .hero__tag, .hero__intro { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 2px 22px rgba(0, 0, 0, 0.55); }
 .hero h1 { color: #fff; font-size: clamp(2.6rem, 6vw, 4.4rem); letter-spacing: -0.01em; }
@@ -265,7 +265,7 @@ p { margin: 0 0 1em; }
   .mosaic .tile:nth-child(6) { grid-column: span 1; }
   .cta-band { padding: 2.2rem 1.4rem; }
   /* hero: show full image as a top banner, text stacked below (no zoom) */
-  .hero { aspect-ratio: auto; min-height: 0; display: block; background-color: var(--forest-d); background-size: 100% auto; background-position: top center; background-repeat: no-repeat; padding-top: calc(100vw * 677 / 1500); }
+  .hero { aspect-ratio: auto; min-height: 0; display: block; background-image: url("../images/hero-bg.jpg"); background-color: var(--forest-d); background-size: 100% auto; background-position: top center; background-repeat: no-repeat; padding-top: calc(100vw * 677 / 1500); }
   .hero__inner { padding: 1.6rem 0 2.4rem; }
 }
 @media (max-width: 480px) {
