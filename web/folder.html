@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-i18n="page_title_gallery">Gallery — Trail to Thriving</title>
-  <meta name="description" content="Photos from Trail to Thriving hikes and retreats across Scandinavia and the Alps." />
+  <title>Folder — Trail to Thriving</title>
+  <meta name="description" content="Photos from Trail to Thriving hikes and retreats." />
   <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,11 +39,11 @@
   <section class="section">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow"><a href="index.html" data-i18n="gallery_back_home">← Back home</a></p>
-        <h2 data-i18n="gallery_heading">Gallery</h2>
-        <p class="muted" data-i18n="gallery_intro">Moments from our hikes and retreats. Open a folder to explore.</p>
+        <p class="eyebrow"><a href="gallery.html" data-i18n="folder_back">← All folders</a></p>
+        <h2 id="folder-title">Gallery</h2>
+        <p class="muted" data-i18n="folder_intro">Tap any photo to enlarge.</p>
       </div>
-      <div class="gallery-grid" id="gallery-folders"><!-- filled by main.js: one tile per folder --></div>
+      <div class="gallery-grid" id="folder-grid"><!-- filled by main.js from ?id=... --></div>
     </div>
   </section>
 

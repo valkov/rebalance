@@ -190,42 +190,67 @@
     fig.addEventListener("click", function () { openLightbox(index); });
     return fig;
   }
-  function renderGallery() {
-    var flat = $("#gallery-grid");      // home mosaic (flat, limited)
-    var grouped = $("#gallery-groups"); // gallery page (folders)
-    var items = (CFG.gallery || []).map(function (g, i) {
+  function galleryItemsFromCfg() {
+    return (CFG.gallery || []).map(function (g, i) {
       return { src: g.src, label: loc(g.label) || ("Photo " + (i + 1)), hue: g.hue, groupId: g.groupId };
     });
+  }
+  function folderTile(id, name, imgs) {
+    var cover = imgs[0] || { label: name };
+    return el("a", { class: "folder-tile reveal", href: "folder.html?id=" + encodeURIComponent(id), "aria-label": name }, [
+      makeImg(cover, name),
+      el("div", { class: "folder-tile__bar" }, [
+        el("span", { class: "folder-tile__name", text: name }),
+        el("span", { class: "folder-tile__count", text: "📷 " + imgs.length }),
+      ]),
+    ]);
+  }
+  // home mosaic (flat featured) + gallery page (one tile per folder)
+  function renderGallery() {
+    var flat = $("#gallery-grid");
+    var folders = $("#gallery-folders");
+    var items = galleryItemsFromCfg();
     if (flat) {
       flat.innerHTML = "";
       var limit = parseInt(flat.getAttribute("data-limit") || "0", 10);
       galleryItems = limit > 0 ? items.slice(0, limit) : items;
       galleryItems.forEach(function (g, i) { flat.appendChild(galleryTile(g, i)); });
     }
-    if (grouped) {
-      grouped.innerHTML = "";
+    if (folders) {
+      folders.innerHTML = "";
       var groups = (CFG.galleryGroups || []);
       var known = {};
-      var buckets = [];
       groups.forEach(function (grp) {
         known[grp._id] = 1;
-        var b = items.filter(function (g) { return g.groupId === grp._id; });
-        if (b.length) buckets.push({ title: loc(grp.title) || "", items: b });
+        folders.appendChild(folderTile(grp._id, loc(grp.title) || "", items.filter(function (g) { return g.groupId === grp._id; })));
       });
       var rest = items.filter(function (g) { return !g.groupId || !known[g.groupId]; });
-      if (rest.length) buckets.push({ title: tr("gallery_more"), items: rest });
-      // flatten in display order so the lightbox steps through folders naturally
-      galleryItems = [];
-      buckets.forEach(function (b) { b.items.forEach(function (g) { g._idx = galleryItems.length; galleryItems.push(g); }); });
-      buckets.forEach(function (b) {
-        var grid = el("div", { class: "gallery-grid" });
-        b.items.forEach(function (g) { grid.appendChild(galleryTile(g, g._idx)); });
-        grouped.appendChild(el("section", { class: "gallery-group reveal" }, [
-          el("h3", { class: "gallery-group__title", text: b.title }),
-          grid,
-        ]));
-      });
+      if (rest.length) folders.appendChild(folderTile("__ungrouped", tr("gallery_more"), rest));
     }
+  }
+  // folder page (folder.html?id=…): one folder's photos, with lightbox
+  function renderFolder() {
+    var grid = $("#folder-grid");
+    if (!grid) return;
+    var id = (new URLSearchParams(location.search)).get("id");
+    var groups = (CFG.galleryGroups || []);
+    var known = {}; groups.forEach(function (g) { known[g._id] = 1; });
+    var items = galleryItemsFromCfg();
+    var grp = groups.filter(function (g) { return g._id === id; })[0];
+    var imgs, title;
+    if (id === "__ungrouped") {
+      imgs = items.filter(function (g) { return !g.groupId || !known[g.groupId]; });
+      title = tr("gallery_more");
+    } else {
+      imgs = items.filter(function (g) { return g.groupId === id; });
+      title = grp ? (loc(grp.title) || "") : "";
+    }
+    var titleEl = $("#folder-title");
+    if (titleEl) titleEl.textContent = title || tr("nav_gallery");
+    document.title = (title || "Gallery") + " — Trail to Thriving";
+    grid.innerHTML = "";
+    galleryItems = imgs;
+    galleryItems.forEach(function (g, i) { grid.appendChild(galleryTile(g, i)); });
   }
 
   /* ---------- lightbox ----------------------------------------------------- */
@@ -457,6 +482,7 @@
     renderEvents();
     renderSessions();
     renderGallery();
+    renderFolder();
     renderEventDetail();
     if (window.applyI18n) window.applyI18n();
     initReveal();

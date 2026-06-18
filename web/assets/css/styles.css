@@ -113,10 +113,13 @@ p { margin: 0 0 1em; }
 /* full gallery grid */
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 240px; gap: 16px; }
 
-/* gallery folders */
-.gallery-group { margin-bottom: 2.8rem; }
-.gallery-group:last-child { margin-bottom: 0; }
-.gallery-group__title { font-family: "Fraunces", Georgia, serif; font-size: 1.45rem; font-weight: 600; margin: 0 0 1.1rem; }
+/* gallery folder tiles (album covers) */
+.folder-tile { position: relative; display: block; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); background: var(--sage); }
+.folder-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.folder-tile:hover img { transform: scale(1.05); }
+.folder-tile__bar { position: absolute; left: 0; right: 0; bottom: 0; padding: 2rem 1.1rem 1rem; color: #fff; background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0)); }
+.folder-tile__name { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.25rem; font-weight: 600; line-height: 1.2; }
+.folder-tile__count { display: block; font-size: 0.85rem; opacity: 0.9; margin-top: 0.15rem; }
 
 /* ---- trips --------------------------------------------------------------- */
 .trips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.6rem; }
