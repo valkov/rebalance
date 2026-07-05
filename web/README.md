@@ -1,4 +1,4 @@
-# Trail to Thriving — website
+# Rebalance — website
 
 A minimal, no-build static site: a home page with photos, bookable trips, an
 about/reviews section, and a separate gallery page. Booking + payment work

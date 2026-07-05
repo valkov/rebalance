@@ -1,4 +1,4 @@
-/* Trail to Thriving — site behaviour. No build step, no dependencies. */
+/* Rebalance — site behaviour. No build step, no dependencies. */
 (function () {
   "use strict";
 
@@ -104,7 +104,7 @@
   /* ---------- brand text / links ------------------------------------------- */
   function applyBrand() {
     var b = CFG.brand || {};
-    $all("[data-brand-name]").forEach(function (n) { n.textContent = b.name || "Trail to Thriving"; });
+    $all("[data-brand-name]").forEach(function (n) { n.textContent = b.name || "Rebalance"; });
     $all("[data-brand-tagline]").forEach(function (n) { n.textContent = b.tagline || ""; });
     $all("[data-brand-intro]").forEach(function (n) { n.textContent = b.intro || ""; });
     $all("[data-link-instagram]").forEach(function (n) { if (b.instagram) n.href = b.instagram; });
@@ -296,7 +296,7 @@
     }
     var titleEl = $("#folder-title");
     if (titleEl) titleEl.textContent = title || tr("nav_gallery");
-    document.title = (title || "Gallery") + " — Trail to Thriving";
+    document.title = (title || "Gallery") + " — Rebalance";
     grid.innerHTML = "";
     galleryItems = imgs;
     galleryItems.forEach(function (g, i) { grid.appendChild(galleryTile(g, i)); });
@@ -378,6 +378,13 @@
     });
   }
 
+  function initHeroVideo() {
+    var v = $(".hero__video");
+    if (!v) return;
+    v.muted = true; // required for autoplay in most browsers
+    var p = v.play && v.play();
+    if (p && p.catch) p.catch(function () {}); // blocked -> poster image shows
+  }
   function initScrollHeader() {
     var hdr = document.querySelector(".site-header");
     if (!hdr) return;
@@ -504,7 +511,7 @@
       wrap.appendChild(el("a", { class: "btn btn--solid", href: "events.html", "data-i18n": "detail_see_all", text: tr("detail_see_all") }));
       return;
     }
-    document.title = loc(ev.title) + " — Trail to Thriving";
+    document.title = loc(ev.title) + " — Rebalance";
 
     var dateStr = fmtDateRange(ev.startDate, ev.endDate);
     var daysStr = fmtDays(ev.startDate, ev.endDate);
@@ -575,7 +582,7 @@
           '</div>' +
         '</div>' +
         '<div class="footer-contact">' +
-          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg" alt="Trail to Thriving" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
+          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg" alt="Rebalance" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
           '<div class="footer-contact__bubble">' +
             '<h3 data-i18n="contact_heading">Have a question?</h3>' +
             '<p data-i18n="contact_text">Curious about a hike, a retreat or a 1:1 session? Reach out — Tanya is happy to help.</p>' +
@@ -585,7 +592,7 @@
         '</div>' +
       '</div>' +
       '<div class="wrap footer-bottom">' +
-        '<span>© <span data-year></span> <span data-brand-name>Trail to Thriving</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
+        '<span>© <span data-year></span> <span data-brand-name>Rebalance</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
       '</div>';
   }
   function render() {
@@ -593,6 +600,7 @@
     applyBrand();
     renderContent();
     initNav();
+    initHeroVideo();
     initScrollHeader();
     initQuotes();
     initBookingButtons();
