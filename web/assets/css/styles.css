@@ -293,9 +293,9 @@ p { margin: 0 0 1em; }
 .site-header .nav {
   position: relative;
   background: #fff;
-  border-radius: 999px 999px 0 999px;
+  border-radius: 999px;
   box-shadow: 0 12px 34px rgba(64, 64, 65, 0.16);
-  padding: 0.97rem 0 0.97rem 1.7rem;
+  padding: 0.85rem 1.9rem;
   transition: background 0.3s, box-shadow 0.3s, border-radius 0.3s, padding 0.3s;
 }
 .site-header .nav-menu { align-self: stretch; }
@@ -316,6 +316,9 @@ p { margin: 0 0 1em; }
   pointer-events: none;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 92' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C160,86 320,26 480,48 C640,68 800,16 960,34 C1120,52 1280,6 1440,14 L1440,92 L0,92 Z' fill='%23fdf6eb'/%3E%3C/svg%3E") no-repeat bottom center / 100% 100%;
 }
+
+/* extra breathing room on the last section so it clears the footer wave */
+#about { padding-bottom: calc(5.5rem + 30px); }
 
 /* organic wave divider: cream -> deep-green footer */
 .site-footer { position: relative; }
