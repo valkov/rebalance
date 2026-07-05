@@ -106,7 +106,7 @@
     $all("[data-brand-tagline]").forEach(function (n) { n.textContent = b.tagline || ""; });
     $all("[data-brand-intro]").forEach(function (n) { n.textContent = b.intro || ""; });
     $all("[data-link-instagram]").forEach(function (n) { if (b.instagram) n.href = b.instagram; });
-    $all("[data-link-facebook]").forEach(function (n) { if (b.facebook) n.href = b.facebook; });
+    $all("[data-link-facebook]").forEach(function (n) { if (b.facebook) { n.href = b.facebook; } else { n.style.display = "none"; } });
     $all("[data-link-telegram]").forEach(function (n) { if (b.telegram) { n.href = b.telegram; } else { n.style.display = "none"; } });
     $all("[data-link-email]").forEach(function (n) { if (b.email) n.href = "mailto:" + b.email; });
     $all("[data-brand-email]").forEach(function (n) { n.textContent = b.email || ""; });
@@ -570,7 +570,6 @@
             '<a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>' +
             '<a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>' +
             '<a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>' +
-            '<span class="footer-line">CVR: 44561956</span>' +
           '</div>' +
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_explore">Explore</h4>' +

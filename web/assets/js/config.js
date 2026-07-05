@@ -32,10 +32,10 @@ window.SITE_CONFIG = {
     name: "Rebalance",
     tagline: "We hike for better mental health, well-being and self-knowledge.",
     intro: "Guided nature hikes, retreats and 1:1 therapy with Tanya Basse — slow down, breathe, and find your footing in the wild.",
-    email: "tanya.ekelin@gmail.com",
+    email: "tanyabasse@gmail.com",
     instagram: "https://www.instagram.com/green.body.lab/",
-    facebook: "https://www.facebook.com/trailtothriving/",
-    telegram: "https://t.me/imagahp",
+    facebook: "",
+    telegram: "",
   },
 
   // Default calendar used by the generic "Book" buttons when a session
