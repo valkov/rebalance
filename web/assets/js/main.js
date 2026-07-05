@@ -30,12 +30,10 @@
     if (Array.isArray(v)) return v;
     if (typeof v === "object") {
       var L = window.getLocale ? window.getLocale() : "en";
-      var sanityL = L === "ua" ? "uk" : L;
       var ok = function (x) { return x != null && !(typeof x === "string" && x.trim() === "") && !(Array.isArray(x) && x.length === 0); };
       if (ok(v[L])) return v[L];
-      if (sanityL !== L && ok(v[sanityL])) return v[sanityL];
       if (ok(v.en)) return v.en;
-      var ks = ["en", "da", "ua", "uk"]; for (var i = 0; i < ks.length; i++) if (ok(v[ks[i]])) return v[ks[i]];
+      var ks = ["en", "da"]; for (var i = 0; i < ks.length; i++) if (ok(v[ks[i]])) return v[ks[i]];
       return v.en != null ? v.en : "";
     }
     return v;
@@ -43,7 +41,7 @@
   function eventHref(t) { return "event.html?id=" + encodeURIComponent(t._id || slugify(loc(t.title))); }
   function localeImg(item, field) {
     var L = window.getLocale ? window.getLocale() : "en";
-    var sfx = L === "da" ? "Da" : L === "ua" ? "Ua" : "En";
+    var sfx = L === "da" ? "Da" : "En";
     return item[field + sfx] || item[field] || "";
   }
   // remember a paid booking client-side. Test/demo only — not server-verified;

@@ -31,7 +31,7 @@ window.SITE_CONFIG = {
   brand: {
     name: "Rebalance",
     tagline: "We hike for better mental health, well-being and self-knowledge.",
-    intro: "Guided nature hikes, retreats and 1:1 therapy with Tanya Ekelin — slow down, breathe, and find your footing in the wild.",
+    intro: "Guided nature hikes, retreats and 1:1 therapy with Tanya Basse — slow down, breathe, and find your footing in the wild.",
     email: "tanya.ekelin@gmail.com",
     instagram: "https://www.instagram.com/green.body.lab/",
     facebook: "https://www.facebook.com/trailtothriving/",
@@ -74,5 +74,5 @@ window.SITE_CONFIG = {
 
   // ---- Where you operate & languages you guide in --------------------------
   locations: ["Copenhagen", "Aarhus", "Odense", "Malmö", "Gothenburg"],
-  languages: ["Danish", "English", "Ukrainian"],
+  languages: ["Danish", "English"],
 };

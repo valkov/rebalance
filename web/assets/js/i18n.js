@@ -1,5 +1,5 @@
 /* =============================================================================
-   Rebalance — UI localization (English / Danish / Ukrainian)
+   Rebalance — UI localization (English / Danish)
    -----------------------------------------------------------------------------
    This localizes the site's own UI text (nav, headings, buttons, copy).
    It does NOT touch CMS content (event/session/gallery titles, descriptions,
@@ -8,7 +8,7 @@
    Engine:
    • elements with  data-i18n="key"       -> textContent set from the dictionary
    • elements with  data-i18n-html="key"  -> innerHTML set (for copy with <strong> etc.)
-   • buttons with   data-lang="en|da|uk"  -> language switcher
+   • buttons with   data-lang="en|da"  -> language switcher
    • t("key") is available to main.js for JS-generated labels.
    Translations of the longer sentences are a first pass — worth a native review.
    ========================================================================== */
@@ -41,13 +41,13 @@
       book_pay: "Book & pay", reserve_spot: "Reserve a spot", enquire: "Enquire", view_details: "View details →",
       book_time: "Book a time", book_free_call: "Book free call", pay_online: "Pay online", buy: "Buy", get_started: "Get started",
       sessions_eyebrow: "Work 1:1 with Tanya", sessions_heading: "Sessions & therapy",
-      sessions_intro: "Tanya Ekelin is a therapist working with psychomotor and nature-assisted therapy. Pick a session, choose a time that suits you, and pay securely — online or in person.",
+      sessions_intro: "Tanya Basse is a therapist working with psychomotor and nature-assisted therapy. Pick a session, choose a time that suits you, and pay securely — online or in person.",
       sessions_note: "Sessions are confidential and tailored to you. They support wellbeing and are not a substitute for emergency or acute medical care — if you are in crisis, contact your local emergency services.",
       about_eyebrow: "About", about_heading: "Nature-assisted therapy, on foot",
-      about_p1: "Rebalance is led by <strong>Tanya Ekelin</strong>, a therapist working with psychomotor and nature-assisted therapy. Alongside group hikes and retreats, Tanya offers 1:1 sessions — blending movement, body awareness and time in the wild to help you slow down, reconnect and come home to yourself.",
+      about_p1: "Rebalance is led by <strong>Tanya Basse</strong>, a therapist working with psychomotor and nature-assisted therapy. Alongside group hikes and retreats, Tanya offers 1:1 sessions — blending movement, body awareness and time in the wild to help you slow down, reconnect and come home to yourself.",
       about_p2: "Group events welcome all levels; 1:1 sessions and therapy are available online or in person, in several languages.",
-      see_events: "See events", langs_display: "Danish, English, Ukrainian",
-      reviews_eyebrow: "Kind words", reviews_line: "recommend · based on 32 reviews on Facebook",
+      see_events: "See events", langs_display: "Danish, English",
+      reviews_eyebrow: "Feedback from clients", reviews_line: "recommend · based on 32 reviews on Facebook",
       review_q1: "Super nice weekend with sweet, friendly people, all very well organised including contingency planning. Relaxing atmosphere but serious hiking. My body aches, yet my head is totally refreshed. I look forward to the next opportunity to join this group!",
       review_q2: "This was my second hiking trip with Rebalance. Saying that I enjoyed it would be a huge understatement. Both trips were truly special, unique, and unforgettable. My mind completely reset, and my body showed me what I can. Hiking in nature is wonderful on its own, but sharing the experience with the organizers and a welcoming group where you can talk, laugh, enjoy peaceful moments in silence, and discover new practices — made it exactly what I needed.",
       review_q3: "An incredible experience and a complete reset after the hike! I'm so grateful to the organizers for creating such a wonderful experience and such great company. I especially loved the combination of hiking with relaxation practices and exercises that support mental wellbeing. Spending time with interesting people, sharing lunches and dinners together — everything was simply wonderful!",
@@ -105,13 +105,13 @@
       book_pay: "Book & betal", reserve_spot: "Reservér plads", enquire: "Forespørg", view_details: "Se detaljer →",
       book_time: "Book et tidspunkt", book_free_call: "Book gratis samtale", pay_online: "Betal online", buy: "Køb", get_started: "Kom i gang",
       sessions_eyebrow: "Arbejd 1:1 med Tanya", sessions_heading: "Sessioner & terapi",
-      sessions_intro: "Tanya Ekelin er terapeut og arbejder med psykomotorisk og naturassisteret terapi. Vælg en session, find et tidspunkt, der passer dig, og betal sikkert — online eller fysisk.",
+      sessions_intro: "Tanya Basse er terapeut og arbejder med psykomotorisk og naturassisteret terapi. Vælg en session, find et tidspunkt, der passer dig, og betal sikkert — online eller fysisk.",
       sessions_note: "Sessionerne er fortrolige og tilpasset dig. De understøtter trivsel og er ikke en erstatning for akut lægehjælp — er du i krise, så kontakt de lokale alarmtjenester.",
       about_eyebrow: "Om os", about_heading: "Naturassisteret terapi — til fods",
-      about_p1: "Rebalance ledes af <strong>Tanya Ekelin</strong>, terapeut med speciale i psykomotorisk og naturassisteret terapi. Ud over gruppevandringer og retreats tilbyder Tanya 1:1-sessioner — en blanding af bevægelse, kropsbevidsthed og tid i naturen, der hjælper dig med at sætte tempoet ned, finde ro og komme hjem til dig selv.",
+      about_p1: "Rebalance ledes af <strong>Tanya Basse</strong>, terapeut med speciale i psykomotorisk og naturassisteret terapi. Ud over gruppevandringer og retreats tilbyder Tanya 1:1-sessioner — en blanding af bevægelse, kropsbevidsthed og tid i naturen, der hjælper dig med at sætte tempoet ned, finde ro og komme hjem til dig selv.",
       about_p2: "Gruppebegivenheder er for alle niveauer; 1:1-sessioner og terapi tilbydes online eller fysisk, på flere sprog.",
-      see_events: "Se begivenheder", langs_display: "Dansk, engelsk, ukrainsk",
-      reviews_eyebrow: "Pæne ord", reviews_line: "anbefaler · baseret på 32 anmeldelser på Facebook",
+      see_events: "Se begivenheder", langs_display: "Dansk, engelsk",
+      reviews_eyebrow: "Feedback fra klienter", reviews_line: "anbefaler · baseret på 32 anmeldelser på Facebook",
       review_q1: "Super skøn weekend med søde og imødekommende mennesker. Det hele var virkelig godt organiseret og gennemtænkt. Afslappet stemning, men seriøse vandreture. Min krop er øm, men mit hoved er helt frisk og fyldt med ny energi. Jeg glæder mig allerede til næste mulighed for at tage med denne gruppe!",
       review_q2: "Det var anden gang, jeg var på vandretur med Rebalance. At sige, at jeg nød det, er næsten en underdrivelse. Begge ture har været helt særlige, anderledes og uforglemmelige. Mit hoved blev nulstillet, og min krop viste mig, hvad jeg kan. Naturen er fantastisk i sig selv, men sammen med arrangørerne og en skøn gruppe, hvor der er plads til både samtaler, grin, stilhed og nye kropslige praksisser — blev det præcis det, jeg havde brug for.",
       review_q3: "En fantastisk oplevelse og en total genopladning efter vandreturen! Jeg er meget taknemmelig over for arrangørerne for den gode organisering og det dejlige fællesskab. Jeg var især vild med kombinationen af vandring, afspændingsøvelser og praksisser, der styrker det mentale velvære. Tiden sammen med spændende mennesker samt vores fælles frokoster og aftensmåltider gjorde oplevelsen helt fantastisk!",
@@ -142,80 +142,14 @@
       booked: "✓ Booket",
       paid_thanks: "Tak — din test-booking er bekræftet.",
     },
-    ua: {
-      nav_events: "Події", nav_sessions: "Сесії", nav_groups: "Групи", nav_gallery: "Галерея", nav_about: "Про нас", nav_book: "Бронювати",
-      services_eyebrow: "Як ми можемо допомогти", services_heading: "Знайдіть свій шлях",
-      service_events_eyebrow: "Групові ретрити", service_events_title: "Походи та ретрити",
-      service_events_desc: "Походи в Скандинавії та Альпах для невеликих груп — у спокійному темпі, де цінується присутність.",
-      service_events_cta: "Переглянути події →",
-      service_sessions_eyebrow: "1:1 з Танею", service_sessions_title: "Індивідуальні сесії",
-      service_sessions_desc: "Індивідуальна терапія з рухом, усвідомленістю тіла та часом на природі — онлайн або особисто.",
-      service_sessions_cta: "Забронювати сесію →",
-      service_groups_eyebrow: "У добрій компанії", service_groups_title: "Групові сесії",
-      service_groups_desc: "Терапевтична групова робота на природі — рух, спільна рефлексія та підтримуюче коло.",
-      service_groups_cta: "Переглянути групові сесії →",
-      groups_eyebrow: "Групові сесії", groups_heading: "Терапія та походи у доброму товаристві",
-      groups_intro: "Невеликі групові сесії на природі — рух, рефлексія та взаємна підтримка. Для будь-якого рівня.",
-      page_title_events: "Події — Rebalance",
-      page_title_sessions: "Сесії — Rebalance",
-      page_title_groups: "Групові сесії — Rebalance",
-      hero_badge: "🌿 Природна терапія та добробут · Данія та Швеція",
-      hero_tagline: "Ми ходимо в походи задля ментального здоров’я, добробуту й самопізнання.",
-      hero_intro: "Терапевтичні походи з гідом, ретрити та індивідуальна терапія — сповільніться, дихайте та віднайдіть опору на природі.",
-      hero_find_event: "Знайти подію", hero_book_session: "Забронювати сесію",
-      moments_eyebrow: "Миті на стежці", moments_heading: "Де ми мандрували", view_full_gallery: "Уся галерея →",
-      events_eyebrow: "Найближчі події", events_heading: "Походи та ретрити, які можна забронювати",
-      events_intro: "Невеликі групи у спокійному темпі — присутність, а не результат. Зарезервуйте місце або сплатіть онлайн.",
-      book_pay: "Забронювати й оплатити", reserve_spot: "Зарезервувати місце", enquire: "Запитати", view_details: "Детальніше →",
-      book_time: "Обрати час", book_free_call: "Безкоштовний дзвінок", pay_online: "Оплатити онлайн", buy: "Купити", get_started: "Почати",
-      sessions_eyebrow: "Індивідуально з Танею", sessions_heading: "Сесії та терапія",
-      sessions_intro: "Таня Екелін — терапевтка, яка працює з психомоторною та природною терапією. Оберіть сесію, зручний час і сплатіть онлайн або особисто.",
-      sessions_note: "Сесії конфіденційні та підлаштовані під вас. Вони підтримують добробут, але не замінюють невідкладної медичної допомоги — у разі кризи звертайтеся до місцевих екстрених служб.",
-      about_eyebrow: "Про нас", about_heading: "Природна терапія в русі",
-      about_p1: "Rebalance веде <strong>Таня Екелін</strong> — терапевтка, яка працює з психомоторною та природною терапією. Окрім групових походів і ретритів, Таня проводить індивідуальні сесії — поєднання руху, усвідомлення тіла й часу на природі, щоб ви могли сповільнитися, відновитися та повернутися до себе.",
-      about_p2: "Групові події підходять для будь-якого рівня; індивідуальні сесії та терапія доступні онлайн або особисто, кількома мовами.",
-      see_events: "Переглянути події", langs_display: "Данська, англійська, українська",
-      reviews_eyebrow: "Добрі слова", reviews_line: "рекомендують · на основі 32 відгуків у Facebook",
-      review_q1: "Надзвичайно чудові вихідні в дружній компанії. Все було дуже добре організовано, включно з продуманим планом. Атмосфера була розслаблена, але самі походи цілком серйозні. Тіло приємно болить, зате голова повністю перезавантажилася. З нетерпінням чекаю наступної можливості знову вирушити в подорож із цією групою!",
-      review_q2: "Уже другий раз була я разом із Rebalance в поході. Сказати, що сподобалося — це не сказати нічого. Все було чудово, дуже незвично, але пам'ятно в обох походах. Мій мозок перезавантажився на 100 відсотків, мої м'язи показали, що я МОЖУ. Прогулянки на природі самі по собі чудові, але разом із дівчатами-організаторами, з групою, де можна і поговорити, і посміятися, і просто побути в тиші наодинці з природою, познайомитися з новими практиками — це те, що мені було дуже потрібно.",
-      review_q3: "Неймовірні враження і тотальне перезавантаження після походу! Дуже вдячна дівчатам за організацію та таку хорошу компанію. Мені дуже сподобалася комбінація походу з практиками розслаблення та покращення ментального стану, а також проведений час із цікавими людьми, наші обіди та вечері разом — все було просто чудово!",
-      review_q4: "Поїздка була надзвичайно корисна і цікава особливо для хто переживає складний період у житті. Ментально переформатує ваш мозок і змусить дивитись на життя під іншим кутом. Надзвичайно сподобалась прогулянка мовчання, чайна церемонія і сауна. Дякую організаторам. Ви мені допомогли переналаштуватись у моїй свідомості. Дякую дівчатка.",
-      review_author: "Учасниця Rebalance",
-      cta_heading: "Готові вирушити з нами на природу?",
-      cta_text: "Забронюйте похід із гідом, зарезервуйте місце на ретриті або почніть з індивідуальної сесії. Кількість місць обмежена, щоб групи лишалися невеликими.",
-      footer_tagline: "Оздоровчі походи з гідом і ретрити на природі — Скандинавія та Альпи.",
-      footer_explore: "Огляд", footer_getintouch: "Контакти", footer_made: "Зроблено з турботою про природу 🌲",
-      footer_rights: "Усі права захищено.", label_email: "Пошта",
-      contact_heading: "Маєте запитання?", contact_text: "Цікавить похід, ретрит, заняття або індивідуальна сесія? Напишіть нам — ми з радістю допоможемо знайти формат, який вам підійде.", read_more: "Дізнатися більше",
-      gallery_back_home: "← На головну", gallery_heading: "Галерея",
-      gallery_intro: "Миті з наших походів і ретритів. Відкрийте теку, щоб переглянути.",
-      gallery_more: "Інше",
-      folder_back: "← Усі теки",
-      folder_intro: "Торкніться фото, щоб збільшити.",
-      gallery_cta_heading: "Подобається?",
-      gallery_cta_text: "Завітайте й відчуйте це самі — приєднайтеся до події або забронюйте індивідуальну сесію з Танею.",
-      early_bird: "рання пташка", until_date: "до", price_regular: "звичайна",
-      detail_back: "← Усі події", detail_daybyday: "День за днем",
-      detail_notfound: "На жаль, ми не знайшли цю подорож.", detail_see_all: "Переглянути всі події",
-      modal_title: "Зв'яжіться з нами",
-      modal_text: "Напишіть нам напряму — ми з радістю допоможемо підібрати найкращий варіант для вас.",
-      modal_email: "Написати на email",
-      modal_telegram: "Написати в Telegram",
-      page_title_home: "Rebalance — оздоровчі походи та ретрити на природі",
-      page_title_gallery: "Галерея — Rebalance",
-      booked: "✓ Заброньовано",
-      paid_thanks: "Дякуємо — вашу тестову бронь підтверджено.",
-    },
   };
 
   function pickInitial() {
     try {
       var s = localStorage.getItem("ttt_lang");
-      if (s === "uk") { s = "ua"; try { localStorage.setItem("ttt_lang", "ua"); } catch(e){} }
       if (s && STR[s]) return s;
     } catch (e) {}
     var n = (navigator.language || "en").slice(0, 2).toLowerCase();
-    if (n === "uk") n = "ua";
     return STR[n] ? n : "en";
   }
   var current = pickInitial();
