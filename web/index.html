@@ -35,12 +35,9 @@
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <a href="events.html" data-i18n="nav_events">Events</a>
-        <a href="sessions.html" data-i18n="nav_sessions">Sessions</a>
-        <a href="group-sessions.html" data-i18n="nav_groups">Classes</a>
+        <a href="#sessions" data-i18n="nav_sessions">Sessions</a>
         <a href="folder.html" data-i18n="nav_gallery">Gallery</a>
-        <a href="about.html" data-i18n="nav_about">About</a>
-        <a class="btn btn--solid" href="sessions.html" data-i18n="nav_book">Book</a>
+        <a href="#about" data-i18n="nav_about">About</a>
       </nav>
     </div>
   </header>
@@ -52,77 +49,12 @@
       <p class="hero__tag" data-i18n="hero_tagline">We hike for better mental health, well-being and self-knowledge.</p>
       <p class="hero__intro" data-i18n="hero_intro"></p>
       <div class="hero__cta">
-        <a class="btn btn--solid btn--lg" href="events.html" data-i18n="hero_find_event">Find an event</a>
-        <a class="btn btn--light btn--lg" href="sessions.html" data-i18n="hero_book_session">Book a session</a>
+        <a class="btn btn--solid btn--lg" href="#sessions" data-i18n="hero_book_session">Book a session</a>
       </div>
     </div>
   </section>
 
-  <!-- SERVICE ENTRY POINTS -->
-  <section class="section services">
-    <div class="wrap">
-      <div class="section__head">
-        <h2 data-i18n="services_eyebrow">How we can help</h2>
-      </div>
-      <div class="services-grid">
-        <a class="service-card reveal" href="events.html">
-          <div class="service-card__photo">
-            <img src="assets/images/service-events.jpg" alt="" />
-          </div>
-          <div class="service-card__body">
-            <h3 class="service-card__title" data-i18n="service_events_title">Hikes & Retreats</h3>
-            <p class="service-card__desc" data-i18n="service_events_desc">Small-group guided hikes across Scandinavia and the Alps — paced for presence, not performance.</p>
-            <span class="service-card__cta" data-i18n="service_events_cta">Explore events →</span>
-          </div>
-        </a>
-        <a class="service-card reveal" href="sessions.html">
-          <div class="service-card__photo">
-            <img src="assets/images/service-sessions.jpg" alt="" />
-          </div>
-          <div class="service-card__body">
-            <h3 class="service-card__title" data-i18n="service_sessions_title">Personal Sessions</h3>
-            <p class="service-card__desc" data-i18n="service_sessions_desc">Individual therapy blending movement, body awareness and time in nature — online or in person.</p>
-            <span class="service-card__cta" data-i18n="service_sessions_cta">Book a session →</span>
-          </div>
-        </a>
-        <a class="service-card reveal" href="group-sessions.html">
-          <div class="service-card__photo">
-            <img src="assets/images/service-classes.jpg" alt="" />
-          </div>
-          <div class="service-card__body">
-            <h3 class="service-card__title" data-i18n="service_groups_title">Group Sessions</h3>
-            <p class="service-card__desc" data-i18n="service_groups_desc">Therapeutic group work in a natural setting — guided movement, shared reflection and a warm supportive circle.</p>
-            <span class="service-card__cta" data-i18n="service_groups_cta">See group sessions →</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="section section--tint" id="about">
-    <div class="wrap about">
-      <div>
-        <p class="eyebrow" data-i18n="about_eyebrow">About</p>
-        <h2 data-i18n="about_heading">Nature-assisted therapy, on foot</h2>
-        <p data-i18n-html="about_p1"></p>
-        <p class="muted" data-i18n="about_p2"></p>
-        <div class="hero__cta" style="margin:0.4rem 0 0.2rem">
-          <a class="btn btn--solid" href="sessions.html" data-i18n="hero_book_session">Book a session</a>
-          <a class="btn btn--ghost" href="events.html" data-i18n="see_events">See events</a>
-        </div>
-        <div class="chips">
-          <span class="chip">📍 <span data-locations>Copenhagen · Aarhus · Odense · Malmö · Gothenburg</span></span>
-          <span class="chip">🗣 <span data-i18n="langs_display">Danish, English, Ukrainian</span></span>
-        </div>
-      </div>
-      <div class="about__media">
-        <img src="assets/images/nature-therapy.jpg" alt="On the trail" id="about-photo" />
-      </div>
-    </div>
-  </section>
-
-  <!-- REVIEWS -->
+  <!-- REVIEWS (feedback from users) -->
   <section class="section" id="reviews">
     <div class="wrap">
       <div class="section__head">
@@ -136,12 +68,47 @@
     </div>
   </section>
 
+  <!-- SESSIONS (therapy sessions you can book) -->
+  <section class="section section--tint" id="sessions">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow" data-i18n="sessions_eyebrow">Work with Tanya</p>
+        <h2 data-i18n="sessions_heading">Sessions you can book</h2>
+        <p class="muted" data-i18n="sessions_intro">Individual and group therapy sessions — pick what feels right and book a time that suits you.</p>
+      </div>
+      <div id="sessions-grid" class="trips-grid"><!-- filled by main.js from Sanity --></div>
+      <p class="muted sessions-note" data-i18n="sessions_note"></p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="wrap about">
+      <div>
+        <p class="eyebrow" data-i18n="about_eyebrow">About</p>
+        <h2 data-i18n="about_heading">Nature-assisted therapy, on foot</h2>
+        <p data-i18n-html="about_p1"></p>
+        <p class="muted" data-i18n="about_p2"></p>
+        <div class="hero__cta" style="margin:0.4rem 0 0.2rem">
+          <a class="btn btn--solid" href="#sessions" data-i18n="hero_book_session">Book a session</a>
+        </div>
+        <div class="chips">
+          <span class="chip">📍 <span data-locations>Copenhagen · Aarhus · Odense · Malmö · Gothenburg</span></span>
+          <span class="chip">🗣 <span data-i18n="langs_display">Danish, English, Ukrainian</span></span>
+        </div>
+      </div>
+      <div class="about__media">
+        <img src="assets/images/nature-therapy.jpg" alt="A calm, safe space" id="about-photo" />
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="site-footer"></footer>
 
-  <script src="assets/js/config.js?v=9"></script>
+  <script src="assets/js/config.js?v=10"></script>
   <script src="assets/js/i18n.js?v=20"></script>
-  <script src="assets/js/main.js?v=28"></script>
+  <script src="assets/js/main.js?v=29"></script>
   <script>
     (function () {
       var CFG = window.SITE_CONFIG || {};

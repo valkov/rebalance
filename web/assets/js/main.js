@@ -432,14 +432,11 @@
   function loadFromSanity() {
     var s = CFG.sanity;
     if (!s || !s.projectId) return Promise.resolve(); // not configured -> built-in content
+    // Three content types only: session, galleryImage, galleryGroup.
     var query =
       '{' +
-        '"events":*[_type=="event"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,active,location,startDate,endDate,regularPrice,earlyBirdPrice,earlyBirdUntil,blurb,longDescription,"image":coalesce(thumbnail.asset->url,images[0].asset->url),"imageEn":imageEn.asset->url,"imageDa":imageDa.asset->url,"imageUa":imageUa.asset->url,"detailImage":coalesce(detailImage.asset->url,images[1].asset->url,images[0].asset->url),"detailImageEn":detailImageEn.asset->url,"detailImageDa":detailImageDa.asset->url,"detailImageUa":detailImageUa.asset->url,"stripeUrl":paymentUrl,hue},' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
-        '"groupSessions":*[_type=="groupSession"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
+          '{_id,title,category,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
@@ -452,11 +449,9 @@
       .then(function (r) { if (!r.ok) throw new Error("CMS " + r.status); return r.json(); })
       .then(function (json) {
         var d = (json && json.result) || {};
-        if (d.events && d.events.length) CFG.events = d.events.map(withImageParams);
-        if (d.sessions && d.sessions.length) CFG.sessions = d.sessions.map(withImageParams);
-        if (d.groupSessions && d.groupSessions.length) CFG.groupSessions = d.groupSessions.map(withImageParams);
-        if (d.gallery && d.gallery.length) CFG.gallery = d.gallery.map(withImageParams);
-        if (d.galleryGroups && d.galleryGroups.length) CFG.galleryGroups = d.galleryGroups;
+        if (d.sessions) CFG.sessions = d.sessions.map(withImageParams);
+        if (d.gallery) CFG.gallery = d.gallery.map(withImageParams);
+        if (d.galleryGroups) CFG.galleryGroups = d.galleryGroups;
       })
       .catch(function (e) { if (window.console) console.warn("CMS load failed — using built-in content.", e); });
   }
@@ -545,12 +540,9 @@
   }
 
   function renderContent() {
-    renderEvents();
     renderSessions();
-    renderGroupSessions();
     renderGallery();
     renderFolder();
-    renderEventDetail();
     if (window.applyI18n) window.applyI18n();
     initReveal();
   }
@@ -577,10 +569,9 @@
           '</div>' +
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_explore">Explore</h4>' +
-            '<a href="events.html" data-i18n="nav_events">Events</a>' +
-            '<a href="sessions.html" data-i18n="nav_sessions">Sessions</a>' +
-            '<a href="group-sessions.html" data-i18n="nav_groups">Groups</a>' +
-            '<a href="about.html" data-i18n="nav_about">About</a>' +
+            '<a href="index.html#sessions" data-i18n="nav_sessions">Sessions</a>' +
+            '<a href="folder.html" data-i18n="nav_gallery">Gallery</a>' +
+            '<a href="index.html#about" data-i18n="nav_about">About</a>' +
           '</div>' +
         '</div>' +
         '<div class="footer-contact">' +
@@ -589,7 +580,7 @@
             '<h3 data-i18n="contact_heading">Have a question?</h3>' +
             '<p data-i18n="contact_text">Curious about a hike, a retreat or a 1:1 session? Reach out — Tanya is happy to help.</p>' +
             '<p class="footer-contact__line"><span class="fc-lbl" data-i18n="label_email">Email</span>: <a class="fc-val" href="#" data-link-email data-brand-email>tanya.ekelin@gmail.com</a></p>' +
-            '<a class="footer-contact__more" href="about.html" data-i18n="read_more">Read more</a>' +
+            '<a class="footer-contact__more" href="index.html#about" data-i18n="read_more">Read more</a>' +
           '</div>' +
         '</div>' +
       '</div>' +
