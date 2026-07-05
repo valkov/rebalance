@@ -1,8 +1,8 @@
 {
-  "name": "trail-to-thriving-studio",
+  "name": "rebalance-studio",
   "private": true,
   "version": "1.0.0",
-  "description": "Content editor (Sanity Studio) for the Trail to Thriving website",
+  "description": "Content editor (Sanity Studio) for the Rebalance website",
   "scripts": {
     "dev": "sanity dev",
     "start": "sanity dev",

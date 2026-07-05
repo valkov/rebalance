@@ -2,15 +2,31 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'session',
-  title: 'Session (1:1 / therapy)',
+  title: 'Therapy session',
   type: 'document',
   fields: [
     defineField({name: 'title', title: 'Title', type: 'localeString'}),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      description: 'Which part of the page this session appears under.',
+      options: {
+        list: [
+          {title: 'Group therapy', value: 'group'},
+          {title: 'Personal therapy', value: 'personal'},
+          {title: 'Other', value: 'other'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'personal',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'order',
       title: 'Sort order',
       type: 'number',
-      description: 'Lower numbers appear first.',
+      description: 'Lower numbers appear first (within a category).',
       initialValue: 10,
     }),
     defineField({name: 'format', title: 'Format', type: 'localeString', description: 'e.g. Online · 20 min, or In person · 60 min'}),
@@ -46,6 +62,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'title.en', subtitle: 'price.en', media: 'image'},
+    select: {title: 'title.en', subtitle: 'category', media: 'image'},
   },
 })

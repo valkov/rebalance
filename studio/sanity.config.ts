@@ -6,9 +6,9 @@ import {schemaTypes} from './schemaTypes'
 // Paste the same project id you used in sanity.cli.ts.
 export default defineConfig({
   name: 'default',
-  title: 'Trail to Thriving',
+  title: 'Rebalance',
 
-  projectId: 'a0vcqlnf',
+  projectId: 's3xmc1k6',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],

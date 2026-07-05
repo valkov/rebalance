@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-i18n="page_title_home">Trail to Thriving — Guided wellbeing hikes & nature retreats</title>
-  <meta name="description" content="Guided nature hikes and retreats for better mental health, wellbeing and self-knowledge — across Scandinavia and the Alps. Join us in the wild." />
-  <link rel="icon" type="image/png" href="assets/images/logo.png" />
+  <title data-i18n="page_title_home">Rebalance — gentle group & personal therapy with Tanya Basse</title>
+  <meta name="description" content="Group and personal therapy with Tanya Basse — a calm, caring space to slow down, feel heard and find your balance again." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Trail to Thriving — Guided wellbeing hikes & nature retreats" />
-  <meta property="og:description" content="We hike for better mental health, wellbeing and self-knowledge. Join us in the wild." />
+  <meta property="og:title" content="Rebalance — gentle group & personal therapy with Tanya Basse" />
+  <meta property="og:description" content="A calm, caring space for group and 1:1 therapy. Slow down, breathe, and rebalance." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/images/logo.png" />
+  <meta property="og:image" content="assets/images/logo.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=19" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=22" />
 </head>
 <body>
   <!-- HEADER -->
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
-        <img src="assets/images/logo.png" alt="" onerror="this.onerror=null;this.src='assets/images/logo.svg'" />
-        <span data-brand-name>Trail to Thriving</span>
+        <img class="brand__logo" src="assets/images/logo.svg" alt="" />
+        <span data-brand-name>Rebalance</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" data-lang="en">EN</button>
@@ -35,7 +35,6 @@
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <a href="#events" data-i18n="nav_events">Events</a>
         <a href="#sessions" data-i18n="nav_sessions">Sessions</a>
         <a href="#moments" data-i18n="nav_gallery">Gallery</a>
         <a href="#about" data-i18n="nav_about">About</a>
@@ -47,12 +46,12 @@
   <!-- HERO -->
   <section class="hero">
     <div class="wrap hero__inner">
-      <h1 data-brand-name>Trail to Thriving</h1>
-      <p class="hero__tag" data-i18n="hero_tagline">We hike for better mental health, well-being and self-knowledge.</p>
+      <h1 data-brand-name>Rebalance</h1>
+      <p class="hero__tag" data-i18n="hero_tagline">Room to slow down, feel held, and rebalance.</p>
       <p class="hero__intro" data-i18n="hero_intro"></p>
       <div class="hero__cta">
-        <a class="btn btn--solid btn--lg" href="#events" data-i18n="hero_find_event">Find an event</a>
-        <a class="btn btn--light btn--lg" href="#sessions" data-i18n="hero_book_session">Book a session</a>
+        <a class="btn btn--solid btn--lg" href="#sessions" data-i18n="hero_book_session">Book a session</a>
+        <a class="btn btn--light btn--lg" href="#sessions" data-i18n="hero_free_call">Free intro call</a>
       </div>
     </div>
   </section>
@@ -61,70 +60,58 @@
   <section class="section" id="moments">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow" data-i18n="moments_eyebrow">Moments on the trail</p>
-        <h2 data-i18n="moments_heading">Where we’ve wandered</h2>
-        <p class="muted" data-i18n="gallery_intro">Moments from our hikes and retreats. Open a folder to explore.</p>
+        <p class="eyebrow" data-i18n="moments_eyebrow">A glimpse</p>
+        <h2 data-i18n="moments_heading">A soft, safe space</h2>
+        <p class="muted" data-i18n="gallery_intro">A few quiet moments. Open a folder to explore.</p>
       </div>
       <div class="gallery-grid" id="gallery-folders"><!-- filled by main.js: one tile per folder --></div>
     </div>
   </section>
 
-  <!-- EVENTS (group hikes / retreats you buy) -->
-  <section class="section section--tint" id="events">
+  <!-- SESSIONS (group & personal therapy with Tanya) -->
+  <section class="section section--tint" id="sessions">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow" data-i18n="events_eyebrow">Upcoming events</p>
-        <h2 data-i18n="events_heading">Hikes &amp; retreats you can book</h2>
-        <p class="muted" data-i18n="events_intro">Small groups, paced for presence rather than performance. Reserve your spot or pay securely online.</p>
-      </div>
-      <div class="trips-grid" id="events-grid"><!-- filled by main.js --></div>
-    </div>
-  </section>
-
-  <!-- SESSIONS (1:1 with Tanya, incl. therapy) -->
-  <section class="section" id="sessions">
-    <div class="wrap">
-      <div class="section__head">
-        <p class="eyebrow" data-i18n="sessions_eyebrow">Work 1:1 with Tanya</p>
+        <p class="eyebrow" data-i18n="sessions_eyebrow">Work with Tanya</p>
         <h2 data-i18n="sessions_heading">Sessions &amp; therapy</h2>
-        <p class="muted" data-i18n="sessions_intro">Tanya Ekelin is a therapist working with psychomotor and nature-assisted therapy. Pick a session, choose a time that suits you, and pay securely — online or in person.</p>
+        <p class="muted" data-i18n="sessions_intro">Tanya Basse offers group and personal therapy. Choose what feels right, pick a time that suits you, and pay securely — online or in person.</p>
       </div>
-      <div class="trips-grid" id="sessions-grid"><!-- filled by main.js --></div>
+      <div id="sessions-list"><!-- filled by main.js, grouped by category --></div>
       <p class="muted sessions-note" data-i18n="sessions_note"></p>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section class="section section--tint" id="about">
+  <section class="section" id="about">
     <div class="wrap about">
       <div>
         <p class="eyebrow" data-i18n="about_eyebrow">About</p>
-        <h2 data-i18n="about_heading">Nature-assisted therapy, on foot</h2>
+        <h2 data-i18n="about_heading">A calm space to rebalance</h2>
         <p data-i18n-html="about_p1"></p>
         <p class="muted" data-i18n="about_p2"></p>
         <div class="hero__cta" style="margin:0.4rem 0 0.2rem">
           <a class="btn btn--solid" href="#sessions" data-i18n="hero_book_session">Book a session</a>
-          <a class="btn btn--ghost" href="#events" data-i18n="see_events">See events</a>
+          <a class="btn btn--ghost" href="#sessions" data-i18n="hero_free_call">Free intro call</a>
         </div>
         <div class="chips">
-          <span class="chip">📍 <span data-locations>Copenhagen · Aarhus · Odense · Malmö · Gothenburg</span></span>
-          <span class="chip">🗣 <span data-i18n="langs_display">Danish, English, Ukrainian</span></span>
+          <span class="chip">📍 <span data-locations>Copenhagen · Aarhus · Online</span></span>
+          <span class="chip">🗣 <span data-i18n="langs_display">Danish, English</span></span>
         </div>
       </div>
       <div class="about__media">
-        <img src="" alt="On the trail" id="about-photo" />
+        <img src="" alt="A calm, soft space" id="about-photo" />
       </div>
     </div>
   </section>
 
   <!-- REVIEWS -->
-  <section class="section" id="reviews">
+  <section class="section section--tint" id="reviews">
     <div class="wrap">
       <div class="section__head">
         <p class="eyebrow" data-i18n="reviews_eyebrow">Kind words</p>
         <div class="reviews__score">
           <strong data-review-score>100%</strong>
-          <span class="muted" data-i18n="reviews_line">recommend · based on 32 reviews on Facebook</span>
+          <span class="muted" data-i18n="reviews_line">recommend · based on 24 reviews</span>
         </div>
       </div>
       <div class="quotes" id="quotes"><!-- filled below via inline script --></div>
@@ -135,10 +122,10 @@
   <section class="section">
     <div class="wrap">
       <div class="cta-band reveal">
-        <h2 data-i18n="cta_heading">Ready to join us in the wild?</h2>
-        <p data-i18n="cta_text">Book a guided hike, reserve a place on a retreat, or start with a 1:1 session. Spaces are limited to keep groups small.</p>
+        <h2 data-i18n="cta_heading">Ready to give yourself this time?</h2>
+        <p data-i18n="cta_text">Book a session, join a group, or start with a free intro call. Spaces are kept small and gentle.</p>
         <div class="hero__cta" style="justify-content:center;margin-top:1.4rem">
-          <a class="btn btn--light btn--lg" href="#events" data-i18n="see_events">See events</a>
+          <a class="btn btn--light btn--lg" href="#sessions" data-i18n="hero_free_call">Free intro call</a>
           <a class="btn btn--solid btn--lg" href="#sessions" data-i18n="hero_book_session">Book a session</a>
         </div>
       </div>
@@ -151,10 +138,10 @@
       <div class="footer-grid">
         <div>
           <div class="footer-brand">
-            <img src="assets/images/logo.png" alt="" onerror="this.onerror=null;this.src='assets/images/logo.svg'" />
-            <span data-brand-name>Trail to Thriving</span>
+            <img class="brand__logo" src="assets/images/logo.svg" alt="" />
+            <span data-brand-name>Rebalance</span>
           </div>
-          <p class="muted" style="color:rgba(255,255,255,0.7);max-width:280px;margin-top:0.6rem" data-i18n="footer_tagline">Guided wellbeing hikes &amp; nature retreats across Scandinavia and the Alps.</p>
+          <p class="muted" style="color:rgba(255,255,255,0.7);max-width:280px;margin-top:0.6rem" data-i18n="footer_tagline">Gentle group &amp; personal therapy with Tanya Basse.</p>
           <div class="socials">
             <a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>
             <a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>
@@ -166,7 +153,6 @@
           <div>
             <h4 data-i18n="footer_explore">Explore</h4>
             <ul>
-              <li><a href="#events" data-i18n="nav_events">Events</a></li>
               <li><a href="#sessions" data-i18n="nav_sessions">Sessions</a></li>
               <li><a href="#moments" data-i18n="nav_gallery">Gallery</a></li>
               <li><a href="#about" data-i18n="nav_about">About</a></li>
@@ -175,23 +161,23 @@
           <div>
             <h4 data-i18n="footer_getintouch">Get in touch</h4>
             <ul>
-              <li><a href="#" data-link-email data-brand-email>hello@trailtothriving.com</a></li>
+              <li><a href="#" data-link-email data-brand-email>hello@rebalance.dk</a></li>
               <li><a href="#sessions" data-i18n="hero_book_session">Book a session</a></li>
-              <li><a href="#events" data-i18n="hero_find_event">Find an event</a></li>
+              <li><a href="#sessions" data-i18n="hero_free_call">Free intro call</a></li>
             </ul>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© <span data-year>2026</span> <span data-brand-name>Trail to Thriving</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>
-        <span data-i18n="footer_made">Made with care for the outdoors 🌲</span>
+        <span>© <span data-year>2026</span> <span data-brand-name>Rebalance</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>
+        <span data-i18n="footer_made">Made with care 🌸</span>
       </div>
     </div>
   </footer>
 
-  <script src="assets/js/config.js?v=6"></script>
-  <script src="assets/js/i18n.js?v=11"></script>
-  <script src="assets/js/main.js?v=10"></script>
+  <script src="assets/js/config.js?v=8"></script>
+  <script src="assets/js/i18n.js?v=13"></script>
+  <script src="assets/js/main.js?v=12"></script>
   <script>
     /* Review quotes (localized via i18n) + the About photo. */
     (function () {
@@ -210,10 +196,10 @@
 
       var about = document.getElementById("about-photo");
       if (about) {
-        var pool = (CFG.gallery || []).concat(CFG.events || []).concat(CFG.sessions || []);
+        var pool = (CFG.gallery || []).concat(CFG.sessions || []);
         var withSrc = pool.filter(function (x) { return x.src || x.image; })[0];
         var phAbout = "data:image/svg+xml," + encodeURIComponent(
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl(150,42%,70%)"/><stop offset="1" stop-color="hsl(168,38%,40%)"/></linearGradient></defs><rect width="640" height="800" fill="url(#g)"/><path d="M-20 620 L200 320 L420 620 Z" fill="hsl(162,42%,28%)"/><path d="M200 320 L260 400 L228 418 L200 388 L172 418 L140 400 Z" fill="#f3f6f1" opacity="0.9"/></svg>'
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl(335,55%,82%)"/><stop offset="1" stop-color="hsl(322,40%,60%)"/></linearGradient></defs><rect width="640" height="800" fill="url(#g)"/><circle cx="320" cy="320" r="120" fill="#fff" opacity="0.35"/><path d="M120 760 Q320 560 520 760 Z" fill="#fff" opacity="0.18"/></svg>'
         );
         about.addEventListener("error", function () { if (about.getAttribute("src") !== phAbout) about.src = phAbout; });
         about.src = withSrc ? (withSrc.src || withSrc.image) : phAbout;
