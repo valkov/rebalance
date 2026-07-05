@@ -206,7 +206,7 @@ p { margin: 0 0 1em; }
 .cta-band .btn { margin-top: 1.4rem; }
 
 /* ---- footer -------------------------------------------------------------- */
-.site-footer { background: rgb(153, 142, 136); color: rgba(255,255,255,0.92); padding: 3.2rem 0 2rem; }
+.site-footer { background: rgb(148, 128, 115); color: rgba(255,255,255,0.92); padding: 3.2rem 0 2rem; }
 .footer-grid { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
 .footer-brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-head); font-size: 1.2rem; color: #fff; }
 .footer-brand img { width: 34px; height: 34px; }
