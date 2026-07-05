@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event — Trail to Thriving</title>
+  <meta name="description" content="Trip details — Trail to Thriving guided hikes and retreats." />
+  <link rel="icon" type="image/png" href="assets/images/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=68" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <img src="assets/images/logo.png" alt="" onerror="this.onerror=null;this.src='assets/images/logo.svg'" />
+        <span data-brand-name>Trail to Thriving</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="da">DA</button>
+        <button type="button" data-lang="ua">UA</button>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+        <a href="events.html" data-i18n="nav_events">Events</a>
+        <a href="sessions.html" data-i18n="nav_sessions">Sessions</a>
+        <a href="group-sessions.html" data-i18n="nav_groups">Classes</a>
+        <a href="folder.html" data-i18n="nav_gallery">Gallery</a>
+        <a href="about.html" data-i18n="nav_about">About</a>
+        <a class="btn btn--solid" href="sessions.html" data-i18n="nav_book">Book</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap detail">
+      <div id="event-detail"><!-- filled by main.js from ?id=... --></div>
+    </div>
+  </section>
+
+  <footer class="site-footer"></footer>
+
+  <script src="assets/js/config.js?v=9"></script>
+  <script src="assets/js/i18n.js?v=20"></script>
+  <script src="assets/js/main.js?v=28"></script>
+</body>
+</html>

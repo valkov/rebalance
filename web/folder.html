@@ -3,86 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Folder — Rebalance</title>
-  <meta name="description" content="A few quiet moments — Rebalance, gentle therapy with Tanya Basse." />
-  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg" />
+  <title data-i18n="page_title_gallery">Gallery — Trail to Thriving</title>
+  <meta name="description" content="Photos from Trail to Thriving hikes and retreats." />
+  <link rel="icon" type="image/png" href="assets/images/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=22" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=68" />
 </head>
 <body>
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="index.html">
-        <img class="brand__logo" src="assets/images/logo.svg" alt="" />
-        <span data-brand-name>Rebalance</span>
+        <img src="assets/images/logo.png" alt="" onerror="this.onerror=null;this.src='assets/images/logo.svg'" />
+        <span data-brand-name>Trail to Thriving</span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language">
         <button type="button" data-lang="en">EN</button>
         <button type="button" data-lang="da">DA</button>
-        <button type="button" data-lang="uk">UK</button>
+        <button type="button" data-lang="ua">UA</button>
       </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <a href="index.html#sessions" data-i18n="nav_sessions">Sessions</a>
-        <a href="index.html#moments" data-i18n="nav_gallery">Gallery</a>
-        <a href="index.html#about" data-i18n="nav_about">About</a>
-        <a class="btn btn--solid" href="index.html#sessions" data-i18n="nav_book">Book</a>
+        <a href="events.html" data-i18n="nav_events">Events</a>
+        <a href="sessions.html" data-i18n="nav_sessions">Sessions</a>
+        <a href="group-sessions.html" data-i18n="nav_groups">Classes</a>
+        <a href="folder.html" data-i18n="nav_gallery">Gallery</a>
+        <a href="about.html" data-i18n="nav_about">About</a>
+        <a class="btn btn--solid" href="sessions.html" data-i18n="nav_book">Book</a>
       </nav>
     </div>
   </header>
 
-  <section class="section">
+  <!-- GALLERY OVERVIEW: shown when no ?id= param -->
+  <section class="section" id="gallery-overview">
     <div class="wrap">
       <div class="section__head">
-        <p class="eyebrow"><a href="index.html#moments" data-i18n="folder_back">← All folders</a></p>
-        <h2 id="folder-title">Gallery</h2>
+        <p class="eyebrow" data-i18n="moments_eyebrow">Moments on the trail</p>
+        <h1 data-i18n="moments_heading">Where we've wandered</h1>
+        <p class="muted" data-i18n="gallery_intro">Moments from our hikes and retreats. Open a folder to explore.</p>
+      </div>
+      <div class="gallery-grid" id="gallery-folders"><!-- filled by main.js --></div>
+    </div>
+  </section>
+
+  <!-- FOLDER DETAIL: shown when ?id= is present -->
+  <section class="section" id="folder-detail" style="display:none">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="eyebrow"><a href="folder.html" data-i18n="gallery_back_home">← Back home</a></p>
+        <h1 id="folder-title">Gallery</h1>
         <p class="muted" data-i18n="folder_intro">Tap any photo to enlarge.</p>
       </div>
       <div class="gallery-grid" id="folder-grid"><!-- filled by main.js from ?id=... --></div>
     </div>
   </section>
 
-  <section class="section section--tint">
+  <section class="section">
     <div class="wrap">
       <div class="cta-band reveal">
-        <h2 data-i18n="gallery_cta_heading">Like the feel of it?</h2>
-        <p data-i18n="gallery_cta_text">Come and experience it for yourself — book a session or a free intro call with Tanya.</p>
+        <h2 data-i18n="gallery_cta_heading">Like what you see?</h2>
+        <p data-i18n="gallery_cta_text">Come and experience it for yourself — join an event or book a 1:1 session with Tanya.</p>
         <div class="hero__cta" style="justify-content:center;margin-top:1.4rem">
-          <a class="btn btn--light btn--lg" href="index.html#sessions" data-i18n="hero_free_call">Free intro call</a>
-          <a class="btn btn--solid btn--lg" href="index.html#sessions" data-i18n="hero_book_session">Book a session</a>
+          <a class="btn btn--light btn--lg" href="events.html" data-i18n="nav_events">Events</a>
+          <a class="btn btn--solid btn--lg" href="sessions.html" data-i18n="hero_book_session">Book a session</a>
         </div>
       </div>
     </div>
   </section>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-brand">
-            <img class="brand__logo" src="assets/images/logo.svg" alt="" />
-            <span data-brand-name>Rebalance</span>
-          </div>
-          <div class="socials">
-            <a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>
-            <a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>
-            <a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>
-            <a href="#" data-link-email data-i18n="label_email">Email</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© <span data-year>2026</span> <span data-brand-name>Rebalance</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>
-      </div>
-    </div>
-  </footer>
+  <footer class="site-footer"></footer>
 
-  <script src="assets/js/config.js?v=8"></script>
-  <script src="assets/js/i18n.js?v=13"></script>
-  <script src="assets/js/main.js?v=12"></script>
+  <script>
+    // Show the right section before JS loads to avoid flicker
+    if (new URLSearchParams(location.search).get("id")) {
+      document.getElementById("gallery-overview").style.display = "none";
+      document.getElementById("folder-detail").style.display = "";
+    }
+  </script>
+  <script src="assets/js/config.js?v=9"></script>
+  <script src="assets/js/i18n.js?v=20"></script>
+  <script src="assets/js/main.js?v=28"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Rebalance — site behaviour. No build step, no dependencies. */
+/* Trail to Thriving — site behaviour. No build step, no dependencies. */
 (function () {
   "use strict";
 
@@ -30,21 +30,29 @@
     if (Array.isArray(v)) return v;
     if (typeof v === "object") {
       var L = window.getLocale ? window.getLocale() : "en";
+      var sanityL = L === "ua" ? "uk" : L;
       var ok = function (x) { return x != null && !(typeof x === "string" && x.trim() === "") && !(Array.isArray(x) && x.length === 0); };
       if (ok(v[L])) return v[L];
+      if (sanityL !== L && ok(v[sanityL])) return v[sanityL];
       if (ok(v.en)) return v.en;
-      var ks = ["en", "da", "uk"]; for (var i = 0; i < ks.length; i++) if (ok(v[ks[i]])) return v[ks[i]];
+      var ks = ["en", "da", "ua", "uk"]; for (var i = 0; i < ks.length; i++) if (ok(v[ks[i]])) return v[ks[i]];
       return v.en != null ? v.en : "";
     }
     return v;
   }
+  function eventHref(t) { return "event.html?id=" + encodeURIComponent(t._id || slugify(loc(t.title))); }
+  function localeImg(item, field) {
+    var L = window.getLocale ? window.getLocale() : "en";
+    var sfx = L === "da" ? "Da" : L === "ua" ? "Ua" : "En";
+    return item[field + sfx] || item[field] || "";
+  }
   // remember a paid booking client-side. Test/demo only — not server-verified;
   // a real one-time-purchase guard needs accounts + a Stripe webhook.
-  function isPaid(id) { try { return !!id && localStorage.getItem("rebalance_paid_" + id) === "1"; } catch (e) { return false; } }
+  function isPaid(id) { try { return !!id && localStorage.getItem("ttt_paid_" + id) === "1"; } catch (e) { return false; } }
   function markPaidFromUrl() {
     var p = new URLSearchParams(location.search).get("paid");
     if (!p) return null;
-    try { localStorage.setItem("rebalance_paid_" + p, "1"); } catch (e) {}
+    try { localStorage.setItem("ttt_paid_" + p, "1"); } catch (e) {}
     history.replaceState(null, "", location.pathname + location.hash); // drop ?paid
     return p;
   }
@@ -96,7 +104,7 @@
   /* ---------- brand text / links ------------------------------------------- */
   function applyBrand() {
     var b = CFG.brand || {};
-    $all("[data-brand-name]").forEach(function (n) { n.textContent = b.name || "Rebalance"; });
+    $all("[data-brand-name]").forEach(function (n) { n.textContent = b.name || "Trail to Thriving"; });
     $all("[data-brand-tagline]").forEach(function (n) { n.textContent = b.tagline || ""; });
     $all("[data-brand-intro]").forEach(function (n) { n.textContent = b.intro || ""; });
     $all("[data-link-instagram]").forEach(function (n) { if (b.instagram) n.href = b.instagram; });
@@ -108,64 +116,118 @@
     if ((CFG.locations || []).length) $all("[data-locations]").forEach(function (n) { n.textContent = CFG.locations.join(" · "); });
     if ((CFG.languages || []).length) $all("[data-languages]").forEach(function (n) { n.textContent = CFG.languages.join(", "); });
     if (CFG.sessionsNote) $all("[data-sessions-note]").forEach(function (n) { n.textContent = CFG.sessionsNote; });
+    if (CFG.groupSessionsNote) $all("[data-group-sessions-note]").forEach(function (n) { n.textContent = CFG.groupSessionsNote; });
     var r = CFG.reviews || {};
     $all("[data-review-score]").forEach(function (n) { n.textContent = r.score || ""; });
     $all("[data-review-count]").forEach(function (n) { n.textContent = r.count != null ? r.count : ""; });
   }
 
-  /* ---------- sessions (group & personal therapy with Tanya — you BOOK) ---- */
-  var SESSION_CATS = [
-    { key: "group", i18n: "cat_group" },
-    { key: "personal", i18n: "cat_personal" },
-    { key: "other", i18n: "cat_other" },
-  ];
-  function sessionCard(s) {
-    var price = loc(s.price), format = loc(s.format), isFree = /free/i.test(price || "");
-    var primary, secondary = null;
-    if (s.schedulerUrl) {
-      primary = btnBook(isFree ? "book_free_call" : "book_time", s.schedulerUrl, true);
-      if (s.stripeUrl) secondary = btnLink("pay_online", s.stripeUrl, false);
-    } else if (s.stripeUrl) {
-      primary = btnLink(isFree ? "get_started" : "buy", s.stripeUrl, true);
-    } else {
-      primary = btnBook(isFree ? "book_free_call" : "enquire", "", true);
+  /* ---------- events (group hikes / retreats you BUY) ---------------------- */
+  function fmtShortDate(dateStr) {
+    if (!dateStr) return "";
+    var jsLoc = window.getLocale() === "ua" ? "uk" : (window.getLocale() === "da" ? "da" : "en");
+    return new Date(dateStr + "T12:00:00").toLocaleDateString(jsLoc, { day: "numeric", month: "short" });
+  }
+  function fmtDateRange(start, end) {
+    if (!start) return "";
+    var jsLoc = window.getLocale() === "ua" ? "uk" : (window.getLocale() === "da" ? "da" : "en");
+    var d1 = new Date(start + "T12:00:00");
+    var opts = { day: "numeric", month: "short", year: "numeric" };
+    if (!end) return d1.toLocaleDateString(jsLoc, opts);
+    var d2 = new Date(end + "T12:00:00");
+    if (d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear())
+      return d1.getDate() + "–" + d2.toLocaleDateString(jsLoc, opts);
+    return fmtShortDate(start) + "–" + d2.toLocaleDateString(jsLoc, opts);
+  }
+  function fmtDays(start, end) {
+    if (!start || !end) return "";
+    var n = Math.round((new Date(end + "T12:00:00") - new Date(start + "T12:00:00")) / 86400000) + 1;
+    if (n < 2) return "";
+    var jsLoc = window.getLocale() === "ua" ? "uk" : (window.getLocale() === "da" ? "da" : "en");
+    var forms = { en: { one: "day", other: "days" }, da: { one: "dag", other: "dage" }, uk: { one: "день", few: "дні", many: "днів", other: "дні" } };
+    var f = forms[jsLoc] || forms.en;
+    try { var rule = new Intl.PluralRules(jsLoc).select(n); return n + " " + (f[rule] || f.other); } catch (e) { return n + " days"; }
+  }
+  function buildPriceBadge(t) {
+    var reg = t.regularPrice, early = t.earlyBirdPrice, until = t.earlyBirdUntil;
+    if (!reg) return null;
+    var jsLoc = window.getLocale() === "ua" ? "uk" : (window.getLocale() === "da" ? "da" : "en");
+    var text = reg.toLocaleString(jsLoc) + " DKK";
+    if (early) {
+      text += ", EarlyBird: " + early.toLocaleString(jsLoc) + " DKK";
+      if (until) text += " " + tr("until_date") + " " + fmtShortDate(until);
     }
-    if (isPaid(s._id)) { primary = bookedBtn(); secondary = null; }
-    return el("article", { class: "card card--session reveal" }, [
-      el("div", { class: "card__body" }, [
-        el("div", { class: "session__head" }, [
-          el("h3", { class: "card__title", text: loc(s.title) }),
-          price ? el("span", { class: "session__price", text: price }) : null,
-        ]),
-        format ? el("p", { class: "card__meta", html: '<span>🌸 ' + escapeHtml(format) + '</span>' }) : null,
-        el("p", { class: "card__blurb", text: loc(s.blurb) || "" }),
-        el("div", { class: "card__actions" }, [primary, secondary]),
-      ]),
-    ]);
+    return el("span", { class: "card__price", text: text });
   }
-  // Sessions are shown grouped under category headings (Group / Personal / Other).
-  function renderSessions() {
-    var wrap = $("#sessions-list");
+
+  function renderEvents() {
+    var wrap = $("#events-grid");
     if (!wrap) return;
-    var all = CFG.sessions || [];
+    var list = CFG.events || CFG.trips || [];
     wrap.innerHTML = "";
-    var cats = SESSION_CATS.slice(), seen = {};
-    all.forEach(function (s) {
-      var c = s.category || "other";
-      if (!cats.some(function (x) { return x.key === c; }) && !seen[c]) { seen[c] = 1; cats.push({ key: c, label: c }); }
-    });
-    cats.forEach(function (cat) {
-      var items = all.filter(function (s) { return (s.category || "other") === cat.key; });
-      if (!items.length) return;
-      var head = el("h3", { class: "session-cat__title" });
-      if (cat.i18n) { head.setAttribute("data-i18n", cat.i18n); head.textContent = tr(cat.i18n); }
-      else { head.textContent = cat.label || cat.key; }
-      wrap.appendChild(el("div", { class: "session-cat" }, [
-        head,
-        el("div", { class: "trips-grid" }, items.map(sessionCard)),
-      ]));
+    list.forEach(function (t) {
+      var href = eventHref(t), title = loc(t.title);
+      var dateStr = fmtDateRange(t.startDate, t.endDate);
+      var actions = isPaid(t._id)
+        ? el("div", { class: "card__actions" }, [bookedBtn()])
+        : t.active === false
+          ? el("div", { class: "card__actions" }, [btnBook("enquire", "", true)])
+          : el("div", { class: "card__actions" }, [
+              t.stripeUrl ? btnLink("book_pay", t.stripeUrl, true) : btnBook("enquire", "", true),
+            ]);
+      var card = el("article", { class: "card reveal" }, [
+        el("div", { class: "card__media" }, [
+          el("a", { href: href, "aria-label": title }, [makeImg({ src: localeImg(t, "image"), label: title, hue: t.hue }, title)]),
+          buildPriceBadge(t),
+        ]),
+        el("div", { class: "card__body" }, [
+          el("h3", { class: "card__title" }, [el("a", { href: href, text: title })]),
+          el("p", { class: "card__meta", html:
+            (loc(t.location) ? '<a class="meta-loc" href="https://maps.google.com/?q=' + encodeURIComponent(loc(t.location)) + '" target="_blank" rel="noopener">📍 ' + escapeHtml(loc(t.location)) + '</a>' : "") +
+            (dateStr ? '<span>🗓 ' + escapeHtml(dateStr) + '</span>' : "") +
+            (fmtDays(t.startDate, t.endDate) ? '<span>⏱ ' + escapeHtml(fmtDays(t.startDate, t.endDate)) + '</span>' : "") }),
+          el("p", { class: "card__blurb", text: loc(t.blurb) || "" }),
+          el("a", { class: "card__more", href: href, "data-i18n": "view_details", text: tr("view_details") }),
+          actions,
+        ]),
+      ]);
+      wrap.appendChild(card);
     });
   }
+
+  /* ---------- sessions (1:1 with Tanya — incl. therapy — you BOOK) --------- */
+  function renderSessionsInto(wrap, list) {
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    list.forEach(function (s) {
+      var price = loc(s.price), format = loc(s.format), isFree = /free/i.test(price || "");
+      var primary, secondary = null;
+      if (s.schedulerUrl) {
+        primary = btnBook(isFree ? "book_free_call" : "book_time", s.schedulerUrl, true);
+        if (s.stripeUrl) secondary = btnLink("pay_online", s.stripeUrl, false);
+      } else if (s.stripeUrl) {
+        primary = btnLink(isFree ? "get_started" : "buy", s.stripeUrl, true);
+      } else {
+        primary = btnBook(isFree ? "book_free_call" : "enquire", "", true);
+      }
+      if (isPaid(s._id)) { primary = bookedBtn(); secondary = null; }
+      var card = el("article", { class: "card card--session reveal" }, [
+        s.image ? el("div", { class: "card__media" }, [makeImg({ src: s.image, label: loc(s.title), hue: s.hue }, loc(s.title))]) : null,
+        el("div", { class: "card__body" }, [
+          el("div", { class: "session__head" }, [
+            el("h3", { class: "card__title", text: loc(s.title) }),
+            price ? el("span", { class: "session__price", text: price }) : null,
+          ]),
+          format ? el("p", { class: "card__meta", html: '<span>🌿 ' + escapeHtml(format) + '</span>' }) : null,
+          el("p", { class: "card__blurb", text: loc(s.blurb) || "" }),
+          el("div", { class: "card__actions" }, [primary, secondary]),
+        ]),
+      ]);
+      wrap.appendChild(card);
+    });
+  }
+  function renderSessions() { renderSessionsInto($("#sessions-grid"), CFG.sessions || []); }
+  function renderGroupSessions() { renderSessionsInto($("#group-sessions-grid"), CFG.groupSessions || []); }
 
   /* ---------- gallery ------------------------------------------------------ */
   var galleryItems = [];
@@ -234,7 +296,7 @@
     }
     var titleEl = $("#folder-title");
     if (titleEl) titleEl.textContent = title || tr("nav_gallery");
-    document.title = (title || "Gallery") + " — Rebalance";
+    document.title = (title || "Gallery") + " — Trail to Thriving";
     grid.innerHTML = "";
     galleryItems = imgs;
     galleryItems.forEach(function (g, i) { grid.appendChild(galleryTile(g, i)); });
@@ -284,13 +346,17 @@
       modalBody.innerHTML = "";
       modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" }));
     } else {
-      var email = (CFG.brand || {}).email || "";
+      var brand = CFG.brand || {};
+      var email = brand.email || "";
+      var telegram = brand.telegram || "";
       modalBody.innerHTML =
         '<div class="modal__msg">' +
           '<h3>' + tr("modal_title") + '</h3>' +
           '<p>' + tr("modal_text") + '</p>' +
-          (email ? '<a class="btn btn--solid" href="mailto:' + email + '?subject=Booking%20enquiry">' + tr("modal_email") + '</a>' : "") +
-          '<p class="modal__hint">' + tr("modal_hint") + '</p>' +
+          '<div class="modal__contacts">' +
+            (email ? '<a class="btn btn--solid" href="mailto:' + escapeHtml(email) + '?subject=Booking%20enquiry">' + tr("modal_email") + '</a>' : "") +
+            (telegram ? '<a class="btn btn--ghost" href="' + escapeHtml(telegram) + '" target="_blank" rel="noopener noreferrer">' + tr("modal_telegram") + '</a>' : "") +
+          '</div>' +
         '</div>';
     }
     modal.classList.add("is-open");
@@ -311,6 +377,7 @@
       q.addEventListener("click", function () { q.classList.toggle("is-open"); });
     });
   }
+
   function initScrollHeader() {
     var hdr = document.querySelector(".site-header");
     if (!hdr) return;
@@ -352,7 +419,13 @@
   }
   function withImageParams(it) {
     if (it.image) it.image = sani(it.image, 1000);
+    if (it.imageEn) it.imageEn = sani(it.imageEn, 1000);
+    if (it.imageDa) it.imageDa = sani(it.imageDa, 1000);
+    if (it.imageUa) it.imageUa = sani(it.imageUa, 1000);
     if (it.detailImage) it.detailImage = sani(it.detailImage, 1600);
+    if (it.detailImageEn) it.detailImageEn = sani(it.detailImageEn, 1600);
+    if (it.detailImageDa) it.detailImageDa = sani(it.detailImageDa, 1600);
+    if (it.detailImageUa) it.detailImageUa = sani(it.detailImageUa, 1600);
     if (it.src) it.src = sani(it.src, 1200);
     return it;
   }
@@ -361,8 +434,12 @@
     if (!s || !s.projectId) return Promise.resolve(); // not configured -> built-in content
     var query =
       '{' +
+        '"events":*[_type=="event"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
+          '{_id,title,active,location,startDate,endDate,regularPrice,earlyBirdPrice,earlyBirdUntil,blurb,longDescription,"image":coalesce(thumbnail.asset->url,images[0].asset->url),"imageEn":imageEn.asset->url,"imageDa":imageDa.asset->url,"imageUa":imageUa.asset->url,"detailImage":coalesce(detailImage.asset->url,images[1].asset->url,images[0].asset->url),"detailImageEn":detailImageEn.asset->url,"detailImageDa":detailImageDa.asset->url,"detailImageUa":detailImageUa.asset->url,"stripeUrl":paymentUrl,hue},' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,category,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
+          '{_id,title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
+        '"groupSessions":*[_type=="groupSession"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
+          '{_id,title,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
@@ -375,29 +452,158 @@
       .then(function (r) { if (!r.ok) throw new Error("CMS " + r.status); return r.json(); })
       .then(function (json) {
         var d = (json && json.result) || {};
+        if (d.events && d.events.length) CFG.events = d.events.map(withImageParams);
         if (d.sessions && d.sessions.length) CFG.sessions = d.sessions.map(withImageParams);
+        if (d.groupSessions && d.groupSessions.length) CFG.groupSessions = d.groupSessions.map(withImageParams);
         if (d.gallery && d.gallery.length) CFG.gallery = d.gallery.map(withImageParams);
         if (d.galleryGroups && d.galleryGroups.length) CFG.galleryGroups = d.galleryGroups;
       })
       .catch(function (e) { if (window.console) console.warn("CMS load failed — using built-in content.", e); });
   }
 
+  /* minimal Portable Text -> HTML (paragraphs, headings, bold/italic/links, lists) */
+  function ptToHtml(blocks) {
+    if (!Array.isArray(blocks)) return "";
+    var html = "", listType = null;
+    function closeList() { if (listType) { html += "</" + listType + ">"; listType = null; } }
+    blocks.forEach(function (b) {
+      if (!b || b._type !== "block") return;
+      var defs = b.markDefs || [];
+      var inner = (b.children || []).map(function (c) {
+        var t = escapeHtml(c.text || "");
+        (c.marks || []).forEach(function (m) {
+          if (m === "strong") t = "<strong>" + t + "</strong>";
+          else if (m === "em") t = "<em>" + t + "</em>";
+          else if (m === "underline") t = "<u>" + t + "</u>";
+          else {
+            var d = defs.filter(function (x) { return x._key === m; })[0];
+            if (d && d._type === "link" && d.href) t = '<a href="' + escapeHtml(d.href) + '" target="_blank" rel="noopener">' + t + "</a>";
+          }
+        });
+        return t;
+      }).join("");
+      if (b.listItem) {
+        var lt = b.listItem === "number" ? "ol" : "ul";
+        if (listType !== lt) { closeList(); html += "<" + lt + ">"; listType = lt; }
+        html += "<li>" + inner + "</li>";
+        return;
+      }
+      closeList();
+      var s = b.style || "normal";
+      if (/^h[1-6]$/.test(s)) html += "<" + s + ">" + inner + "</" + s + ">";
+      else if (s === "blockquote") html += "<blockquote>" + inner + "</blockquote>";
+      else html += "<p>" + inner + "</p>";
+    });
+    closeList();
+    return html;
+  }
+
+  /* ---------- event detail page (event.html?id=...) ----------------------- */
+  function renderEventDetail() {
+    var wrap = $("#event-detail");
+    if (!wrap) return;
+    var id = (new URLSearchParams(location.search)).get("id");
+    var ev = (CFG.events || []).filter(function (e) { return (e._id || slugify(loc(e.title))) === id; })[0];
+    if (!ev) {
+      wrap.innerHTML = '<p class="detail__empty" data-i18n="detail_notfound">' + tr("detail_notfound") + '</p>';
+      wrap.appendChild(el("a", { class: "btn btn--solid", href: "events.html", "data-i18n": "detail_see_all", text: tr("detail_see_all") }));
+      return;
+    }
+    document.title = loc(ev.title) + " — Trail to Thriving";
+
+    var dateStr = fmtDateRange(ev.startDate, ev.endDate);
+    var daysStr = fmtDays(ev.startDate, ev.endDate);
+    var meta =
+      (loc(ev.location) ? '<a class="meta-loc" href="https://maps.google.com/?q=' + encodeURIComponent(loc(ev.location)) + '" target="_blank" rel="noopener">📍 ' + escapeHtml(loc(ev.location)) + '</a>' : "") +
+      (dateStr ? '<span>🗓 ' + escapeHtml(dateStr) + '</span>' : "") +
+      (daysStr ? '<span>⏱ ' + escapeHtml(daysStr) + '</span>' : "");
+    var priceBadge = buildPriceBadge(ev);
+
+    var actions = isPaid(ev._id)
+      ? el("div", { class: "card__actions detail__actions" }, [bookedBtn()])
+      : ev.active === false
+        ? el("div", { class: "card__actions detail__actions" }, [btnBook("enquire", "", true)])
+        : el("div", { class: "card__actions detail__actions" }, [
+            ev.stripeUrl ? btnLink("book_pay", ev.stripeUrl, true) : btnBook("enquire", "", true),
+          ]);
+
+    wrap.innerHTML = "";
+    wrap.appendChild(el("a", { class: "detail__back", href: "events.html", "data-i18n": "detail_back", text: tr("detail_back") }));
+    wrap.appendChild(el("h1", { class: "detail__title", text: loc(ev.title) }));
+    wrap.appendChild(el("p", { class: "card__meta detail__meta", html: meta }));
+    if (priceBadge) { priceBadge.className = "card__price detail__price"; wrap.appendChild(priceBadge); }
+    wrap.appendChild(actions);
+    var heroSrc = localeImg(ev, "detailImage") || localeImg(ev, "image"); // only show when there's a real photo
+    if (heroSrc) wrap.appendChild(el("div", { class: "detail__media" }, [makeImg({ src: heroSrc, label: loc(ev.title), hue: ev.hue }, loc(ev.title))]));
+
+    var ld = loc(ev.longDescription), desc = el("div", { class: "detail__desc" }), hasDesc = false;
+    if (Array.isArray(ld) && ld.length) { desc.innerHTML = ptToHtml(ld); hasDesc = true; }
+    else if (typeof ld === "string" && ld.trim()) { ld.split(/\n{2,}/).forEach(function (p) { if (p.trim()) desc.appendChild(el("p", { text: p.trim() })); }); hasDesc = true; }
+    else if (loc(ev.blurb)) { desc.appendChild(el("p", { text: loc(ev.blurb) })); hasDesc = true; }
+    if (hasDesc) wrap.appendChild(desc);
+
+  }
+
   function renderContent() {
+    renderEvents();
     renderSessions();
+    renderGroupSessions();
     renderGallery();
     renderFolder();
+    renderEventDetail();
     if (window.applyI18n) window.applyI18n();
     initReveal();
   }
   // re-render CMS content (titles, blurbs, itineraries…) in the chosen language
   window.__onLocaleChange = function () { renderContent(); };
 
+  function renderFooter() {
+    var f = $(".site-footer");
+    if (!f) return;
+    f.innerHTML =
+      '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
+        '<clipPath id="fcPhoto" clipPathUnits="objectBoundingBox"><path d="M0.50,0.01 C0.76,0 0.99,0.18 0.98,0.46 C0.98,0.68 0.90,0.90 0.62,0.98 C0.40,1.03 0.14,0.92 0.05,0.64 C-0.01,0.40 0.08,0.16 0.30,0.06 C0.37,0.02 0.44,0.01 0.50,0.01 Z"/></clipPath>' +
+        '<clipPath id="fcBubble" clipPathUnits="objectBoundingBox"><path d="M0.02,0.40 C0.02,0.16 0.16,0.05 0.40,0.05 C0.62,0.05 0.78,0 0.90,0.10 C1,0.19 0.99,0.40 0.99,0.56 C0.99,0.80 0.88,0.98 0.62,0.97 C0.44,0.965 0.26,1 0.14,0.90 C0.04,0.82 0.02,0.62 0.02,0.40 Z"/></clipPath>' +
+      '</defs></svg>' +
+      '<div class="wrap footer-inner">' +
+        '<div class="footer-cols">' +
+          '<div class="footer-col">' +
+            '<h4 data-i18n="footer_getintouch">Get in touch</h4>' +
+            '<a href="#" data-link-email data-brand-email>tanya.ekelin@gmail.com</a>' +
+            '<a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>' +
+            '<a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>' +
+            '<a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>' +
+            '<span class="footer-line">CVR: 44561956</span>' +
+          '</div>' +
+          '<div class="footer-col">' +
+            '<h4 data-i18n="footer_explore">Explore</h4>' +
+            '<a href="events.html" data-i18n="nav_events">Events</a>' +
+            '<a href="sessions.html" data-i18n="nav_sessions">Sessions</a>' +
+            '<a href="group-sessions.html" data-i18n="nav_groups">Groups</a>' +
+            '<a href="about.html" data-i18n="nav_about">About</a>' +
+          '</div>' +
+        '</div>' +
+        '<div class="footer-contact">' +
+          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg" alt="Trail to Thriving" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
+          '<div class="footer-contact__bubble">' +
+            '<h3 data-i18n="contact_heading">Have a question?</h3>' +
+            '<p data-i18n="contact_text">Curious about a hike, a retreat or a 1:1 session? Reach out — Tanya is happy to help.</p>' +
+            '<p class="footer-contact__line"><span class="fc-lbl" data-i18n="label_email">Email</span>: <a class="fc-val" href="#" data-link-email data-brand-email>tanya.ekelin@gmail.com</a></p>' +
+            '<a class="footer-contact__more" href="about.html" data-i18n="read_more">Read more</a>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="wrap footer-bottom">' +
+        '<span>© <span data-year></span> <span data-brand-name>Trail to Thriving</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
+      '</div>';
+  }
   function render() {
+    renderFooter();
     applyBrand();
     renderContent();
     initNav();
-    initQuotes();
     initScrollHeader();
+    initQuotes();
     initBookingButtons();
     initKeys();
     // content renders after an async fetch, so re-honour a #hash deep link
