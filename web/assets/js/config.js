@@ -33,7 +33,7 @@ window.SITE_CONFIG = {
     tagline: "We hike for better mental health, well-being and self-knowledge.",
     intro: "Guided nature hikes, retreats and 1:1 therapy with Tanya Basse — slow down, breathe, and find your footing in the wild.",
     email: "tanyabasse@gmail.com",
-    instagram: "https://www.instagram.com/green.body.lab/",
+    instagram: "https://www.instagram.com/tanyabasse/",
     facebook: "",
     telegram: "",
   },

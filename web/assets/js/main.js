@@ -579,7 +579,7 @@
           '</div>' +
         '</div>' +
         '<div class="footer-contact">' +
-          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg" alt="Rebalance" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
+          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg?v=2" alt="Rebalance" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
           '<div class="footer-contact__bubble">' +
             '<h3 data-i18n="contact_heading">Have a question?</h3>' +
             '<p data-i18n="contact_text">Curious about a hike, a retreat or a 1:1 session? Reach out — Tanya is happy to help.</p>' +
