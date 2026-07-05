@@ -73,6 +73,6 @@ window.SITE_CONFIG = {
   },
 
   // ---- Where you operate & languages you guide in --------------------------
-  locations: ["Copenhagen", "Aarhus", "Odense", "Malmö", "Gothenburg"],
+  locations: ["Copenhagen"],
   languages: ["Danish", "English"],
 };
