@@ -149,8 +149,7 @@
       var s = localStorage.getItem("ttt_lang");
       if (s && STR[s]) return s;
     } catch (e) {}
-    var n = (navigator.language || "en").slice(0, 2).toLowerCase();
-    return STR[n] ? n : "en";
+    return "da"; // Danish is the default language
   }
   var current = pickInitial();
 
