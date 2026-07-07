@@ -2,15 +2,22 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'galleryImage',
-  title: 'Gallery photo',
+  title: 'Gallery photo / video',
   type: 'document',
   fields: [
     defineField({
       name: 'image',
-      title: 'Photo',
+      title: 'Photo / poster',
       type: 'image',
       options: {hotspot: true},
-      validation: (r) => r.required(),
+      description: 'The photo. For a video item, this is the still shown before it plays (poster).',
+    }),
+    defineField({
+      name: 'video',
+      title: 'Video (optional)',
+      type: 'file',
+      options: {accept: 'video/*'},
+      description: 'Upload an MP4 (or WebM) to make this a video item. The photo above is used as its poster/thumbnail.',
     }),
     defineField({name: 'caption', title: 'Caption', type: 'localeString', description: 'e.g. Lofoten, Norway · 2024'}),
     defineField({
@@ -18,7 +25,7 @@ export default defineType({
       title: 'Folder',
       type: 'reference',
       to: [{type: 'galleryGroup'}],
-      description: 'Which folder this photo belongs to. Leave empty to show it under “More”.',
+      description: 'Which folder this belongs to. Leave empty to show it under “More”.',
     }),
     defineField({
       name: 'order',
@@ -34,6 +41,9 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'caption.en', media: 'image'},
+    select: {title: 'caption.en', media: 'image', video: 'video'},
+    prepare({title, media, video}) {
+      return {title: (video ? '🎬 ' : '') + (title || 'Untitled'), media}
+    },
   },
 })

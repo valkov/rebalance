@@ -230,16 +230,18 @@
   /* ---------- gallery ------------------------------------------------------ */
   var galleryItems = [];
   function galleryTile(g, index) {
-    var fig = el("button", { class: "tile reveal", type: "button", "aria-label": "Open photo: " + g.label }, [
-      makeImg(g, g.label),
-      el("span", { class: "tile__cap", text: g.label }),
-    ]);
+    var children = [makeImg(g, g.label), el("span", { class: "tile__cap", text: g.label })];
+    if (g.video) children.push(el("span", { class: "tile__play", "aria-hidden": "true" }));
+    var fig = el("button", {
+      class: "tile reveal" + (g.video ? " tile--video" : ""), type: "button",
+      "aria-label": (g.video ? "Play video: " : "Open photo: ") + g.label,
+    }, children);
     fig.addEventListener("click", function () { openLightbox(index); });
     return fig;
   }
   function galleryItemsFromCfg() {
     return (CFG.gallery || []).map(function (g, i) {
-      return { src: g.src, label: loc(g.label) || ("Photo " + (i + 1)), hue: g.hue, groupId: g.groupId };
+      return { src: g.src, video: g.video, label: loc(g.label) || ("Photo " + (i + 1)), hue: g.hue, groupId: g.groupId };
     });
   }
   function folderTile(id, name, imgs) {
@@ -300,14 +302,15 @@
     galleryItems.forEach(function (g, i) { grid.appendChild(galleryTile(g, i)); });
   }
 
-  /* ---------- lightbox ----------------------------------------------------- */
-  var lb, lbImg, lbCap, lbIndex = 0;
+  /* ---------- lightbox (photos + video player) ----------------------------- */
+  var lb, lbImg, lbVideo, lbCap, lbIndex = 0;
   function ensureLightbox() {
     if (lb) return;
     lb = el("div", { class: "lightbox", "aria-hidden": "true", role: "dialog", "aria-modal": "true" }, [
       el("button", { class: "lightbox__close", type: "button", "aria-label": "Close", html: "&times;" }),
       el("button", { class: "lightbox__nav lightbox__nav--prev", type: "button", "aria-label": "Previous", html: "&#8249;" }),
       (function () { lbImg = el("img", { class: "lightbox__img", alt: "" }); return lbImg; })(),
+      (function () { lbVideo = el("video", { class: "lightbox__video", controls: true, playsinline: true, preload: "metadata" }); return lbVideo; })(),
       (function () { lbCap = el("p", { class: "lightbox__cap" }); return lbCap; })(),
       el("button", { class: "lightbox__nav lightbox__nav--next", type: "button", "aria-label": "Next", html: "&#8250;" }),
     ]);
@@ -318,10 +321,28 @@
     $(".lightbox__nav--next", lb).addEventListener("click", function () { step(1); });
     lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
   }
+  function stopVideo() { if (lbVideo) { lbVideo.pause(); lbVideo.removeAttribute("src"); lbVideo.load(); } }
   function openLightbox(i) { ensureLightbox(); lbIndex = i; show(); lb.classList.add("is-open"); lb.setAttribute("aria-hidden", "false"); document.body.classList.add("no-scroll"); }
-  function show() { var g = galleryItems[lbIndex] || {}; lbImg.src = imgFor(g); lbImg.alt = g.label || ""; lbCap.textContent = g.label || ""; }
+  function show() {
+    var g = galleryItems[lbIndex] || {};
+    lbCap.textContent = g.label || "";
+    if (g.video) {
+      stopVideo();
+      lbImg.style.display = "none";
+      lbVideo.style.display = "";
+      if (g.src) lbVideo.poster = g.src;
+      lbVideo.src = g.video;
+      lbVideo.play().catch(function () {}); // autoplay if the browser allows; controls are shown either way
+    } else {
+      stopVideo();
+      lbVideo.style.display = "none";
+      lbImg.style.display = "";
+      lbImg.src = imgFor(g);
+      lbImg.alt = g.label || "";
+    }
+  }
   function step(d) { lbIndex = (lbIndex + d + galleryItems.length) % galleryItems.length; show(); }
-  function closeLightbox() { if (!lb) return; lb.classList.remove("is-open"); lb.setAttribute("aria-hidden", "true"); document.body.classList.remove("no-scroll"); }
+  function closeLightbox() { if (!lb) return; stopVideo(); lb.classList.remove("is-open"); lb.setAttribute("aria-hidden", "true"); document.body.classList.remove("no-scroll"); }
 
   /* ---------- booking / scheduler modal ------------------------------------ */
   var modal, modalBody;
@@ -443,7 +464,7 @@
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{_id,title,category,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{"label":caption,"src":image.asset->url,hue,"groupId":group._ref},' +
+          '{"label":caption,"src":image.asset->url,"video":video.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{_id,"title":title,hue}' +
       '}';
