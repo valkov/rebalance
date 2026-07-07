@@ -230,8 +230,18 @@
   /* ---------- gallery ------------------------------------------------------ */
   var galleryItems = [];
   function galleryTile(g, index) {
-    var children = [makeImg(g, g.label), el("span", { class: "tile__cap", text: g.label })];
-    if (g.video) children.push(el("span", { class: "tile__play", "aria-hidden": "true" }));
+    var media;
+    if (g.video) {
+      // inline muted looping preview; click opens the lightbox with sound + controls
+      media = el("video", { class: "tile__video", autoplay: true, loop: true, playsinline: true, preload: "metadata" });
+      media.muted = true; media.defaultMuted = true; // required for autoplay
+      if (g.src) media.poster = g.src;
+      media.src = g.video;
+    } else {
+      media = makeImg(g, g.label);
+    }
+    var children = [media, el("span", { class: "tile__cap", text: g.label })];
+    if (g.video) children.push(el("span", { class: "tile__badge", "aria-hidden": "true" }));
     var fig = el("button", {
       class: "tile reveal" + (g.video ? " tile--video" : ""), type: "button",
       "aria-label": (g.video ? "Play video: " : "Open photo: ") + g.label,
