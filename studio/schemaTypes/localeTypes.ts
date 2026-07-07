@@ -1,11 +1,10 @@
 import {defineType} from 'sanity'
 
-// The three site languages. `en` is the fallback the website uses when a
+// The site languages. `en` is the fallback the website uses when a
 // translation is empty.
 const LANGS = [
   {id: 'en', title: 'English'},
   {id: 'da', title: 'Dansk'},
-  {id: 'uk', title: 'Українська'},
 ]
 
 // Each localized value is a small object grouping the three languages together,
