@@ -155,8 +155,8 @@ p { margin: 0 0 1em; }
 
 /* ---- horizontal session cards (image · details · BOOK) ------------------- */
 .sessions-list { display: flex; flex-direction: column; gap: 1.5rem; }
-.session-card { display: grid; grid-template-columns: clamp(150px, 20vw, 240px) 1fr auto; gap: 1.9rem; align-items: stretch; background: var(--cream-2); border: 1px solid var(--line); box-shadow: var(--shadow-sm); padding: 1.5rem; }
-.session-card__media { overflow: hidden; background: var(--sage); min-height: 200px; }
+.session-card { display: grid; grid-template-columns: clamp(150px, 20vw, 240px) 1fr auto; gap: 1.9rem; align-items: start; background: var(--cream-2); border: 1px solid var(--line); box-shadow: var(--shadow-sm); padding: 1.5rem; }
+.session-card__media { overflow: hidden; background: var(--sage); aspect-ratio: 1 / 1; }
 .session-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .session-card__body { min-width: 0; padding: 0.25rem 0; }
 .session-card__title { font-size: 1.3rem; font-weight: 600; margin: 0 0 0.1rem; color: var(--ink); }
@@ -170,7 +170,7 @@ p { margin: 0 0 1em; }
 .btn--book-dark:hover { background: #000; color: #fff; }
 @media (max-width: 760px) {
   .session-card { grid-template-columns: 1fr; gap: 1.2rem; }
-  .session-card__media { min-height: 220px; }
+  .session-card__media { width: 100%; max-width: 300px; }
   .session-card__action { justify-self: start; }
 }
 
