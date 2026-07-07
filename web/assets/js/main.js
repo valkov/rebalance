@@ -377,7 +377,7 @@
       modalBody.innerHTML = "";
       var holder = el("div", { class: "cal-embed" });
       modalBody.appendChild(holder);
-      try { window.Cal("inline", { elementOrSelector: holder, calLink: calLink, layout: "month_view" }); }
+      try { window.Cal("inline", { elementOrSelector: holder, calLink: calLink, config: { theme: "light", layout: "month_view" } }); }
       catch (e) { modalBody.innerHTML = ""; modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" })); }
     } else if (url) {
       modalBody.innerHTML = "";
