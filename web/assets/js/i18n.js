@@ -15,7 +15,7 @@
 (function () {
   var STR = {
     en: {
-      nav_events: "Events", nav_sessions: "Sessions", nav_groups: "Classes", nav_gallery: "Gallery", nav_about: "About", nav_book: "Book",
+      nav_events: "Events", nav_sessions: "Sessions", nav_groups: "Classes", nav_gallery: "Gallery", nav_about: "About me", nav_book: "Book",
       services_eyebrow: "How we can help", services_heading: "Find your path",
       service_events_eyebrow: "Group retreats", service_events_title: "Hikes & Retreats",
       service_events_desc: "Small-group guided hikes across Scandinavia and the Alps — paced for presence, not performance.",
@@ -43,7 +43,7 @@
       sessions_eyebrow: "Work 1:1 with Tanya", sessions_heading: "Sessions & therapy",
       sessions_intro: "Tanya Basse is a therapist working with psychomotor and nature-assisted therapy. Pick a session, choose a time that suits you, and pay securely — online or in person.",
       sessions_note: "Sessions are confidential and tailored to you. They support wellbeing and are not a substitute for emergency or acute medical care — if you are in crisis, contact your local emergency services.",
-      about_eyebrow: "About", about_heading: "Nature-assisted therapy, on foot",
+      about_eyebrow: "About me", about_heading: "Nature-assisted therapy, on foot",
       about_p1: "Rebalance is led by <strong>Tanya Basse</strong>, a therapist working with psychomotor and nature-assisted therapy. Alongside group hikes and retreats, Tanya offers 1:1 sessions — blending movement, body awareness and time in the wild to help you slow down, reconnect and come home to yourself.",
       about_p2: "Group events welcome all levels; 1:1 sessions and therapy are available online or in person, in several languages.",
       see_events: "See events", langs_display: "Danish, English",
@@ -79,7 +79,7 @@
       paid_thanks: "Thanks — your test booking is confirmed.",
     },
     da: {
-      nav_events: "Begivenheder", nav_sessions: "Sessioner", nav_groups: "Grupper", nav_gallery: "Galleri", nav_about: "Om os", nav_book: "Book",
+      nav_events: "Begivenheder", nav_sessions: "Sessioner", nav_groups: "Grupper", nav_gallery: "Galleri", nav_about: "Om mig", nav_book: "Book",
       services_eyebrow: "Hvad tilbyder vi", services_heading: "Find din vej",
       service_events_eyebrow: "Grupperetreat", service_events_title: "Vandringer & retreats",
       service_events_desc: "Guidede vandringer i Skandinavien og Alperne for små grupper — i roligt tempo med fokus på nærvær.",
@@ -107,7 +107,7 @@
       sessions_eyebrow: "Arbejd 1:1 med Tanya", sessions_heading: "Sessioner & terapi",
       sessions_intro: "Tanya Basse er terapeut og arbejder med psykomotorisk og naturassisteret terapi. Vælg en session, find et tidspunkt, der passer dig, og betal sikkert — online eller fysisk.",
       sessions_note: "Sessionerne er fortrolige og tilpasset dig. De understøtter trivsel og er ikke en erstatning for akut lægehjælp — er du i krise, så kontakt de lokale alarmtjenester.",
-      about_eyebrow: "Om os", about_heading: "Naturassisteret terapi — til fods",
+      about_eyebrow: "Om mig", about_heading: "Naturassisteret terapi — til fods",
       about_p1: "Rebalance ledes af <strong>Tanya Basse</strong>, terapeut med speciale i psykomotorisk og naturassisteret terapi. Ud over gruppevandringer og retreats tilbyder Tanya 1:1-sessioner — en blanding af bevægelse, kropsbevidsthed og tid i naturen, der hjælper dig med at sætte tempoet ned, finde ro og komme hjem til dig selv.",
       about_p2: "Gruppebegivenheder er for alle niveauer; 1:1-sessioner og terapi tilbydes online eller fysisk, på flere sprog.",
       see_events: "Se begivenheder", langs_display: "Dansk, engelsk",
