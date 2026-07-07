@@ -21,7 +21,7 @@ export default defineType({
       initialValue: 10,
     }),
     defineField({name: 'time', title: 'Time / duration', type: 'localeString', description: 'e.g. 1 hour, or 60 min'}),
-    defineField({name: 'price', title: 'Price', type: 'localeString', description: 'e.g. DKK 1,000.00, or Free'}),
+    defineField({name: 'price', title: 'Price', type: 'string', description: 'e.g. DKK 1,000.00, or Free'}),
     defineField({
       name: 'description',
       title: 'Description',
