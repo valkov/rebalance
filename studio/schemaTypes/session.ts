@@ -32,13 +32,7 @@ export default defineType({
       name: 'schedulerUrl',
       title: 'Booking calendar (Book a time)',
       type: 'url',
-      description: 'A Cal.com / Calendly link for this session. Leave empty to fall back to an email enquiry.',
-    }),
-    defineField({
-      name: 'paymentUrl',
-      title: 'Payment link (optional)',
-      type: 'url',
-      description: 'A Stripe Payment Link — e.g. to prepay or to sell a package. Shows a "Pay online" button.',
+      description: 'The Cal.com booking link for this session (payment is handled in Cal.com via its Stripe app). Leave empty to fall back to an email enquiry.',
     }),
     defineField({
       name: 'hue',
