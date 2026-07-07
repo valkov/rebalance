@@ -372,13 +372,15 @@
     ensureModal();
     url = url || CFG.schedulerUrl;
     var calLink = calLinkFromUrl(url);
+    modal.classList.remove("modal--wide");
     if (calLink && window.Cal) {
-      // official Cal.com embed (public booking — no API key)
+      // official Cal.com embed (public booking — no API key); wide so the calendar fits
+      modal.classList.add("modal--wide");
       modalBody.innerHTML = "";
       var holder = el("div", { class: "cal-embed" });
       modalBody.appendChild(holder);
-      try { window.Cal("inline", { elementOrSelector: holder, calLink: calLink, config: { theme: "light", layout: "month_view" } }); }
-      catch (e) { modalBody.innerHTML = ""; modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" })); }
+      try { window.Cal("inline", { elementOrSelector: holder, calLink: calLink, config: { theme: "light", layout: "month_view" }, hideEventTypeDetails: true }); }
+      catch (e) { modal.classList.remove("modal--wide"); modalBody.innerHTML = ""; modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" })); }
     } else if (url) {
       modalBody.innerHTML = "";
       modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" }));
