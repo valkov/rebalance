@@ -5,42 +5,28 @@ export default defineType({
   title: 'Therapy session',
   type: 'document',
   fields: [
-    defineField({name: 'title', title: 'Title', type: 'localeString'}),
+    defineField({name: 'title', title: 'Title', type: 'localeString', validation: (Rule) => Rule.required()}),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      description: 'Which part of the page this session appears under.',
-      options: {
-        list: [
-          {title: 'Group therapy', value: 'group'},
-          {title: 'Personal therapy', value: 'personal'},
-          {title: 'Other', value: 'other'},
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'personal',
-      validation: (Rule) => Rule.required(),
+      name: 'image',
+      title: 'Photo',
+      type: 'image',
+      options: {hotspot: true},
+      description: 'Shown on the left of the session card.',
     }),
     defineField({
       name: 'order',
       title: 'Sort order',
       type: 'number',
-      description: 'Lower numbers appear first (within a category).',
+      description: 'Lower numbers appear first.',
       initialValue: 10,
     }),
-    defineField({name: 'format', title: 'Format', type: 'localeString', description: 'e.g. Online · 20 min, or In person · 60 min'}),
-    defineField({name: 'price', title: 'Price', type: 'localeString', description: 'e.g. kr 750 / session, or Free'}),
+    defineField({name: 'time', title: 'Time / duration', type: 'localeString', description: 'e.g. 1 hour, or 60 min'}),
+    defineField({name: 'price', title: 'Price', type: 'localeString', description: 'e.g. DKK 1,000.00, or Free'}),
     defineField({
-      name: 'blurb',
+      name: 'description',
       title: 'Description',
-      type: 'localeText',
-    }),
-    defineField({
-      name: 'image',
-      title: 'Photo (optional)',
-      type: 'image',
-      options: {hotspot: true},
+      type: 'localeBlock',
+      description: 'Rich text — paragraphs, bold, links, lists.',
     }),
     defineField({
       name: 'schedulerUrl',
@@ -62,6 +48,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'title.en', subtitle: 'category', media: 'image'},
+    select: {title: 'title.en', subtitle: 'price.en', media: 'image'},
   },
 })

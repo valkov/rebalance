@@ -198,28 +198,28 @@
     if (!wrap) return;
     wrap.innerHTML = "";
     list.forEach(function (s) {
-      var price = loc(s.price), format = loc(s.format), isFree = /free/i.test(price || "");
-      var primary, secondary = null;
-      if (s.schedulerUrl) {
-        primary = btnBook(isFree ? "book_free_call" : "book_time", s.schedulerUrl, true);
-        if (s.stripeUrl) secondary = btnLink("pay_online", s.stripeUrl, false);
-      } else if (s.stripeUrl) {
-        primary = btnLink(isFree ? "get_started" : "buy", s.stripeUrl, true);
-      } else {
-        primary = btnBook(isFree ? "book_free_call" : "enquire", "", true);
-      }
-      if (isPaid(s._id)) { primary = bookedBtn(); secondary = null; }
-      var card = el("article", { class: "card card--session reveal" }, [
-        s.image ? el("div", { class: "card__media" }, [makeImg({ src: s.image, label: loc(s.title), hue: s.hue }, loc(s.title))]) : null,
-        el("div", { class: "card__body" }, [
-          el("div", { class: "session__head" }, [
-            el("h3", { class: "card__title", text: loc(s.title) }),
-            price ? el("span", { class: "session__price", text: price }) : null,
-          ]),
-          format ? el("p", { class: "card__meta", html: '<span>🌿 ' + escapeHtml(format) + '</span>' }) : null,
-          el("p", { class: "card__blurb", text: loc(s.blurb) || "" }),
-          el("div", { class: "card__actions" }, [primary, secondary]),
+      var price = loc(s.price), time = loc(s.time);
+      var metaText = [time, price].filter(Boolean).join(" @ "); // e.g. "1 hour @ DKK 1,000.00"
+      // one clear BOOK action per card
+      var action = isPaid(s._id)
+        ? bookedBtn()
+        : (s.stripeUrl && !s.schedulerUrl)
+          ? btnLink("nav_book", s.stripeUrl, true)
+          : btnBook("nav_book", s.schedulerUrl || "", true);
+      action.classList.add("btn--book-dark");
+      // rich text (Portable Text) or plain-text fallback
+      var descEl = el("div", { class: "session-card__desc" });
+      var d = loc(s.description);
+      if (Array.isArray(d) && d.length) descEl.innerHTML = ptToHtml(d);
+      else if (typeof d === "string" && d.trim()) d.split(/\n{2,}/).forEach(function (p) { if (p.trim()) descEl.appendChild(el("p", { text: p.trim() })); });
+      var card = el("article", { class: "session-card reveal" }, [
+        el("div", { class: "session-card__media" }, [makeImg({ src: s.image, label: loc(s.title), hue: s.hue }, loc(s.title))]),
+        el("div", { class: "session-card__body" }, [
+          el("h3", { class: "session-card__title", text: loc(s.title) }),
+          metaText ? el("p", { class: "session-card__meta", text: metaText }) : null,
+          descEl,
         ]),
+        el("div", { class: "session-card__action" }, [action]),
       ]);
       wrap.appendChild(card);
     });
@@ -472,7 +472,7 @@
     var query =
       '{' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,category,format,price,blurb,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
+          '{_id,title,time,price,description,"image":image.asset->url,schedulerUrl,"stripeUrl":paymentUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,"video":video.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +

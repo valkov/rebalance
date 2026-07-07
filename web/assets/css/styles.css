@@ -153,6 +153,27 @@ p { margin: 0 0 1em; }
 .session__price { font-family: var(--font-head); font-weight: 600; color: var(--sun-d); white-space: nowrap; font-size: 1.05rem; }
 .sessions-note { margin-top: 1.8rem; font-size: 0.85rem; max-width: 760px; padding-left: 1rem; border-left: 3px solid var(--sage); }
 
+/* ---- horizontal session cards (image · details · BOOK) ------------------- */
+.sessions-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.session-card { display: grid; grid-template-columns: clamp(150px, 20vw, 240px) 1fr auto; gap: 1.9rem; align-items: stretch; background: var(--cream-2); border: 1px solid var(--line); box-shadow: var(--shadow-sm); padding: 1.5rem; }
+.session-card__media { overflow: hidden; background: var(--sage); min-height: 200px; }
+.session-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.session-card__body { min-width: 0; padding: 0.25rem 0; }
+.session-card__title { font-size: 1.3rem; font-weight: 600; margin: 0 0 0.1rem; color: var(--ink); }
+.session-card__meta { font-size: 1rem; color: var(--ink); margin: 0 0 1.1rem; }
+.session-card__desc { font-size: 0.98rem; color: var(--ink); line-height: 1.6; }
+.session-card__desc p { margin: 0 0 0.9rem; }
+.session-card__desc p:last-child { margin-bottom: 0; }
+.session-card__desc a { color: var(--forest); text-decoration: underline; }
+.session-card__action { align-self: start; }
+.btn--book-dark { background: #111; color: #fff; border: 0; border-radius: 0; padding: 0.75rem 1.6rem; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; box-shadow: none; }
+.btn--book-dark:hover { background: #000; color: #fff; }
+@media (max-width: 760px) {
+  .session-card { grid-template-columns: 1fr; gap: 1.2rem; }
+  .session-card__media { min-height: 220px; }
+  .session-card__action { justify-self: start; }
+}
+
 /* card links to the detail page */
 .card__title a { color: inherit; text-decoration: none; }
 .card__title a:hover { color: var(--forest); }
