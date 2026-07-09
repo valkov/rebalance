@@ -513,7 +513,7 @@
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{_id,"title":title,hue},' +
         '"testimonials":*[_type=="review"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,text,author,"photo":photo.asset->url,rating}' +
+          '{_id,text,author,"photo":photo.asset->url}' +
       '}';
     var ver = s.apiVersion || "2024-01-01";
     var url = "https://" + s.projectId + ".api.sanity.io/v" + ver + "/data/query/" +
@@ -620,12 +620,18 @@
     var list = CFG.testimonials || [];
     box.innerHTML = "";
     list.forEach(function (rv) {
-      var n = rv.rating == null ? 5 : Math.max(0, Math.min(5, Math.round(rv.rating)));
-      var children = [];
-      if (rv.photo) children.push(el("img", { class: "quote__photo", src: sani(rv.photo, 240), alt: rv.author || "", loading: "lazy" }));
-      children.push(el("div", { class: "stars", "aria-label": n + " out of 5", text: "★★★★★".slice(0, n) }));
-      children.push(el("p", { text: "“" + (loc(rv.text) || "") + "”" }));
-      if (rv.author) children.push(el("cite", { text: "— " + rv.author }));
+      var author = (rv.author || "").trim();
+      var children = [
+        el("div", { class: "quote__mark", "aria-hidden": "true", text: "“" }),
+        el("blockquote", { class: "quote__text" }, [el("p", { text: loc(rv.text) || "" })]),
+      ];
+      if (rv.photo || author) {
+        var by = [];
+        if (rv.photo) by.push(el("img", { class: "quote__photo", src: sani(rv.photo, 240), alt: author, loading: "lazy" }));
+        else by.push(el("span", { class: "quote__photo quote__photo--mono", "aria-hidden": "true", text: author.charAt(0).toUpperCase() }));
+        if (author) by.push(el("span", { class: "quote__name", text: author }));
+        children.push(el("figcaption", { class: "quote__by" }, by));
+      }
       box.appendChild(el("figure", { class: "quote reveal" }, children));
     });
   }

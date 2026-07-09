@@ -21,14 +21,6 @@ export default defineType({
       description: 'Shown as a small round photo above the review.',
     }),
     defineField({
-      name: 'rating',
-      title: 'Stars',
-      type: 'number',
-      description: '1–5. Defaults to 5.',
-      initialValue: 5,
-      validation: (Rule) => Rule.min(1).max(5),
-    }),
-    defineField({
       name: 'order',
       title: 'Sort order',
       type: 'number',
