@@ -32,7 +32,14 @@ export default defineType({
       name: 'schedulerUrl',
       title: 'Booking calendar (Book a time)',
       type: 'url',
-      description: 'The Cal.com booking link for this session (payment is handled in Cal.com via its Stripe app). Leave empty to fall back to an email enquiry.',
+      description: 'Cal.com booking link — for sessions people book on a calendar (group/class). Leave empty for clip-card sessions.',
+    }),
+    defineField({
+      name: 'clipCardUrl',
+      title: 'Clip card link (klippekort)',
+      type: 'url',
+      description:
+        'Stripe Payment Link to sell a clip card (a prepaid package of sessions). If set, the button becomes “Buy clip card” and this takes priority over the calendar. Enable name + phone collection on the Stripe link so you capture the client’s details.',
     }),
     defineField({
       name: 'hue',

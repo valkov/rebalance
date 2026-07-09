@@ -200,8 +200,10 @@
     list.forEach(function (s) {
       var price = loc(s.price), time = loc(s.time);
       var metaText = [time, price].filter(Boolean).join(" @ "); // e.g. "1 hour @ DKK 1,000.00"
-      // one clear BOOK action per card (payment handled in Cal.com)
-      var action = btnBook("nav_book", s.schedulerUrl || "", true);
+      // one clear action per card: clip card (Stripe) takes priority, else calendar booking
+      var action = s.clipCardUrl
+        ? btnLink("buy_clipcard", s.clipCardUrl, true)
+        : btnBook("nav_book", s.schedulerUrl || "", true);
       action.classList.add("btn--book-dark");
       // rich text (Portable Text) or plain-text fallback
       var descEl = el("div", { class: "session-card__desc" });
@@ -496,7 +498,7 @@
     var query =
       '{' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,time,price,description,"image":image.asset->url,schedulerUrl,hue},' +
+          '{_id,title,time,price,description,"image":image.asset->url,schedulerUrl,clipCardUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,"video":video.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
