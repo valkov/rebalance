@@ -411,10 +411,24 @@
     btn.addEventListener("click", function () { var open = menu.classList.toggle("is-open"); btn.setAttribute("aria-expanded", open ? "true" : "false"); });
     $all("a", menu).forEach(function (a) { a.addEventListener("click", function () { menu.classList.remove("is-open"); btn.setAttribute("aria-expanded", "false"); }); });
   }
+  function measureQuote(q) {
+    if (q.classList.contains("is-open")) return; // don't re-measure while expanded
+    var p = q.querySelector("p");
+    if (p) q.classList.toggle("is-clamped", p.scrollHeight - p.clientHeight > 3);
+  }
   function initQuotes() {
     $all(".quote").forEach(function (q) {
-      q.addEventListener("click", function () { q.classList.toggle("is-open"); });
+      if (!q.__quoteBound) {
+        q.__quoteBound = true;
+        q.addEventListener("click", function () { if (q.classList.contains("is-clamped")) q.classList.toggle("is-open"); });
+      }
+      measureQuote(q);
     });
+    // re-check once webfonts settle (line heights can shift truncation)
+    if (document.fonts && document.fonts.ready && !initQuotes.__fontHook) {
+      initQuotes.__fontHook = true;
+      document.fonts.ready.then(function () { $all(".quote").forEach(measureQuote); });
+    }
   }
 
   function initHeroVideo() {

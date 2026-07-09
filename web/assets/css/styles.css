@@ -227,12 +227,14 @@ p { margin: 0 0 1em; }
 .reviews__score { display: flex; align-items: baseline; gap: 0.8rem; margin-bottom: 2rem; }
 .reviews__score strong { font-family: var(--font-head); font-size: 3.2rem; color: var(--forest-d); line-height: 1; }
 .quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
-.quote { background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem 1.4rem; box-shadow: var(--shadow-sm); cursor: pointer; }
+.quote { background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem 1.4rem; box-shadow: var(--shadow-sm); cursor: default; }
+.quote.is-clamped { cursor: pointer; }
 .quote__photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 0.9rem; }
 .quote p { font-family: var(--font-head); font-style: italic; font-size: 0.95rem; color: var(--ink); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; margin-bottom: 0.3rem; }
-.quote.is-open p { display: block; overflow: visible; }
-.quote::after { content: "Read more ↓"; display: block; font-size: 0.78rem; font-weight: 600; color: var(--forest); margin-top: 0.5rem; }
-.quote.is-open::after { content: "Show less ↑"; }
+.quote.is-clamped.is-open p { display: block; overflow: visible; }
+/* only clamped (truncated) quotes get the Read more toggle */
+.quote.is-clamped::after { content: "Read more ↓"; display: block; font-size: 0.78rem; font-weight: 600; color: var(--forest); margin-top: 0.5rem; }
+.quote.is-clamped.is-open::after { content: "Show less ↑"; }
 .quote cite { font-style: normal; font-weight: 600; font-size: 0.82rem; color: var(--moss); }
 .stars { color: var(--sun); letter-spacing: 2px; margin-bottom: 0.6rem; }
 
