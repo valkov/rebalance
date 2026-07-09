@@ -304,7 +304,7 @@
     }
     var titleEl = $("#folder-title");
     if (titleEl) titleEl.textContent = title || tr("nav_gallery");
-    document.title = (title || "Gallery") + " — Rebalance";
+    document.title = (title || "Gallery") + " — Tanya Basse";
     grid.innerHTML = "";
     galleryItems = imgs;
     galleryItems.forEach(function (g, i) { grid.appendChild(galleryTile(g, i)); });
@@ -569,7 +569,7 @@
       wrap.appendChild(el("a", { class: "btn btn--solid", href: "events.html", "data-i18n": "detail_see_all", text: tr("detail_see_all") }));
       return;
     }
-    document.title = loc(ev.title) + " — Rebalance";
+    document.title = loc(ev.title) + " — Tanya Basse";
 
     var dateStr = fmtDateRange(ev.startDate, ev.endDate);
     var daysStr = fmtDays(ev.startDate, ev.endDate);
@@ -656,7 +656,7 @@
           '</div>' +
         '</div>' +
         '<div class="footer-contact">' +
-          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg?v=2" alt="Rebalance" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
+          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg?v=2" alt="Tanya Basse" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
           '<div class="footer-contact__bubble">' +
             '<h3 data-i18n="contact_heading">Have a question?</h3>' +
             '<p data-i18n="contact_text">Curious about a hike, a retreat or a 1:1 session? Reach out — Tanya is happy to help.</p>' +
@@ -666,7 +666,7 @@
         '</div>' +
       '</div>' +
       '<div class="wrap footer-bottom">' +
-        '<span>© <span data-year></span> <span data-brand-name>Rebalance</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
+        '<span>© <span data-year></span> <span data-brand-name>Tanya Basse</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
       '</div>';
   }
   function render() {

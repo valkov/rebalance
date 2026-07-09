@@ -29,7 +29,7 @@ window.SITE_CONFIG = {
   sanity: { projectId: "s3xmc1k6", dataset: "production", apiVersion: "2024-01-01" },
 
   brand: {
-    name: "Rebalance",
+    name: "Tanya Basse", // visible brand name; "Rebalance" stays the internal code name (repo, Sanity, paths)
     tagline: "We hike for better mental health, well-being and self-knowledge.",
     intro: "Guided nature hikes, retreats and 1:1 therapy with Tanya Basse — slow down, breathe, and find your footing in the wild.",
     email: "tanyabasse@gmail.com",
