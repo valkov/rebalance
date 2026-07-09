@@ -486,7 +486,9 @@
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,"video":video.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,"title":title,hue}' +
+          '{_id,"title":title,hue},' +
+        '"testimonials":*[_type=="review"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
+          '{_id,text,author,"photo":photo.asset->url,rating}' +
       '}';
     var ver = s.apiVersion || "2024-01-01";
     var url = "https://" + s.projectId + ".api.sanity.io/v" + ver + "/data/query/" +
@@ -498,6 +500,7 @@
         if (d.sessions) CFG.sessions = d.sessions.map(withImageParams);
         if (d.gallery) CFG.gallery = d.gallery.map(withImageParams);
         if (d.galleryGroups) CFG.galleryGroups = d.galleryGroups;
+        if (d.testimonials) CFG.testimonials = d.testimonials;
       })
       .catch(function (e) { if (window.console) console.warn("CMS load failed — using built-in content.", e); });
   }
@@ -585,10 +588,27 @@
 
   }
 
+  /* ---------- client reviews (from CMS) ------------------------------------ */
+  function renderReviews() {
+    var box = $("#quotes");
+    if (!box) return;
+    var list = CFG.testimonials || [];
+    box.innerHTML = "";
+    list.forEach(function (rv) {
+      var n = rv.rating == null ? 5 : Math.max(0, Math.min(5, Math.round(rv.rating)));
+      var children = [];
+      if (rv.photo) children.push(el("img", { class: "quote__photo", src: sani(rv.photo, 240), alt: rv.author || "", loading: "lazy" }));
+      children.push(el("div", { class: "stars", "aria-label": n + " out of 5", text: "★★★★★".slice(0, n) }));
+      children.push(el("p", { text: "“" + (loc(rv.text) || "") + "”" }));
+      if (rv.author) children.push(el("cite", { text: "— " + rv.author }));
+      box.appendChild(el("figure", { class: "quote reveal" }, children));
+    });
+  }
   function renderContent() {
     renderSessions();
     renderGallery();
     renderFolder();
+    renderReviews();
     if (window.applyI18n) window.applyI18n();
     initReveal();
   }

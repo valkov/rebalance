@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=86" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=87" />
 </head>
 <body>
   <!-- HEADER -->
@@ -123,34 +123,6 @@
   </script>
   <script src="assets/js/config.js?v=16"></script>
   <script src="assets/js/i18n.js?v=25"></script>
-  <script src="assets/js/main.js?v=41"></script>
-  <script>
-    (function () {
-      var CFG = window.SITE_CONFIG || {};
-      var box = document.getElementById("quotes");
-      var reviewAuthors = ["Yaiza", "Lyudmila", "Elvira", "Galina"];
-      if (box) ["review_q1", "review_q2", "review_q3", "review_q4"].forEach(function (key, i) {
-        var card = document.createElement("figure");
-        card.className = "quote reveal";
-        card.innerHTML =
-          '<div class="stars">★★★★★</div>' +
-          '<p>"<span data-i18n="' + key + '"></span>"</p>' +
-          '<cite>— ' + reviewAuthors[i] + '</cite>';
-        box.appendChild(card);
-      });
-      if (window.applyI18n) window.applyI18n();
-
-      var about = document.getElementById("about-photo");
-      if (about && !about.getAttribute("src")) {
-        var pool = (CFG.gallery || []).concat(CFG.events || []).concat(CFG.sessions || []);
-        var withSrc = pool.filter(function (x) { return x.src || x.image; })[0];
-        var phAbout = "data:image/svg+xml," + encodeURIComponent(
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl(150,42%,70%)"/><stop offset="1" stop-color="hsl(168,38%,40%)"/></linearGradient></defs><rect width="640" height="800" fill="url(#g)"/><path d="M-20 620 L200 320 L420 620 Z" fill="hsl(162,42%,28%)"/><path d="M200 320 L260 400 L228 418 L200 388 L172 418 L140 400 Z" fill="#f3f6f1" opacity="0.9"/></svg>'
-        );
-        about.addEventListener("error", function () { if (about.getAttribute("src") !== phAbout) about.src = phAbout; });
-        about.src = withSrc ? (withSrc.src || withSrc.image) : phAbout;
-      }
-    })();
-  </script>
+  <script src="assets/js/main.js?v=42"></script>
 </body>
 </html>
