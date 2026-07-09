@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'session',
@@ -35,11 +35,44 @@ export default defineType({
       description: 'Cal.com booking link — for sessions people book on a calendar (group/class). Leave empty for clip-card sessions.',
     }),
     defineField({
-      name: 'clipCardUrl',
-      title: 'Clip card link (klippekort)',
-      type: 'url',
+      name: 'packages',
+      title: 'Session packages (klippekort)',
+      type: 'array',
       description:
-        'Stripe Payment Link to sell a clip card (a prepaid package of sessions). If set, the button becomes “Buy clip card” and this takes priority over the calendar. Enable name + phone collection on the Stripe link so you capture the client’s details.',
+        'For personal sessions sold as prepaid packages instead of a calendar. Add one item per Stripe Payment Link (e.g. 1, 5 and 10 sessions). If any packages are set, the card shows a “Buy” button per package instead of the calendar. Enable name + phone collection on each Stripe link so you capture the client’s details.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'sessionPackage',
+          fields: [
+            defineField({
+              name: 'count',
+              title: 'Number of sessions',
+              type: 'number',
+              validation: (Rule) => Rule.required().min(1).integer(),
+            }),
+            defineField({
+              name: 'price',
+              title: 'Price (optional)',
+              type: 'string',
+              description: 'e.g. DKK 900. Shown on the button.',
+            }),
+            defineField({
+              name: 'stripeUrl',
+              title: 'Stripe payment link',
+              type: 'url',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {count: 'count', price: 'price'},
+            prepare({count, price}) {
+              const n = count === 1 ? '1 session' : `${count} sessions`
+              return {title: price ? `${n} — ${price}` : n}
+            },
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'hue',
@@ -49,6 +82,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'title.en', subtitle: 'price.en', media: 'image'},
+    select: {title: 'title.en', subtitle: 'price', media: 'image'},
   },
 })
