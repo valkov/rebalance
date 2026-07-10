@@ -30,7 +30,24 @@ Deno.serve(async (req) => {
     const row = Array.isArray(data) ? data[0] : data;
     const siteUrl = Deno.env.get("SITE_URL") ?? "https://valkov.github.io/rebalance";
     const cancelUrl = `${siteUrl}/cancel.html?token=${row.cancel_token}`;
+    const when = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Copenhagen", weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit",
+    }).format(new Date(row.starts_at));
+
+    // confirmation to the client (best-effort)
     await sendEmail(email, "Your Re-balance session is confirmed", confirmationHtml(name, row.starts_at, cancelUrl));
+    // notification to Tanya so she sees new bookings by email too (best-effort)
+    const notify = Deno.env.get("ENQUIRY_TO");
+    if (notify) {
+      await sendEmail(notify, `New group booking — ${name}`,
+        `<div style="font-family:Mulish,Arial,sans-serif;color:#404041;line-height:1.6">
+          <h2>New group-session booking</h2>
+          <p><strong>When:</strong> ${when} (Copenhagen)</p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+        </div>`, email);
+    }
 
     return json({ ok: true }, 200, headers);
   } catch (e) {

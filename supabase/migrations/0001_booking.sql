@@ -52,12 +52,28 @@ create table if not exists bookings (
 create index if not exists bookings_slot_idx on bookings (slot_id);
 create unique index if not exists bookings_cancel_token_idx on bookings (cancel_token);
 
+-- ---------------------------------------------------------------------------
+-- Personal-session enquiries (from the 1:1 enquiry form). Stored so nothing is
+-- lost even if the notification email fails.
+-- ---------------------------------------------------------------------------
+create table if not exists enquiries (
+  id          uuid primary key default gen_random_uuid(),
+  session     text,
+  first_name  text not null,
+  last_name   text not null,
+  email       text not null,
+  phone       text not null,
+  message     text,
+  created_at  timestamptz not null default now()
+);
+
 -- All access goes through Edge Functions using the service-role key (which
 -- bypasses RLS). Enable RLS with no anon policies so the tables are private
--- (bookings hold PII) to the public anon/authenticated keys.
+-- (they hold PII) to the public anon/authenticated keys.
 alter table recurring_rules enable row level security;
 alter table slots           enable row level security;
 alter table bookings        enable row level security;
+alter table enquiries       enable row level security;
 
 -- ---------------------------------------------------------------------------
 -- materialize_slots: generate concrete slot rows for the next p_weeks weeks
