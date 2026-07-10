@@ -92,7 +92,6 @@
     return img;
   }
   function tr(key) { return (window.t ? window.t(key) : key); }
-  function pkgLabel(n) { n = Number(n) || 0; return tr(n === 1 ? "pkg_one" : "pkg_other").replace("{n}", n); }
   function btnLink(key, href, solid) {
     return el("a", { class: "btn " + (solid ? "btn--solid" : "btn--ghost"), href: href, target: "_blank", rel: "noopener", "data-i18n": key, text: tr(key) });
   }
@@ -109,8 +108,17 @@
     $all("[data-link-instagram]").forEach(function (n) { if (b.instagram) n.href = b.instagram; });
     $all("[data-link-facebook]").forEach(function (n) { if (b.facebook) { n.href = b.facebook; } else { n.style.display = "none"; } });
     $all("[data-link-telegram]").forEach(function (n) { if (b.telegram) { n.href = b.telegram; } else { n.style.display = "none"; } });
+    var waNum = String(b.whatsapp || "").replace(/[^\d]/g, "");
+    $all("[data-link-whatsapp]").forEach(function (n) {
+      if (waNum) { n.href = "https://wa.me/" + waNum; } else { n.style.display = "none"; }
+    });
+    if (!waNum) $all("[data-wa-line]").forEach(function (n) { n.style.display = "none"; });
     $all("[data-link-email]").forEach(function (n) { if (b.email) n.href = "mailto:" + b.email; });
     $all("[data-brand-email]").forEach(function (n) { n.textContent = b.email || ""; });
+    $all("[data-link-phone]").forEach(function (n) { if (b.phone) { n.href = "tel:" + b.phone.replace(/[^\d+]/g, ""); } });
+    $all("[data-brand-phone]").forEach(function (n) { n.textContent = b.phone || ""; });
+    $all("[data-brand-location]").forEach(function (n) { if (b.location) { n.textContent = b.location; } else { n.style.display = "none"; } });
+    $all("[data-brand-cvr]").forEach(function (n) { if (b.cvr) { n.textContent = "CVR " + b.cvr; } else { n.style.display = "none"; } });
     $all("[data-year]").forEach(function (n) { n.textContent = String(new Date().getFullYear()); });
     if ((CFG.locations || []).length) $all("[data-locations]").forEach(function (n) { n.textContent = CFG.locations.join(" · "); });
     if ((CFG.languages || []).length) $all("[data-languages]").forEach(function (n) { n.textContent = CFG.languages.join(", "); });
@@ -200,20 +208,12 @@
     wrap.innerHTML = "";
     list.forEach(function (s) {
       var price = loc(s.price), time = loc(s.time);
-      var metaText = [time, price].filter(Boolean).join(" @ "); // e.g. "1 hour @ DKK 1,000.00"
-      // action: if the session is sold as prepaid packages (Stripe links), show one
-      // "Buy N sessions" button per package; otherwise fall back to calendar booking.
-      var packages = Array.isArray(s.packages) ? s.packages.filter(function (p) { return p && p.stripeUrl; }) : [];
-      var action;
-      if (packages.length) {
-        action = el("div", { class: "session-card__packages" }, packages.map(function (p) {
-          var label = pkgLabel(p.count) + (p.price ? " · " + p.price : "");
-          return el("a", { class: "btn btn--solid btn--book-dark", href: p.stripeUrl, target: "_blank", rel: "noopener", text: label });
-        }));
-      } else {
-        action = btnBook("nav_book", s.schedulerUrl || "", true);
-        action.classList.add("btn--book-dark");
-      }
+      var metaText = [time, price].filter(Boolean).join(" · "); // e.g. "60 min · 850 DKK"
+      // one BOOK action per card. group session -> slot picker; personal -> enquiry form.
+      var action = btnBook("nav_book", "", true);
+      action.classList.add("btn--book-dark");
+      action.setAttribute("data-mode", s.groupBooking ? "group" : "enquiry");
+      action.setAttribute("data-session", loc(s.title) || "");
       // rich text (Portable Text) or plain-text fallback
       var descEl = el("div", { class: "session-card__desc" });
       var d = loc(s.description);
@@ -375,44 +375,167 @@
     $(".modal__close", modal).addEventListener("click", closeModal);
     modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
   }
-  function calLinkFromUrl(url) {
-    var m = /(?:app\.)?cal\.com\/([^?#]+)/i.exec(url || "");
-    return m ? m[1].replace(/\/+$/, "") : null;
+  /* our own group-session booking: slot picker -> form -> confirmation,
+     backed by the Supabase Edge Functions (no third-party calendar). */
+  function bookingCfg() { return CFG.booking || {}; }
+  function bookingKey() { var c = bookingCfg(); return c.publishableKey || c.anonKey || ""; }
+  function bookingApi(path, opts) {
+    var cfg = bookingCfg();
+    var key = bookingKey();
+    var headers = { "content-type": "application/json" };
+    if (key) { headers["apikey"] = key; headers["Authorization"] = "Bearer " + key; }
+    return fetch(String(cfg.functionsBase || "").replace(/\/+$/, "") + path, {
+      method: (opts && opts.method) || "GET",
+      headers: headers,
+      body: opts && opts.body ? JSON.stringify(opts.body) : undefined,
+    }).then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); });
   }
-  function openBooking(url) {
+  function fmtSlot(iso) {
+    try {
+      return new Intl.DateTimeFormat(window.getLocale && window.getLocale() === "da" ? "da-DK" : "en-GB", {
+        timeZone: "Europe/Copenhagen", weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit",
+      }).format(new Date(iso));
+    } catch (e) { return iso; }
+  }
+  function bookingMsg(html) { modalBody.innerHTML = '<div class="modal__msg">' + html + "</div>"; }
+  function openModalShell() {
     ensureModal();
-    url = url || CFG.schedulerUrl;
-    var calLink = calLinkFromUrl(url);
     modal.classList.remove("modal--wide");
-    if (calLink && window.Cal) {
-      // official Cal.com embed (public booking — no API key); wide so the calendar fits
-      modal.classList.add("modal--wide");
-      modalBody.innerHTML = "";
-      var holder = el("div", { class: "cal-embed" });
-      modalBody.appendChild(holder);
-      try { window.Cal("inline", { elementOrSelector: holder, calLink: calLink, config: { theme: "light", layout: "month_view" }, hideEventTypeDetails: true }); }
-      catch (e) { modal.classList.remove("modal--wide"); modalBody.innerHTML = ""; modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" })); }
-    } else if (url) {
-      modalBody.innerHTML = "";
-      modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" }));
-    } else {
-      var brand = CFG.brand || {};
-      var email = brand.email || "";
-      var telegram = brand.telegram || "";
-      modalBody.innerHTML =
-        '<div class="modal__msg">' +
-          '<h3>' + tr("modal_title") + '</h3>' +
-          '<p>' + tr("modal_text") + '</p>' +
-          '<div class="modal__contacts">' +
-            (email ? '<a class="btn btn--solid" href="mailto:' + escapeHtml(email) + '?subject=Booking%20enquiry">' + tr("modal_email") + '</a>' : "") +
-            (telegram ? '<a class="btn btn--ghost" href="' + escapeHtml(telegram) + '" target="_blank" rel="noopener noreferrer">' + tr("modal_telegram") + '</a>' : "") +
-          '</div>' +
-        '</div>';
-    }
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("no-scroll");
   }
+  function openBooking() {
+    openModalShell();
+    if (!bookingCfg().functionsBase || !bookingKey()) { renderBookingFallback(); return; }
+    bookingMsg('<p class="booking__loading">' + tr("booking_loading") + "</p>");
+    bookingApi("/list-slots").then(function (res) {
+      if (res.status !== 200 || !res.body || !res.body.slots) { renderBookingFallback(); return; }
+      renderSlots(res.body.slots);
+    }).catch(function () { renderBookingFallback(); });
+  }
+  function renderBookingFallback() {
+    var email = (CFG.brand || {}).email || "";
+    bookingMsg("<h3>" + tr("modal_title") + "</h3><p>" + tr("modal_text") + "</p>" +
+      (email ? '<div class="modal__contacts"><a class="btn btn--solid" href="mailto:' + escapeHtml(email) + '?subject=Booking%20enquiry">' + tr("modal_email") + "</a></div>" : ""));
+  }
+  function renderSlots(slots) {
+    modalBody.innerHTML = "";
+    var wrap = el("div", { class: "booking" }, [el("h3", { class: "booking__title", text: tr("booking_pick_time") })]);
+    if (!slots.length) { wrap.appendChild(el("p", { class: "muted", text: tr("booking_none") })); modalBody.appendChild(wrap); return; }
+    var list = el("div", { class: "booking__slots" });
+    slots.forEach(function (s) {
+      var leftTxt = s.remaining === 1 ? tr("booking_seats_left_one") : tr("booking_seats_left").replace("{n}", s.remaining);
+      var btn = el("button", { class: "booking__slot", type: "button" }, [
+        el("span", { class: "booking__slot-when", text: fmtSlot(s.starts_at) }),
+        el("span", { class: "booking__slot-left", text: leftTxt }),
+      ]);
+      btn.addEventListener("click", function () { renderForm(s); });
+      list.appendChild(btn);
+    });
+    wrap.appendChild(list);
+    modalBody.appendChild(wrap);
+  }
+  function renderForm(slot) {
+    modalBody.innerHTML = "";
+    var wrap = el("div", { class: "booking" });
+    var back = el("button", { class: "booking__back", type: "button", text: tr("booking_back") });
+    back.addEventListener("click", openBooking);
+    var form = el("form", { class: "booking__form" });
+    function field(name, label, type) {
+      return el("label", { class: "booking__field" }, [
+        el("span", { text: label }),
+        el("input", { name: name, type: type || "text", required: "required" }),
+      ]);
+    }
+    var err = el("p", { class: "booking__error" });
+    var submit = el("button", { class: "btn btn--solid btn--book-dark", type: "submit", text: tr("booking_confirm") });
+    form.appendChild(field("name", tr("booking_name")));
+    form.appendChild(field("email", tr("booking_email"), "email"));
+    form.appendChild(field("phone", tr("booking_phone"), "tel"));
+    form.appendChild(err);
+    form.appendChild(submit);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      err.classList.remove("is-show");
+      var data = { slot_id: slot.id, name: form.name.value.trim(), email: form.email.value.trim(), phone: form.phone.value.trim() };
+      if (!data.name || !data.email || !data.phone) { err.textContent = tr("booking_fill_all"); err.classList.add("is-show"); return; }
+      submit.disabled = true; submit.textContent = tr("booking_sending");
+      bookingApi("/create-booking", { method: "POST", body: data }).then(function (res) {
+        if (res.status === 200 && res.body && res.body.ok) { renderSuccess(slot); return; }
+        submit.disabled = false; submit.textContent = tr("booking_confirm");
+        var full = res.body && res.body.error === "slot_full";
+        err.textContent = full ? tr("booking_full") : tr("booking_error");
+        err.classList.add("is-show");
+        if (full) setTimeout(openBooking, 1400);
+      }).catch(function () {
+        submit.disabled = false; submit.textContent = tr("booking_confirm");
+        err.textContent = tr("booking_error"); err.classList.add("is-show");
+      });
+    });
+    wrap.appendChild(back);
+    wrap.appendChild(el("h3", { class: "booking__title", text: tr("booking_your_details") }));
+    wrap.appendChild(el("p", { class: "booking__chosen", text: fmtSlot(slot.starts_at) }));
+    wrap.appendChild(form);
+    modalBody.appendChild(wrap);
+  }
+  function renderSuccess(slot) {
+    bookingMsg("<h3>" + tr("booking_confirmed_title") + "</h3><p>" +
+      tr("booking_confirmed_text").replace("{when}", escapeHtml(fmtSlot(slot.starts_at))) + "</p>");
+  }
+
+  /* personal (1:1) session: an enquiry form emailed to Tanya */
+  function openEnquiry(sessionTitle) {
+    openModalShell();
+    if (!bookingCfg().functionsBase || !bookingKey()) { renderBookingFallback(); return; }
+    modalBody.innerHTML = "";
+    var wrap = el("div", { class: "booking" });
+    wrap.appendChild(el("h3", { class: "booking__title", text: tr("enquiry_title") }));
+    if (sessionTitle) wrap.appendChild(el("p", { class: "booking__chosen", text: sessionTitle }));
+    var form = el("form", { class: "booking__form" });
+    function field(name, label, type) {
+      return el("label", { class: "booking__field" }, [
+        el("span", { text: label }),
+        el("input", { name: name, type: type || "text", required: name !== "message" ? "required" : null }),
+      ]);
+    }
+    var row = el("div", { class: "booking__row" }, [field("first", tr("enquiry_first")), field("last", tr("enquiry_last"))]);
+    var msg = el("label", { class: "booking__field" }, [el("span", { text: tr("enquiry_message") }), el("textarea", { name: "message", rows: "4" })]);
+    var err = el("p", { class: "booking__error" });
+    var submit = el("button", { class: "btn btn--solid btn--book-dark", type: "submit", text: tr("enquiry_send") });
+    form.appendChild(row);
+    form.appendChild(field("email", tr("booking_email"), "email"));
+    form.appendChild(field("phone", tr("booking_phone"), "tel"));
+    form.appendChild(msg);
+    form.appendChild(err);
+    form.appendChild(submit);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      err.classList.remove("is-show");
+      var data = {
+        session: sessionTitle,
+        firstName: form.first.value.trim(), lastName: form.last.value.trim(),
+        email: form.email.value.trim(), phone: form.phone.value.trim(),
+        message: form.message.value.trim(),
+      };
+      if (!data.firstName || !data.lastName || !data.email || !data.phone) { err.textContent = tr("booking_fill_all"); err.classList.add("is-show"); return; }
+      submit.disabled = true; submit.textContent = tr("enquiry_sending");
+      bookingApi("/create-enquiry", { method: "POST", body: data }).then(function (res) {
+        if (res.status === 200 && res.body && res.body.ok) {
+          bookingMsg("<h3>" + tr("enquiry_sent_title") + "</h3><p>" + tr("enquiry_sent_text") + "</p>");
+          return;
+        }
+        submit.disabled = false; submit.textContent = tr("enquiry_send");
+        err.textContent = tr("booking_error"); err.classList.add("is-show");
+      }).catch(function () {
+        submit.disabled = false; submit.textContent = tr("enquiry_send");
+        err.textContent = tr("booking_error"); err.classList.add("is-show");
+      });
+    });
+    wrap.appendChild(form);
+    modalBody.appendChild(wrap);
+  }
+
   function closeModal() { if (!modal) return; modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); document.body.classList.remove("no-scroll"); modalBody.innerHTML = ""; }
 
   /* ---------- nav, buttons, keys, reveal ----------------------------------- */
@@ -459,7 +582,11 @@
   function initBookingButtons() {
     document.addEventListener("click", function (e) {
       var t = e.target.closest ? e.target.closest("[data-book]") : null;
-      if (t) { e.preventDefault(); openBooking(t.getAttribute("data-scheduler") || ""); }
+      if (t) {
+        e.preventDefault();
+        if (t.getAttribute("data-mode") === "enquiry") openEnquiry(t.getAttribute("data-session") || "");
+        else openBooking();
+      }
     });
   }
   function initKeys() {
@@ -507,7 +634,7 @@
     var query =
       '{' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,time,price,description,"image":image.asset->url,schedulerUrl,packages[]{count,price,stripeUrl},hue},' +
+          '{_id,title,time,price,description,"image":image.asset->url,groupBooking,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,"video":video.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
@@ -650,18 +777,30 @@
     var f = $(".site-footer");
     if (!f) return;
     f.innerHTML =
-      '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
-        '<clipPath id="fcPhoto" clipPathUnits="objectBoundingBox"><path d="M0.50,0.01 C0.76,0 0.99,0.18 0.98,0.46 C0.98,0.68 0.90,0.90 0.62,0.98 C0.40,1.03 0.14,0.92 0.05,0.64 C-0.01,0.40 0.08,0.16 0.30,0.06 C0.37,0.02 0.44,0.01 0.50,0.01 Z"/></clipPath>' +
-        '<clipPath id="fcBubble" clipPathUnits="objectBoundingBox"><path d="M0.02,0.40 C0.02,0.16 0.16,0.05 0.40,0.05 C0.62,0.05 0.78,0 0.90,0.10 C1,0.19 0.99,0.40 0.99,0.56 C0.99,0.80 0.88,0.98 0.62,0.97 C0.44,0.965 0.26,1 0.14,0.90 C0.04,0.82 0.02,0.62 0.02,0.40 Z"/></clipPath>' +
-      '</defs></svg>' +
+      '<div class="footer-flower" aria-hidden="true">' +
+        '<svg viewBox="0 0 240 240" fill="none" stroke="currentColor" stroke-width="1.4">' +
+          '<g transform="translate(120 120)">' +
+            '<ellipse cx="0" cy="-48" rx="21" ry="48"/>' +
+            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(60)"/>' +
+            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(120)"/>' +
+            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(180)"/>' +
+            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(240)"/>' +
+            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(300)"/>' +
+            '<circle r="17"/>' +
+          '</g>' +
+        '</svg>' +
+      '</div>' +
       '<div class="wrap footer-inner">' +
         '<div class="footer-cols">' +
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_getintouch">Get in touch</h4>' +
-            '<a href="#" data-link-email data-brand-email>tanya.ekelin@gmail.com</a>' +
+            '<a href="#" data-link-email data-brand-email>email</a>' +
+            '<a href="#" data-link-phone data-brand-phone>Phone</a>' +
+            '<a href="#" data-link-whatsapp target="_blank" rel="noopener">WhatsApp</a>' +
             '<a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>' +
             '<a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>' +
             '<a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>' +
+            '<p class="footer-col__loc">📍 <span data-brand-location></span></p>' +
           '</div>' +
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_explore">Explore</h4>' +
@@ -670,18 +809,10 @@
             '<a href="index.html#about" data-i18n="nav_about">About</a>' +
           '</div>' +
         '</div>' +
-        '<div class="footer-contact">' +
-          '<div class="footer-contact__photo"><img src="assets/images/about-tanya.jpg?v=2" alt="Re-balance" onerror="this.onerror=null;this.src=\'assets/images/hero-bg.jpg\'"></div>' +
-          '<div class="footer-contact__bubble">' +
-            '<h3 data-i18n="contact_heading">Have a question?</h3>' +
-            '<p data-i18n="contact_text">Curious about a hike, a retreat or a 1:1 session? Reach out — Tanya is happy to help.</p>' +
-            '<p class="footer-contact__line"><span class="fc-lbl" data-i18n="label_email">Email</span>: <a class="fc-val" href="#" data-link-email data-brand-email>tanya.ekelin@gmail.com</a></p>' +
-            '<a class="footer-contact__more" href="index.html#about" data-i18n="read_more">Read more</a>' +
-          '</div>' +
-        '</div>' +
       '</div>' +
       '<div class="wrap footer-bottom">' +
         '<span>© <span data-year></span> <span data-brand-name>Re-balance</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
+        '<span class="footer-legal" data-brand-cvr></span>' +
       '</div>';
   }
   function render() {

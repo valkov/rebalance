@@ -33,6 +33,10 @@ window.SITE_CONFIG = {
     tagline: "We hike for better mental health, well-being and self-knowledge.",
     intro: "Guided nature hikes, retreats and 1:1 therapy with Tanya Basse — slow down, breathe, and find your footing in the wild.",
     email: "tanyabasse@gmail.com",
+    phone: "+45 41 18 50 96",
+    whatsapp: "4541185096", // digits only — becomes https://wa.me/…
+    location: "København, Østerbro",
+    cvr: "32386644",
     instagram: "https://www.instagram.com/tanyabasse/",
     facebook: "",
     telegram: "",
@@ -42,6 +46,15 @@ window.SITE_CONFIG = {
   // doesn't specify its own. Paste a Cal.com or Calendly link. Leave "" to
   // fall back to email.
   schedulerUrl: "",
+
+  // ---- Group-session booking (our own system on Supabase) ------------------
+  // The semi-private (1:4) session books through our Supabase Edge Functions.
+  // Both values below are PUBLIC and safe to commit (the anon key is meant for
+  // browsers). The service-role key / DB password never go here.
+  booking: {
+    functionsBase: "https://egtaoiaiqxvgiismhpvd.supabase.co/functions/v1",
+    publishableKey: "sb_publishable__oBXfiS03HP5YMwtwFv-tw_uevE27Hv", // Supabase publishable key — browser-safe
+  },
 
   // Content (therapy sessions + photo gallery) is loaded LIVE from Sanity
   // (projectId above). There is intentionally no built-in fallback content:

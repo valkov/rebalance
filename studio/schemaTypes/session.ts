@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'session',
@@ -29,50 +29,13 @@ export default defineType({
       description: 'Rich text — paragraphs, bold, links, lists.',
     }),
     defineField({
-      name: 'schedulerUrl',
-      title: 'Booking calendar (Book a time)',
-      type: 'url',
-      description: 'Cal.com booking link — for sessions people book on a calendar (group/class). Leave empty for clip-card sessions.',
-    }),
-    defineField({
-      name: 'packages',
-      title: 'Session packages (klippekort)',
-      type: 'array',
+      name: 'groupBooking',
+      title: 'Group slot booking',
+      type: 'boolean',
+      initialValue: false,
       description:
-        'For personal sessions sold as prepaid packages instead of a calendar. Add one item per Stripe Payment Link (e.g. 1, 5 and 10 sessions). If any packages are set, the card shows a “Buy” button per package instead of the calendar. Enable name + phone collection on each Stripe link so you capture the client’s details.',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          name: 'sessionPackage',
-          fields: [
-            defineField({
-              name: 'count',
-              title: 'Number of sessions',
-              type: 'number',
-              validation: (Rule) => Rule.required().min(1).integer(),
-            }),
-            defineField({
-              name: 'price',
-              title: 'Price (optional)',
-              type: 'string',
-              description: 'e.g. DKK 900. Shown on the button.',
-            }),
-            defineField({
-              name: 'stripeUrl',
-              title: 'Stripe payment link',
-              type: 'url',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-          preview: {
-            select: {count: 'count', price: 'price'},
-            prepare({count, price}) {
-              const n = count === 1 ? '1 session' : `${count} sessions`
-              return {title: price ? `${n} — ${price}` : n}
-            },
-          },
-        }),
-      ],
+        'ON = this is the semi-private group session; the Book button opens the slot calendar (pick a time, up to 4 people). ' +
+        'OFF = personal session; the Book button opens an enquiry form (name, email, phone, message) sent to you.',
     }),
     defineField({
       name: 'hue',
