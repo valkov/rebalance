@@ -118,6 +118,7 @@
     $all("[data-link-phone]").forEach(function (n) { if (b.phone) { n.href = "tel:" + b.phone.replace(/[^\d+]/g, ""); } });
     $all("[data-brand-phone]").forEach(function (n) { n.textContent = b.phone || ""; });
     $all("[data-brand-location]").forEach(function (n) { if (b.location) { n.textContent = b.location; } else { n.style.display = "none"; } });
+    $all("[data-map-link]").forEach(function (n) { if (b.location) { n.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(b.location); } });
     $all("[data-brand-cvr]").forEach(function (n) { if (b.cvr) { n.textContent = "CVR " + b.cvr; } else { n.style.display = "none"; } });
     $all("[data-year]").forEach(function (n) { n.textContent = String(new Date().getFullYear()); });
     if ((CFG.locations || []).length) $all("[data-locations]").forEach(function (n) { n.textContent = CFG.locations.join(" · "); });
@@ -220,7 +221,6 @@
       if (Array.isArray(d) && d.length) descEl.innerHTML = ptToHtml(d);
       else if (typeof d === "string" && d.trim()) d.split(/\n{2,}/).forEach(function (p) { if (p.trim()) descEl.appendChild(el("p", { text: p.trim() })); });
       var card = el("article", { class: "session-card reveal" }, [
-        el("div", { class: "session-card__media" }, [makeImg({ src: s.image, label: loc(s.title), hue: s.hue }, loc(s.title))]),
         el("div", { class: "session-card__body" }, [
           el("h3", { class: "session-card__title", text: loc(s.title) }),
           metaText ? el("p", { class: "session-card__meta", text: metaText }) : null,
@@ -778,15 +778,15 @@
     if (!f) return;
     f.innerHTML =
       '<div class="footer-flower" aria-hidden="true">' +
-        '<svg viewBox="0 0 240 240" fill="none" stroke="currentColor" stroke-width="1.4">' +
-          '<g transform="translate(120 120)">' +
-            '<ellipse cx="0" cy="-48" rx="21" ry="48"/>' +
-            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(60)"/>' +
-            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(120)"/>' +
-            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(180)"/>' +
-            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(240)"/>' +
-            '<ellipse cx="0" cy="-48" rx="21" ry="48" transform="rotate(300)"/>' +
-            '<circle r="17"/>' +
+        '<svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">' +
+          '<g transform="translate(120 140)">' +
+            '<path d="M0 0 C-27 -36 -23 -78 0 -104 C23 -78 27 -36 0 0 Z"/>' +
+            '<path d="M0 0 C-27 -36 -23 -78 0 -104 C23 -78 27 -36 0 0 Z" transform="rotate(34)"/>' +
+            '<path d="M0 0 C-27 -36 -23 -78 0 -104 C23 -78 27 -36 0 0 Z" transform="rotate(-34)"/>' +
+            '<path d="M0 0 C-20 -18 -46 -34 -80 -40 C-70 -12 -34 0 0 0 Z" transform="rotate(8)"/>' +
+            '<path d="M0 0 C-20 -18 -46 -34 -80 -40 C-70 -12 -34 0 0 0 Z" transform="rotate(-8) scale(-1 1)"/>' +
+            '<path d="M0 0 C-16 -12 -40 -20 -66 -20 C-58 -4 -28 4 0 0 Z" transform="rotate(4)"/>' +
+            '<path d="M0 0 C-16 -12 -40 -20 -66 -20 C-58 -4 -28 4 0 0 Z" transform="rotate(-4) scale(-1 1)"/>' +
           '</g>' +
         '</svg>' +
       '</div>' +
@@ -800,7 +800,7 @@
             '<a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>' +
             '<a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>' +
             '<a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>' +
-            '<p class="footer-col__loc">📍 <span data-brand-location></span></p>' +
+            '<a class="footer-col__loc" data-map-link data-brand-location href="#" target="_blank" rel="noopener"></a>' +
           '</div>' +
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_explore">Explore</h4>' +
