@@ -427,16 +427,35 @@
     bookingMsg("<h3>" + tr("modal_title") + "</h3><p>" + tr("modal_text") + "</p>" +
       (email ? '<div class="modal__contacts"><a class="btn btn--solid" href="mailto:' + escapeHtml(email) + '?subject=Booking%20enquiry">' + tr("modal_email") + "</a></div>" : ""));
   }
+  // contact options (email / phone / WhatsApp) for when a session is full
+  function contactBlock() {
+    var b = CFG.brand || {};
+    var links = [];
+    if (b.email) links.push(el("a", { class: "btn btn--solid btn--book-dark", href: "mailto:" + b.email, text: tr("modal_email") }));
+    if (b.phone) links.push(el("a", { class: "btn btn--ghost", href: "tel:" + b.phone.replace(/[^\d+]/g, ""), text: b.phone }));
+    var waNum = String(b.whatsapp || "").replace(/\D/g, "");
+    if (waNum) links.push(el("a", { class: "btn btn--ghost", href: "https://wa.me/" + waNum, target: "_blank", rel: "noopener", text: "WhatsApp" }));
+    return el("div", { class: "booking__contact" }, [
+      el("p", { class: "booking__contact-intro", text: tr("booking_contact_intro") }),
+      el("div", { class: "booking__contact-links" }, links),
+    ]);
+  }
+  function renderNoAvailability() {
+    modalBody.innerHTML = "";
+    modalBody.appendChild(el("div", { class: "booking" }, [
+      el("h3", { class: "booking__title", text: tr("booking_full_title") }),
+      el("p", { class: "muted", text: tr("booking_none") }),
+      contactBlock(),
+    ]));
+  }
   function renderSlots(slots) {
     modalBody.innerHTML = "";
+    if (!slots.length) { renderNoAvailability(); return; }
     var wrap = el("div", { class: "booking" }, [el("h3", { class: "booking__title", text: tr("booking_pick_time") })]);
-    if (!slots.length) { wrap.appendChild(el("p", { class: "muted", text: tr("booking_none") })); modalBody.appendChild(wrap); return; }
     var list = el("div", { class: "booking__slots" });
     slots.forEach(function (s) {
-      var leftTxt = s.remaining === 1 ? tr("booking_seats_left_one") : tr("booking_seats_left").replace("{n}", s.remaining);
       var btn = el("button", { class: "booking__slot", type: "button" }, [
         el("span", { class: "booking__slot-when", text: fmtSlot(s.starts_at) }),
-        el("span", { class: "booking__slot-left", text: leftTxt }),
       ]);
       btn.addEventListener("click", function () { renderForm(s); });
       list.appendChild(btn);
@@ -473,11 +492,10 @@
       submit.disabled = true; submit.textContent = tr("booking_sending");
       bookingApi("/create-booking", { method: "POST", body: data }).then(function (res) {
         if (res.status === 200 && res.body && res.body.ok) { renderSuccess(slot); return; }
+        // slot filled up (full or no longer bookable) -> show contact options
+        if (res.body && res.body.error === "slot_full") { renderNoAvailability(); return; }
         submit.disabled = false; submit.textContent = tr("booking_confirm");
-        var full = res.body && res.body.error === "slot_full";
-        err.textContent = full ? tr("booking_full") : tr("booking_error");
-        err.classList.add("is-show");
-        if (full) setTimeout(openBooking, 1400);
+        err.textContent = tr("booking_error"); err.classList.add("is-show");
       }).catch(function () {
         submit.disabled = false; submit.textContent = tr("booking_confirm");
         err.textContent = tr("booking_error"); err.classList.add("is-show");
