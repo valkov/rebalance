@@ -390,6 +390,14 @@
       body: opts && opts.body ? JSON.stringify(opts.body) : undefined,
     }).then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); });
   }
+  function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e || ""); }
+  function validPhone(p) { var d = (p || "").replace(/\D/g, ""); return /^[+\d\s()\-.]+$/.test(p || "") && d.length >= 6 && d.length <= 15; }
+  // returns an i18n error key if invalid, else null
+  function contactError(email, phone) {
+    if (!validEmail(email)) return "booking_bad_email";
+    if (!validPhone(phone)) return "booking_bad_phone";
+    return null;
+  }
   function fmtSlot(iso) {
     try {
       return new Intl.DateTimeFormat(window.getLocale && window.getLocale() === "da" ? "da-DK" : "en-GB", {
@@ -460,6 +468,8 @@
       err.classList.remove("is-show");
       var data = { slot_id: slot.id, name: form.name.value.trim(), email: form.email.value.trim(), phone: form.phone.value.trim() };
       if (!data.name || !data.email || !data.phone) { err.textContent = tr("booking_fill_all"); err.classList.add("is-show"); return; }
+      var ce = contactError(data.email, data.phone);
+      if (ce) { err.textContent = tr(ce); err.classList.add("is-show"); return; }
       submit.disabled = true; submit.textContent = tr("booking_sending");
       bookingApi("/create-booking", { method: "POST", body: data }).then(function (res) {
         if (res.status === 200 && res.body && res.body.ok) { renderSuccess(slot); return; }
@@ -519,6 +529,8 @@
         message: form.message.value.trim(),
       };
       if (!data.firstName || !data.lastName || !data.email || !data.phone) { err.textContent = tr("booking_fill_all"); err.classList.add("is-show"); return; }
+      var ce = contactError(data.email, data.phone);
+      if (ce) { err.textContent = tr(ce); err.classList.add("is-show"); return; }
       submit.disabled = true; submit.textContent = tr("enquiry_sending");
       bookingApi("/create-enquiry", { method: "POST", body: data }).then(function (res) {
         if (res.status === 200 && res.body && res.body.ok) {

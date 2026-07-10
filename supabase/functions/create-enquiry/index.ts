@@ -22,6 +22,7 @@ Deno.serve(async (req) => {
 
     if (!firstName || !lastName || !email || !phone) return json({ error: "missing_fields" }, 400, headers);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "bad_email" }, 400, headers);
+    if (phone.replace(/\D/g, "").length < 6) return json({ error: "bad_phone" }, 400, headers);
 
     const to = Deno.env.get("ENQUIRY_TO");
     if (!to) return json({ error: "not_configured" }, 500, headers);
