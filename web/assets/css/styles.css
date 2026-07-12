@@ -236,7 +236,7 @@ p { margin: 0 0 1em; }
 .about__body p:last-child { margin-bottom: 0; }
 .about__subheading { font-size: 1.35rem; font-weight: 700; margin: 2.2rem 0 0.9rem; color: var(--ink); }
 /* About (homepage): 3-paragraph intro + a Read more button to the About page */
-.about__more { display: inline-block; margin: 0.6rem 0 0; padding: 0.7rem 1.7rem; border: 1px solid var(--forest); color: var(--forest); font-weight: 600; text-decoration: none; transition: background .15s, color .15s; }
+.about__more { display: inline-block; margin: calc(0.6rem + 30px) 0 0; padding: 0.7rem 1.7rem; border: 1px solid var(--forest); color: var(--forest); font-weight: 600; text-decoration: none; transition: background .15s, color .15s; }
 .about__more:hover { background: var(--forest); color: #fff; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
 .chip { background: var(--sand); color: var(--forest-d); border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: 500; }
