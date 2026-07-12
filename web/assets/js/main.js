@@ -836,7 +836,7 @@
       '<div class="wrap footer-inner">' +
         '<div class="footer-lead">' +
           '<div class="footer-brand">' +
-            '<svg class="footer-brand__icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>' +
+            '<svg class="footer-brand__icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>' +
             '<span data-brand-name>Re-balance</span>' +
           '</div>' +
           '<p class="footer-tag" data-i18n="footer_blurb">Body-oriented therapy and nervous-system work — a calm, safe space to slow down and reconnect.</p>' +
