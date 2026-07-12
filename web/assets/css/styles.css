@@ -178,6 +178,9 @@ p { margin: 0 0 1em; }
 .session-card__desc p:last-child { margin-bottom: 0; }
 .session-card__desc a { color: var(--forest); text-decoration: underline; }
 .session-card__action { align-self: start; }
+/* session book buttons: defined by a border instead of a drop shadow */
+.session-card .btn--book { box-shadow: none; border: 1px solid var(--forest); }
+.session-card .btn--book:hover { background: var(--forest); color: #fff; }
 .btn--book-dark { background: #111; color: #fff; border: 0; border-radius: 0; padding: 0.75rem 1.6rem; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; box-shadow: none; }
 .btn--book-dark:hover { background: #000; color: #fff; }
 @media (max-width: 760px) {
