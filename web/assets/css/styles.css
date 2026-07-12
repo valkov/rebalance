@@ -19,7 +19,7 @@
   --radius: 0;
   --radius-lg: 0;
   --wrap: 1140px;
-  --font-head: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", "Avenir Next", Avenir, Roboto, Helvetica, Arial, sans-serif;
+  --font-head: "Josefin Sans", "Century Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", Avenir, Helvetica, Arial, sans-serif;
   --font-body: "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", "Avenir Next", Avenir, Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -73,7 +73,7 @@ p { margin: 0 0 1em; }
 .brand img { width: 38px; height: 38px; }
 .brand__icon { width: 1.1em; height: 1.1em; flex: none; }
 .nav-menu { order: 1; display: flex; align-items: center; gap: 1.8rem; }
-.nav-menu a { color: var(--ink); font-weight: 500; font-size: 0.97rem; }
+.nav-menu a { color: var(--ink); font-family: var(--font-head); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.04em; }
 .nav-menu a:hover { color: var(--forest); }
 .lang-switch { order: 2; display: inline-flex; gap: 2px; border: 1px solid var(--line); border-radius: 0; padding: 3px; background: rgba(255, 255, 255, 0.5); }
 .lang-switch button { border: 0; background: none; cursor: pointer; font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); padding: 0.28rem 0.55rem; border-radius: 0; line-height: 1; }
@@ -247,16 +247,16 @@ p { margin: 0 0 1em; }
 .quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
 .quote { position: relative; display: flex; flex-direction: column; background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem 1.5rem 1.2rem; box-shadow: var(--shadow-sm); cursor: default; }
 .quote.is-clamped { cursor: pointer; }
-.quote__mark { font-family: var(--font-head); font-style: italic; font-size: 2.2rem; line-height: 0.5; color: var(--sage); margin-bottom: 0.45rem; }
+.quote__mark { font-family: var(--font-body); font-style: italic; font-size: 2.2rem; line-height: 0.5; color: var(--sage); margin-bottom: 0.45rem; }
 .quote__text { margin: 0; }
-.quote__text p { font-family: var(--font-head); font-style: italic; font-size: 0.98rem; line-height: 1.55; color: var(--ink); margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+.quote__text p { font-family: var(--font-body); font-style: italic; font-size: 0.98rem; line-height: 1.55; color: var(--ink); margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
 .quote.is-clamped.is-open .quote__text p { display: block; overflow: visible; }
 /* only clamped (truncated) quotes get the Read more toggle */
 .quote.is-clamped .quote__text::after { content: "Read more ↓"; display: block; font-family: var(--font-body); font-style: normal; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--forest); margin-top: 0.8rem; }
 .quote.is-clamped.is-open .quote__text::after { content: "Show less ↑"; }
 .quote__by { display: flex; align-items: center; gap: 0.85rem; margin-top: auto; padding-top: 1rem; }
 .quote__photo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: none; display: flex; align-items: center; justify-content: center; background: var(--sage); box-shadow: 0 3px 12px rgba(64, 64, 65, 0.16); }
-.quote__photo--mono { color: #fff; font-family: var(--font-head); font-style: italic; font-size: 1.35rem; }
+.quote__photo--mono { color: #fff; font-family: var(--font-body); font-style: italic; font-size: 1.35rem; }
 .quote__byline { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
 .quote__name { font-family: var(--font-body); font-style: normal; font-weight: 700; font-size: 0.92rem; letter-spacing: 0.01em; color: var(--ink); }
 .quote__role { font-size: 0.8rem; line-height: 1.35; color: var(--ink-soft); }
