@@ -133,7 +133,7 @@
       hero_badge: "🌿 Naturassisteret velvære · Danmark & Sverige",
       hero_tagline: "Vi vandrer for bedre mental sundhed, trivsel og selvindsigt.",
       hero_intro: "Guidede terapeutiske vandringer, retreats og 1:1-terapi — sæt tempoet ned, træk vejret, og find fodfæste i naturen.",
-      hero_find_event: "Find en begivenhed", hero_book_session: "Book en session", hero_cue: "Slip, slap af, find ro",
+      hero_find_event: "Find en begivenhed", hero_book_session: "Book en session", hero_cue: "Slip, Slap af, Find ro",
       moments_eyebrow: "Øjeblikke på stien", moments_heading: "Hvor vi har vandret", view_full_gallery: "Se hele galleriet →",
       events_eyebrow: "Kommende begivenheder", events_heading: "Vandringer & retreats, du kan booke",
       events_intro: "Små grupper i roligt tempo — nærvær frem for præstation. Reservér din plads, eller betal sikkert online.",
