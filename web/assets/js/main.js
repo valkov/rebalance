@@ -215,7 +215,13 @@
       action.classList.add("btn--book");
       action.setAttribute("data-mode", s.groupBooking ? "group" : "enquiry");
       action.setAttribute("data-session", loc(s.title) || "");
-      if (s.groupBooking) action.setAttribute("data-scheduler", s.schedulerUrl || "");
+      var enTitle = (s.title && s.title.en) || loc(s.title) || "";
+      if (s.groupBooking) {
+        action.setAttribute("data-scheduler", s.schedulerUrl || "");
+        action.setAttribute("data-group-key", /morning|morgen/i.test((s.schedulerUrl || "") + " " + enTitle) ? "morning" : "evening");
+      } else {
+        action.setAttribute("data-enquiry-kind", /call|samtale|opkald/i.test(enTitle) ? "call" : "private");
+      }
       // rich text (Portable Text) or plain-text fallback
       var descEl = el("div", { class: "session-card__desc" });
       var d = loc(s.description);
@@ -374,6 +380,7 @@
 
   /* ---------- booking / scheduler modal ------------------------------------ */
   var modal, modalBody;
+  var currentGroupKey = "evening"; // which group session the Cal embed is open for
   function ensureModal() {
     if (modal) return;
     modal = el("div", { class: "modal", "aria-hidden": "true", role: "dialog", "aria-modal": "true", "aria-label": "Book" }, [
@@ -439,8 +446,9 @@
     var m = /(?:app\.)?cal\.com\/([^?#]+)/i.exec(url || "");
     return m ? m[1].replace(/\/+$/, "") : null;
   }
-  function openCalBooking(url) {
+  function openCalBooking(url, groupKey) {
     openModalShell();
+    currentGroupKey = groupKey === "morning" ? "morning" : "evening";
     var calLink = calLinkFromUrl(url);
     if (calLink && window.Cal) {
       modal.classList.add("modal--wide");
@@ -460,6 +468,27 @@
     } else {
       renderBookingFallback();
     }
+  }
+  // When a Cal.com booking completes inside the embed, replace the calendar with
+  // our own warm confirmation (incl. the chosen date/time from the event).
+  function onCalBookingSuccess(detail) {
+    if (!modal || !modal.classList.contains("is-open")) return;
+    var d = (detail && detail.data) || {};
+    var startIso = d.date || (d.booking && (d.booking.startTime || d.booking.start)) ||
+      (d.confirmedBooking && d.confirmedBooking.startTime) || null;
+    var whenStr = "";
+    if (startIso) {
+      try {
+        var locale = (window.getLocale && window.getLocale() === "da") ? "da-DK" : "en-GB";
+        var dObj = new Date(startIso);
+        var dateStr = new Intl.DateTimeFormat(locale, { timeZone: "Europe/Copenhagen", weekday: "long", day: "numeric", month: "long" }).format(dObj);
+        var timeStr = new Intl.DateTimeFormat(locale, { timeZone: "Europe/Copenhagen", hour: "2-digit", minute: "2-digit" }).format(dObj);
+        whenStr = tr("when_prefix").replace("{date}", dateStr).replace("{time}", timeStr);
+      } catch (e) { /* no date -> message without it */ }
+    }
+    var msg = tr(currentGroupKey === "morning" ? "thanks_morning" : "thanks_evening").replace("{when}", whenStr);
+    modal.classList.remove("modal--wide");
+    bookingMsg('<p>' + msg + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
   }
   function renderBookingFallback() {
     var email = (CFG.brand || {}).email || "";
@@ -552,7 +581,7 @@
   }
 
   /* personal (1:1) session: an enquiry form emailed to Tanya */
-  function openEnquiry(sessionTitle) {
+  function openEnquiry(sessionTitle, kind) {
     openModalShell();
     if (!bookingCfg().functionsBase || !bookingKey()) { renderBookingFallback(); return; }
     modalBody.innerHTML = "";
@@ -591,7 +620,7 @@
       submit.disabled = true; submit.textContent = tr("enquiry_sending");
       bookingApi("/create-enquiry", { method: "POST", body: data }).then(function (res) {
         if (res.status === 200 && res.body && res.body.ok) {
-          bookingMsg("<h3>" + tr("enquiry_sent_title") + "</h3><p>" + tr("enquiry_sent_text") + "</p>");
+          bookingMsg('<p>' + tr(kind === "call" ? "thanks_call" : "thanks_private") + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
           return;
         }
         submit.disabled = false; submit.textContent = tr("enquiry_send");
@@ -653,8 +682,8 @@
       var t = e.target.closest ? e.target.closest("[data-book]") : null;
       if (t) {
         e.preventDefault();
-        if (t.getAttribute("data-mode") === "enquiry") openEnquiry(t.getAttribute("data-session") || "");
-        else openCalBooking(t.getAttribute("data-scheduler") || "");
+        if (t.getAttribute("data-mode") === "enquiry") openEnquiry(t.getAttribute("data-session") || "", t.getAttribute("data-enquiry-kind") || "private");
+        else openCalBooking(t.getAttribute("data-scheduler") || "", t.getAttribute("data-group-key") || "evening");
       }
     });
   }
@@ -903,6 +932,9 @@
     initScrollHeader();
     initQuotes();
     initBookingButtons();
+    if (window.Cal) {
+      try { window.Cal("on", { action: "bookingSuccessful", callback: function (e) { onCalBookingSuccess(e && e.detail); } }); } catch (e) { /* embed not ready */ }
+    }
     initKeys();
     // content renders after an async fetch, so re-honour a #hash deep link
     // on the next frame, once card/gallery heights exist (instant, not smooth)
