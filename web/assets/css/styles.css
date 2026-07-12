@@ -235,9 +235,9 @@ p { margin: 0 0 1em; }
 .about__body p { margin: 0 0 1rem; line-height: 1.72; color: var(--ink); }
 .about__body p:last-child { margin-bottom: 0; }
 .about__subheading { font-size: 1.35rem; font-weight: 700; margin: 2.2rem 0 0.9rem; color: var(--ink); }
-/* desktop shows the full bio; the short intro + Read more are mobile-only */
-.about__short { display: none; }
-.about__more { display: none; }
+/* About (homepage): 3-paragraph intro + a Read more button to the About page */
+.about__more { display: inline-block; margin: 0.6rem 0 0; padding: 0.7rem 1.7rem; border: 1px solid var(--forest); color: var(--forest); font-weight: 600; text-decoration: none; transition: background .15s, color .15s; }
+.about__more:hover { background: var(--forest); color: #fff; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
 .chip { background: var(--sand); color: var(--forest-d); border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: 500; }
 
@@ -345,11 +345,6 @@ p { margin: 0 0 1em; }
 }
 @media (max-width: 760px) {
   .quotes { grid-template-columns: 1fr; }
-  /* About: show a short intro + Read more (-> about page), hide the full bio */
-  .about__full { display: none; }
-  .about__short { display: block; margin: 0 0 1.1rem; line-height: 1.7; color: var(--ink); }
-  .about__more { display: inline-block; color: var(--forest); font-weight: 700; text-decoration: none; }
-  .about__more::after { content: " \2192"; }
   .section { padding: 4rem 0; }
   .nav-toggle { display: block; }
   .nav-menu {
