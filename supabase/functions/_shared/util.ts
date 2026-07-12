@@ -74,6 +74,18 @@ export function confirmationHtml(name: string, whenIso: string, cancelUrl: strin
   );
 }
 
+// Confirmation sent to the client after a 1:1 enquiry. No date — Tanya arranges
+// the time personally afterwards.
+export function enquiryConfirmationHtml(name: string, session: string): string {
+  return WRAP(
+    `<h2 style="font-weight:700">Thank you, ${escapeHtml(name)} 🌿</h2>
+     <p>I've received your request${session ? ` for the <strong>${escapeHtml(session)}</strong>` : ""} and will be in touch personally to arrange a time that suits you.</p>
+     <p>If you have any questions in the meantime, just reply to this email or reach me directly:</p>
+     <p><a href="mailto:tanyabasse@gmail.com" style="color:#8a6c55">tanyabasse@gmail.com</a> · <a href="tel:+4541185096" style="color:#8a6c55">+45 41 18 50 96</a></p>
+     <p style="margin-top:20px">Warmly,<br>Tanya</p>`,
+  );
+}
+
 export function cancellationHtml(name: string, whenIso: string): string {
   return WRAP(
     `<h2 style="font-weight:700">Booking cancelled</h2>

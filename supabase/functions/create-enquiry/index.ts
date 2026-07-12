@@ -1,7 +1,7 @@
 // POST /create-enquiry { firstName, lastName, email, phone, message, session } -> { ok: true }
 // Saves a personal-session enquiry to the DB (source of truth) and, best-effort,
 // emails a notification to ENQUIRY_TO via Resend.
-import { cors, json, sendEmail, supabase } from "../_shared/util.ts";
+import { cors, enquiryConfirmationHtml, json, sendEmail, supabase } from "../_shared/util.ts";
 
 function esc(s: string): string {
   return String(s ?? "").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
@@ -45,6 +45,15 @@ Deno.serve(async (req) => {
         </div>`;
       await sendEmail(to, `Private booking — ${firstName} ${lastName}`, html, email);
     }
+
+    // 3) Best-effort confirmation to the client (no date — Tanya arranges the
+    // time). Reply-to points at Tanya so replies reach her.
+    await sendEmail(
+      email,
+      "Your Re-balance session request 🌿",
+      enquiryConfirmationHtml(firstName, session),
+      to ?? undefined,
+    );
     return json({ ok: true }, 200, headers);
   } catch (e) {
     return json({ error: String((e as Error)?.message ?? e) }, 500, headers);
