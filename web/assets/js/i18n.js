@@ -15,7 +15,7 @@
 (function () {
   var STR = {
     en: {
-      nav_events: "Events", nav_sessions: "Sessions", nav_groups: "Classes", nav_gallery: "Gallery", nav_about: "About me", nav_book: "Book",
+      nav_events: "Events", nav_sessions: "Sessions", nav_groups: "Classes", nav_gallery: "Gallery", nav_partners: "Partners", nav_about: "About me", nav_book: "Book", page_title_partners: "Partners — Re-balance",
       services_eyebrow: "How we can help", services_heading: "Find your path",
       service_events_eyebrow: "Group retreats", service_events_title: "Hikes & Retreats",
       service_events_desc: "Small-group guided hikes across Scandinavia and the Alps — paced for presence, not performance.",
@@ -116,7 +116,7 @@
       paid_thanks: "Thanks — your test booking is confirmed.",
     },
     da: {
-      nav_events: "Begivenheder", nav_sessions: "Sessioner", nav_groups: "Grupper", nav_gallery: "Galleri", nav_about: "Om mig", nav_book: "Book",
+      nav_events: "Begivenheder", nav_sessions: "Sessioner", nav_groups: "Grupper", nav_gallery: "Galleri", nav_partners: "Partnere", nav_about: "Om mig", nav_book: "Book", page_title_partners: "Partnere — Re-balance",
       services_eyebrow: "Hvad tilbyder vi", services_heading: "Find din vej",
       service_events_eyebrow: "Grupperetreat", service_events_title: "Vandringer & retreats",
       service_events_desc: "Guidede vandringer i Skandinavien og Alperne for små grupper — i roligt tempo med fokus på nærvær.",

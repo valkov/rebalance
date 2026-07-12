@@ -12,7 +12,8 @@ export default defineType({
       rows: 4,
       validation: (Rule) => Rule.required(),
     }),
-    defineField({name: 'author', title: 'Client name', type: 'string'}),
+    defineField({name: 'author', title: 'Client name', type: 'string', description: 'e.g. "Andrei, 39"'}),
+    defineField({name: 'role', title: 'Context / background', type: 'string', description: 'Shown under the name, e.g. "Combat soldier • Leg amputation".'}),
     defineField({
       name: 'photo',
       title: 'Client photo (optional)',
