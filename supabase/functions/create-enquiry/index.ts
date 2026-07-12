@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
           <p><strong>Phone:</strong> ${esc(phone)}</p>
           ${message ? `<p><strong>Message:</strong><br>${esc(message).replace(/\n/g, "<br>")}</p>` : ""}
         </div>`;
-      await sendEmail(to, `Private booking — ${firstName} ${lastName}`, html, email);
+      await sendEmail(to, `${session || "Session enquiry"} — ${firstName} ${lastName}`, html, email);
     }
 
     // 3) Best-effort confirmation to the client (no date — Tanya arranges the
