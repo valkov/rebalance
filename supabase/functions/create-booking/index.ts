@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
     // notification to Tanya so she sees new bookings by email too (best-effort)
     const notify = Deno.env.get("ENQUIRY_TO");
     if (notify) {
-      await sendEmail(notify, `New group booking — ${name}`,
+      await sendEmail(notify, `Group booking — ${name}`,
         `<div style="font-family:Mulish,Arial,sans-serif;color:#404041;line-height:1.6">
           <h2>New group-session booking</h2>
           <p><strong>When:</strong> ${when} (Copenhagen)</p>

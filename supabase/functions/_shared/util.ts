@@ -68,7 +68,9 @@ export function confirmationHtml(name: string, whenIso: string, cancelUrl: strin
      <p style="font-size:18px;font-weight:700">${fmtWhen(whenIso)} (Copenhagen time)</p>
      <p>Need to cancel? You can do so up to <strong>24 hours before</strong> the session:</p>
      <p><a href="${cancelUrl}" style="background:#111;color:#fff;padding:10px 18px;text-decoration:none;display:inline-block">Cancel my booking</a></p>
-     <p style="color:#8a8a89;font-size:13px">Within 24 hours of the start time, cancellation is no longer possible — please reach out directly.</p>`,
+     <p style="color:#8a8a89;font-size:13px">Within 24 hours of the start time, cancellation is no longer possible — please reach out directly.</p>
+     <p style="margin-top:20px">Any questions? Contact Tanya:<br>
+       <a href="mailto:tanyabasse@gmail.com" style="color:#8a6c55">tanyabasse@gmail.com</a> · <a href="tel:+4541185096" style="color:#8a6c55">+45 41 18 50 96</a></p>`,
   );
 }
 
