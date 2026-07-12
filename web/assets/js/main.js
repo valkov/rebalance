@@ -818,8 +818,7 @@
     list.forEach(function (rv) {
       var author = (rv.author || "").trim();
       var children = [
-        el("div", { class: "quote__mark", "aria-hidden": "true", text: "“" }),
-        el("blockquote", { class: "quote__text" }, [el("p", { text: loc(rv.text) || "" })]),
+        el("blockquote", { class: "quote__text" }, [el("p", { text: "“" + (loc(rv.text) || "") + "”" })]),
       ];
       if (rv.photo || author) {
         var by = [];

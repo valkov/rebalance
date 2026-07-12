@@ -247,7 +247,6 @@ p { margin: 0 0 1em; }
 .quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
 .quote { position: relative; display: flex; flex-direction: column; background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem 1.5rem 1.2rem; box-shadow: var(--shadow-sm); cursor: default; }
 .quote.is-clamped { cursor: pointer; }
-.quote__mark { font-family: var(--font-body); font-style: italic; font-size: 2.2rem; line-height: 0.5; color: var(--sage); margin-bottom: 0.45rem; }
 .quote__text { margin: 0; }
 .quote__text p { font-family: var(--font-body); font-style: italic; font-size: 0.98rem; line-height: 1.55; color: var(--ink); margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
 .quote.is-clamped.is-open .quote__text p { display: block; overflow: visible; }
