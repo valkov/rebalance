@@ -212,7 +212,7 @@
       var metaText = [time, price].filter(Boolean).join(" · "); // e.g. "60 min · 850 DKK"
       // one BOOK action per card. group session -> slot picker; personal -> enquiry form.
       var action = btnBook("nav_book", "", true);
-      action.classList.add("btn--book-dark");
+      action.classList.add("btn--book");
       action.setAttribute("data-mode", s.groupBooking ? "group" : "enquiry");
       action.setAttribute("data-session", loc(s.title) || "");
       // rich text (Portable Text) or plain-text fallback
@@ -827,7 +827,7 @@
             '<span data-brand-name>Re-balance</span>' +
           '</div>' +
           '<p class="footer-tag" data-i18n="footer_blurb">Body-oriented therapy and nervous-system work — a calm, safe space to slow down and reconnect.</p>' +
-          '<a class="btn btn--solid footer-cta" href="index.html#sessions" data-i18n="hero_book_session">Book a session</a>' +
+          '<a class="btn btn--book footer-cta" href="index.html#sessions" data-i18n="hero_book_session">Book a session</a>' +
         '</div>' +
         '<div class="footer-cols">' +
           '<div class="footer-col">' +
