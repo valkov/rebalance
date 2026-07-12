@@ -181,12 +181,17 @@ p { margin: 0 0 1em; }
 /* session book buttons: defined by a border instead of a drop shadow */
 .session-card .btn--book { box-shadow: none; border: 1px solid var(--forest); }
 .session-card .btn--book:hover { background: var(--forest); color: #fff; }
+.session-card__toggle { display: none; background: none; border: 0; padding: 0.55rem 0 0; margin: 0; color: var(--forest); font: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
 .btn--book-dark { background: #111; color: #fff; border: 0; border-radius: 0; padding: 0.75rem 1.6rem; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; box-shadow: none; }
 .btn--book-dark:hover { background: #000; color: #fff; }
 @media (max-width: 760px) {
-  .session-card { grid-template-columns: 1fr; gap: 1.2rem; }
+  .session-card { grid-template-columns: 1fr; gap: 0.9rem; padding: 1.2rem; }
   .session-card__media { width: 100%; max-width: 300px; }
   .session-card__action { justify-self: start; }
+  /* collapse description; expand via the toggle */
+  .session-card__desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .session-card.is-open .session-card__desc { -webkit-line-clamp: unset; overflow: visible; }
+  .session-card__toggle { display: inline-block; }
 }
 
 /* card links to the detail page */
@@ -230,6 +235,9 @@ p { margin: 0 0 1em; }
 .about__body p { margin: 0 0 1rem; line-height: 1.72; color: var(--ink); }
 .about__body p:last-child { margin-bottom: 0; }
 .about__subheading { font-size: 1.35rem; font-weight: 700; margin: 2.2rem 0 0.9rem; color: var(--ink); }
+/* desktop shows the full bio; the short intro + Read more are mobile-only */
+.about__short { display: none; }
+.about__more { display: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
 .chip { background: var(--sand); color: var(--forest-d); border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: 500; }
 
@@ -337,6 +345,11 @@ p { margin: 0 0 1em; }
 }
 @media (max-width: 760px) {
   .quotes { grid-template-columns: 1fr; }
+  /* About: show a short intro + Read more (-> about page), hide the full bio */
+  .about__full { display: none; }
+  .about__short { display: block; margin: 0 0 1.1rem; line-height: 1.7; color: var(--ink); }
+  .about__more { display: inline-block; color: var(--forest); font-weight: 700; text-decoration: none; }
+  .about__more::after { content: " \2192"; }
   .section { padding: 4rem 0; }
   .nav-toggle { display: block; }
   .nav-menu {

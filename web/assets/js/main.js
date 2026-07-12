@@ -220,14 +220,24 @@
       var d = loc(s.description);
       if (Array.isArray(d) && d.length) descEl.innerHTML = ptToHtml(d);
       else if (typeof d === "string" && d.trim()) d.split(/\n{2,}/).forEach(function (p) { if (p.trim()) descEl.appendChild(el("p", { text: p.trim() })); });
+      var body = el("div", { class: "session-card__body" }, [
+        el("h3", { class: "session-card__title", text: loc(s.title) }),
+        metaText ? el("p", { class: "session-card__meta", text: metaText }) : null,
+        descEl,
+      ]);
       var card = el("article", { class: "session-card reveal" }, [
-        el("div", { class: "session-card__body" }, [
-          el("h3", { class: "session-card__title", text: loc(s.title) }),
-          metaText ? el("p", { class: "session-card__meta", text: metaText }) : null,
-          descEl,
-        ]),
+        body,
         el("div", { class: "session-card__action" }, [action]),
       ]);
+      // mobile: description is clamped with a Read more / Show less toggle
+      if (descEl.childNodes.length) {
+        var toggle = el("button", { class: "session-card__toggle", type: "button", text: tr("read_more") });
+        toggle.addEventListener("click", function () {
+          var open = card.classList.toggle("is-open");
+          toggle.textContent = open ? tr("read_less") : tr("read_more");
+        });
+        body.appendChild(toggle);
+      }
       wrap.appendChild(card);
     });
   }
