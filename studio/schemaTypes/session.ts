@@ -34,8 +34,16 @@ export default defineType({
       type: 'boolean',
       initialValue: false,
       description:
-        'ON = this is the semi-private group session; the Book button opens the slot calendar (pick a time, up to 4 people). ' +
+        'ON = semi-private group session; the Book button opens the Cal.com booking calendar (set the link below). ' +
         'OFF = personal session; the Book button opens an enquiry form (name, email, phone, message) sent to you.',
+    }),
+    defineField({
+      name: 'schedulerUrl',
+      title: 'Cal.com booking link',
+      type: 'url',
+      description:
+        'Group sessions only: the Cal.com event link, e.g. https://cal.com/tanya-basse-f6x4ga/rest-and-digest-evening. ' +
+        'The Book button opens this calendar.',
     }),
     defineField({
       name: 'hue',

@@ -215,6 +215,7 @@
       action.classList.add("btn--book");
       action.setAttribute("data-mode", s.groupBooking ? "group" : "enquiry");
       action.setAttribute("data-session", loc(s.title) || "");
+      if (s.groupBooking) action.setAttribute("data-scheduler", s.schedulerUrl || "");
       // rich text (Portable Text) or plain-text fallback
       var descEl = el("div", { class: "session-card__desc" });
       var d = loc(s.description);
@@ -432,6 +433,34 @@
       renderSlots(res.body.slots);
     }).catch(function () { renderBookingFallback(); });
   }
+  /* group-session booking via Cal.com public embed (calLink from the session's
+     schedulerUrl in Sanity). Falls back to an iframe, then to contact options. */
+  function calLinkFromUrl(url) {
+    var m = /(?:app\.)?cal\.com\/([^?#]+)/i.exec(url || "");
+    return m ? m[1].replace(/\/+$/, "") : null;
+  }
+  function openCalBooking(url) {
+    openModalShell();
+    var calLink = calLinkFromUrl(url);
+    if (calLink && window.Cal) {
+      modal.classList.add("modal--wide");
+      modalBody.innerHTML = "";
+      var holder = el("div", { class: "cal-embed" });
+      modalBody.appendChild(holder);
+      try {
+        window.Cal("inline", { elementOrSelector: holder, calLink: calLink, config: { theme: "light", layout: "month_view" }, hideEventTypeDetails: true });
+      } catch (e) {
+        modalBody.innerHTML = "";
+        modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" }));
+      }
+    } else if (url) {
+      modal.classList.add("modal--wide");
+      modalBody.innerHTML = "";
+      modalBody.appendChild(el("iframe", { class: "modal__frame", src: url, title: "Booking calendar", loading: "lazy", frameborder: "0" }));
+    } else {
+      renderBookingFallback();
+    }
+  }
   function renderBookingFallback() {
     var email = (CFG.brand || {}).email || "";
     bookingMsg("<h3>" + tr("modal_title") + "</h3><p>" + tr("modal_text") + "</p>" +
@@ -625,7 +654,7 @@
       if (t) {
         e.preventDefault();
         if (t.getAttribute("data-mode") === "enquiry") openEnquiry(t.getAttribute("data-session") || "");
-        else openBooking();
+        else openCalBooking(t.getAttribute("data-scheduler") || "");
       }
     });
   }
@@ -674,7 +703,7 @@
     var query =
       '{' +
         '"sessions":*[_type=="session"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
-          '{_id,title,time,price,description,"image":image.asset->url,groupBooking,hue},' +
+          '{_id,title,time,price,description,"image":image.asset->url,groupBooking,schedulerUrl,hue},' +
         '"gallery":*[_type=="galleryImage"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
           '{"label":caption,"src":image.asset->url,"video":video.asset->url,hue,"groupId":group._ref},' +
         '"galleryGroups":*[_type=="galleryGroup"&&!(_id in path("drafts.**"))]|order(coalesce(order,99) asc)' +
