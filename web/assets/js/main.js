@@ -211,7 +211,7 @@
       var price = loc(s.price), time = loc(s.time);
       var metaText = [time, price].filter(Boolean).join(" · "); // e.g. "60 min · 850 DKK"
       // one BOOK action per card. group session -> slot picker; personal -> enquiry form.
-      var action = btnBook("nav_book", "", true);
+      var action = btnBook("hero_book_session", "", true);
       action.classList.add("btn--book");
       action.setAttribute("data-mode", s.groupBooking ? "group" : "enquiry");
       action.setAttribute("data-session", loc(s.title) || "");

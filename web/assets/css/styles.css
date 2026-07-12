@@ -429,6 +429,7 @@ p { margin: 0 0 1em; }
 .footer-brand__icon { color: #fff; flex: none; }
 .footer-tag { color: rgba(255, 255, 255, 0.82); font-size: 1.02rem; line-height: 1.65; margin: 0; }
 .footer-cta { align-self: flex-start; margin-top: 0.2rem; }
+.site-footer a.footer-cta, .site-footer a.footer-cta:hover { color: var(--ink); }
 .footer-cols { display: flex; gap: 3.5rem; flex-wrap: wrap; }
 .footer-col__loc { color: rgba(255, 255, 255, 0.86); font-size: 0.95rem; margin: 0.4rem 0 0; }
 /* footer headings: light warm tone so they read on the taupe footer */
