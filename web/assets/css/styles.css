@@ -265,7 +265,7 @@ p { margin: 0 0 1em; }
 .footer-cols { display: flex; gap: 3rem; flex-wrap: wrap; }
 .footer-cols h4 { font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem; color: var(--sage); margin: 0 0 0.7rem; }
 .footer-cols ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; font-size: 0.92rem; }
-.footer-bottom { margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.6); }
+.footer-bottom { margin-top: 2.4rem; padding-top: 1.4rem; font-size: 0.84rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.6); }
 
 /* ---- lightbox ------------------------------------------------------------ */
 .lightbox { position: fixed; inset: 0; z-index: 80; background: rgba(15, 25, 18, 0.92); display: none; align-items: center; justify-content: center; padding: 4vmin; }
