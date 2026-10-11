@@ -10,6 +10,11 @@ export const supabase = createClient(
 // Where enquiry/booking notifications go, and where client replies are directed.
 export const TANYA_EMAIL = "tanyabasse@gmail.com";
 
+// Sender for notifications to Tanya. Must differ from the client-facing sender
+// (EMAIL_FROM = tanya@re-balance.dk): Gmail files mail from one of the
+// recipient's own send-as addresses under All Mail instead of the inbox.
+export const NOTIFY_FROM = "Re-balance Website <website@re-balance.dk>";
+
 // Origins allowed to call the functions from the browser.
 // Set with: supabase secrets set ALLOWED_ORIGINS="https://valkov.github.io,http://localhost:8090"
 const ALLOWED = (Deno.env.get("ALLOWED_ORIGINS") ?? "")
@@ -46,9 +51,9 @@ export function fmtWhen(iso: string): string {
 // Send an email via Resend. Never throws (a failed email must not roll back a
 // completed booking), but returns/logs the outcome so failures are visible in
 // the function logs instead of vanishing.
-export async function sendEmail(to: string, subject: string, html: string, replyTo?: string): Promise<string | null> {
+export async function sendEmail(to: string, subject: string, html: string, replyTo?: string, fromOverride?: string): Promise<string | null> {
   const key = Deno.env.get("RESEND_API_KEY");
-  const from = Deno.env.get("EMAIL_FROM") ?? "Re-balance <onboarding@resend.dev>";
+  const from = fromOverride ?? Deno.env.get("EMAIL_FROM") ?? "Re-balance <onboarding@resend.dev>";
   if (!key) { console.error("sendEmail: RESEND_API_KEY is not set"); return "no_api_key"; }
   try {
     const body: Record<string, unknown> = { from, to, subject, html };

@@ -1,7 +1,7 @@
 // POST /create-booking { slot_id, name, email, phone } -> { ok: true }
 // Atomically reserves a seat (never overbooks a 1:4 slot) and emails a
 // confirmation with a cancel link.
-import { confirmationHtml, cors, json, sendEmail, supabase, TANYA_EMAIL } from "../_shared/util.ts";
+import { confirmationHtml, cors, json, sendEmail, supabase, TANYA_EMAIL, NOTIFY_FROM } from "../_shared/util.ts";
 
 Deno.serve(async (req) => {
   const headers = cors(req.headers.get("origin"));
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Phone:</strong> ${phone}</p>
-        </div>`, email);
+        </div>`, email, NOTIFY_FROM);
     }
 
     return json({ ok: true }, 200, headers);
