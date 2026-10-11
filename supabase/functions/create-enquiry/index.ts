@@ -1,7 +1,7 @@
 // POST /create-enquiry { firstName, lastName, email, phone, message, session } -> { ok: true }
 // Saves a personal-session enquiry to the DB (source of truth) and, best-effort,
 // emails a notification to TANYA_EMAIL via Resend.
-import { cors, enquiryConfirmationHtml, json, sendEmail, supabase, TANYA_EMAIL } from "../_shared/util.ts";
+import { cors, enquiryConfirmationHtml, json, sendEmail, supabase, TANYA_EMAIL, NOTIFY_FROM } from "../_shared/util.ts";
 
 function esc(s: string): string {
   return String(s ?? "").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
           <p><strong>Phone:</strong> ${esc(phone)}</p>
           ${message ? `<p><strong>Message:</strong><br>${esc(message).replace(/\n/g, "<br>")}</p>` : ""}
         </div>`;
-      notifyErr = await sendEmail(to, `${session || "Session enquiry"} — ${firstName} ${lastName}`, html, email);
+      notifyErr = await sendEmail(to, `${session || "Session enquiry"} — ${firstName} ${lastName}`, html, email, NOTIFY_FROM);
     }
 
     // 3) Best-effort confirmation to the client (no date — Tanya arranges the
