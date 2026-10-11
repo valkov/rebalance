@@ -7,6 +7,9 @@ export const supabase = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
 );
 
+// Where enquiry/booking notifications go, and where client replies are directed.
+export const TANYA_EMAIL = "tanyabasse@gmail.com";
+
 // Origins allowed to call the functions from the browser.
 // Set with: supabase secrets set ALLOWED_ORIGINS="https://valkov.github.io,http://localhost:8090"
 const ALLOWED = (Deno.env.get("ALLOWED_ORIGINS") ?? "")
@@ -40,21 +43,31 @@ export function fmtWhen(iso: string): string {
   }).format(new Date(iso));
 }
 
-// Send an email via Resend. Best-effort: never throws (a failed email must not
-// roll back a completed booking).
-export async function sendEmail(to: string, subject: string, html: string, replyTo?: string): Promise<void> {
+// Send an email via Resend. Never throws (a failed email must not roll back a
+// completed booking), but returns/logs the outcome so failures are visible in
+// the function logs instead of vanishing.
+export async function sendEmail(to: string, subject: string, html: string, replyTo?: string): Promise<string | null> {
   const key = Deno.env.get("RESEND_API_KEY");
   const from = Deno.env.get("EMAIL_FROM") ?? "Re-balance <onboarding@resend.dev>";
-  if (!key) return;
+  if (!key) { console.error("sendEmail: RESEND_API_KEY is not set"); return "no_api_key"; }
   try {
     const body: Record<string, unknown> = { from, to, subject, html };
     if (replyTo) body.reply_to = replyTo;
-    await fetch("https://api.resend.com/emails", {
+    const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "content-type": "application/json" },
       body: JSON.stringify(body),
     });
-  } catch (_e) { /* swallow */ }
+    if (!r.ok) {
+      const t = await r.text();
+      console.error(`sendEmail to=${to} from=${from} failed: ${r.status} ${t}`);
+      return `${r.status} ${t}`;
+    }
+    return null;
+  } catch (e) {
+    console.error("sendEmail threw:", e);
+    return String(e);
+  }
 }
 
 const WRAP = (inner: string) =>
