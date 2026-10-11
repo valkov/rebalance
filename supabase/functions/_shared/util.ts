@@ -13,7 +13,7 @@ export const TANYA_EMAIL = "tanyabasse@gmail.com";
 // Sender for notifications to Tanya. Must differ from the client-facing sender
 // (EMAIL_FROM = tanya@re-balance.dk): Gmail files mail from one of the
 // recipient's own send-as addresses under All Mail instead of the inbox.
-export const NOTIFY_FROM = "Re-balance Website <no-reply@re-balance.dk>";
+export const NOTIFY_FROM = "Re-balance Website <website@re-balance.dk>";
 
 // Origins allowed to call the functions from the browser.
 // Set with: supabase secrets set ALLOWED_ORIGINS="https://valkov.github.io,http://localhost:8090"
