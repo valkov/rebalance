@@ -1,0 +1,29 @@
+name: Deploy Supabase Edge Functions
+
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/functions/**', '.github/workflows/supabase-functions.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: supabase-functions
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: egtaoiaiqxvgiismhpvd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      # Public functions: the website calls them from the browser (no JWT).
+      - name: Deploy functions
+        run: |
+          for fn in list-slots create-booking cancel-booking create-enquiry list-bookings; do
+            supabase functions deploy "$fn" --project-ref "$PROJECT_REF" --no-verify-jwt
+          done
