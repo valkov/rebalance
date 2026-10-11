@@ -1,6 +1,6 @@
 # Rebalance
 
-Marketing website + CMS for **Rebalance** — gentle group and personal therapy
+Marketing website +CMS for **Rebalance** — gentle group and personal therapy
 with Tanya Basse (Denmark).
 
 ## Repository structure
