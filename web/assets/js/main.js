@@ -961,7 +961,6 @@
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_explore">Explore</h4>' +
             '<a href="sessions.html" data-i18n="nav_sessions">Sessions</a>' +
-            '<a href="index.html#about" data-i18n="nav_about">About</a>' +
           '</div>' +
         '</div>' +
       '</div>' +
