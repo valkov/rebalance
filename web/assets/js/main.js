@@ -270,7 +270,7 @@
       var mailSubject = tr("enquiry_mail_subject") + (cardTitle ? " \u2013 " + cardTitle : "");
       var mailHref = brandEmail ? "mailto:" + brandEmail + "?subject=" + encodeURIComponent(mailSubject) : "#booking-info";
       var action = el("button", { class: "btn btn--solid btn--book", type: "button", "data-book": "1", "data-mode": "enquiry",
-        "data-session": cardTitle, "data-enquiry-kind": kind === "phone" ? "call" : "private", "data-i18n": "book_request", text: tr("book_request") });
+        "data-session": cardTitle, "data-enquiry-kind": kind === "phone" ? "call" : (kind === "group" ? "group" : "private"), "data-i18n": "book_request", text: tr("book_request") });
       var descEl = el("div", { class: "service-card__desc" });
       var d = loc(x.description);
       if (Array.isArray(d) && d.length) descEl.innerHTML = ptToHtml(d);
@@ -674,7 +674,7 @@
       submit.disabled = true; submit.textContent = tr("enquiry_sending");
       bookingApi("/create-enquiry", { method: "POST", body: data }).then(function (res) {
         if (res.status === 200 && res.body && res.body.ok) {
-          bookingMsg('<p>' + tr(kind === "call" ? "thanks_call" : "thanks_private") + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
+          bookingMsg('<p>' + tr("thanks_" + (sel ? ["private", "group", "call", "package", "general"][sel.selectedIndex] || "general" : (kind || "private"))) + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
           return;
         }
         enquiryFallback(data);
