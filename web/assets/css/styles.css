@@ -760,3 +760,26 @@ p { margin: 0 0 1em; }
 .rec__org { margin: 0 0 1.1rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--forest); }
 .rec figcaption strong { font-size: 1.08rem; }
 .rec figcaption .rec__role { font-size: 0.98rem; font-weight: 500; color: var(--forest-d); }
+
+/* compact booking form: everything visible without scrolling */
+.modal__panel { max-height: 96vh; }
+.booking { padding: 1.4rem 1.8rem 1.5rem; max-height: 94vh; }
+.booking__title { font-size: 1.2rem; margin: 0 0 0.7rem; }
+.booking__chosen { font-size: 1rem; margin: 0 0 0.7rem; }
+.booking__form { gap: 0.55rem; }
+.booking__field { gap: 0.2rem; font-size: 0.8rem; }
+.booking__field input, .booking__field select, .booking__field textarea { padding: 0.5rem 0.7rem; }
+.booking__field textarea { min-height: 54px; }
+.booking__row { gap: 0.7rem; }
+.booking__hint { margin: 0; font-size: 0.75rem; }
+.booking__check { font-size: 0.8rem; line-height: 1.4; }
+.booking__form .btn { margin-top: 0.2rem; }
+@media (max-width: 560px) { .booking { padding: 1.2rem 1.1rem 1.3rem; } .booking__row .booking__field { flex: 1 1 100%; } }
+@media (max-width: 560px) { .modal { padding: 8px; } .booking__form { gap: 0.45rem; } .booking__title { margin-bottom: 0.5rem; } .booking__check { font-size: 0.76rem; } }
+
+.home-project { display: flex; flex-direction: column; padding-bottom: 1.8rem; }
+.home-project p { margin-bottom: 1.6rem; }
+.home-project__btn { margin: auto 1.4rem 0; align-self: flex-start; border: 1px solid var(--forest); color: var(--forest); border-radius: 0; padding: 0.75rem 1.6rem; }
+.home-project:hover .home-project__btn { background: var(--forest); color: #fff; }
+.project-head { scroll-margin-top: 90px; }
+.home-projects { margin-bottom: 0.6rem; }

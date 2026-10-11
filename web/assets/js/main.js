@@ -577,8 +577,7 @@
     var err = el("p", { class: "booking__error" });
     var submit = el("button", { class: "btn btn--solid btn--book-dark", type: "submit", text: tr("booking_confirm") });
     form.appendChild(field("name", tr("booking_name")));
-    form.appendChild(field("email", tr("booking_email"), "email"));
-    form.appendChild(field("phone", tr("booking_phone"), "tel"));
+    form.appendChild(el("div", { class: "booking__row" }, [field("email", tr("booking_email"), "email"), field("phone", tr("booking_phone"), "tel")]));
     form.appendChild(err);
     form.appendChild(submit);
     form.addEventListener("submit", function (e) {
@@ -644,12 +643,11 @@
       ]);
     }
     var row = el("div", { class: "booking__row" }, [field("first", tr("enquiry_first")), field("last", tr("enquiry_last"))]);
-    var msg = el("label", { class: "booking__field" }, [el("span", { text: tr("enquiry_message") }), el("textarea", { name: "message", rows: "4" })]);
+    var msg = el("label", { class: "booking__field" }, [el("span", { text: tr("enquiry_message") }), el("textarea", { name: "message", rows: "2" })]);
     var err = el("p", { class: "booking__error" });
     var submit = el("button", { class: "btn btn--solid btn--book-dark", type: "submit", text: tr("enquiry_send") });
     form.appendChild(row);
-    form.appendChild(field("email", tr("booking_email"), "email"));
-    form.appendChild(field("phone", tr("booking_phone"), "tel"));
+    form.appendChild(el("div", { class: "booking__row" }, [field("email", tr("booking_email"), "email"), field("phone", tr("booking_phone"), "tel")]));
     form.appendChild(msg);
     form.appendChild(el("p", { class: "booking__hint", text: tr("enquiry_health_note") }));
     var agree = el("input", { type: "checkbox", name: "agree" });
