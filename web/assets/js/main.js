@@ -953,7 +953,6 @@
             '<a href="#" data-link-email data-brand-email>email</a>' +
             '<a href="#" data-link-phone data-brand-phone>Phone</a>' +
             '<a href="#" data-link-whatsapp target="_blank" rel="noopener">WhatsApp</a>' +
-            '<a href="#" data-link-instagram target="_blank" rel="noopener">Instagram</a>' +
             '<a href="#" data-link-facebook target="_blank" rel="noopener">Facebook</a>' +
             '<a href="#" data-link-telegram target="_blank" rel="noopener">Telegram</a>' +
             '<a class="footer-col__loc" data-map-link data-brand-location href="#" target="_blank" rel="noopener"></a>' +
