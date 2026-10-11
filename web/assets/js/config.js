@@ -27,6 +27,14 @@ window.SITE_CONFIG = {
   // Don't forget: add your site URL + http://localhost:8087 to
   // Sanity → Manage → API → CORS origins, or the browser fetch is blocked.
   sanity: { projectId: "s3xmc1k6", dataset: "production", apiVersion: "2024-01-01" },
+  // Client reviews (short versions). testimonialsPinned keeps these on the site instead of the CMS copies.
+  testimonialsPinned: true,
+  testimonials: [
+    { author: "Combat soldier, 25", role: "In rehabilitation after combat injuries", text: "I finally felt able to relax and let go. The flashbacks almost disappeared, and the phantom pain no longer came at night like it used to." },
+    // { author: "Andrij, 39", role: "Combat soldier \u2022 Leg amputation and multiple shrapnel wounds", photo: "https://cdn.sanity.io/images/s3xmc1k6/production/305247d33b4d57a3e6d4fb24b5228d2608ddb468-200x200.png", text: "My leg started healing faster, the pain in my joints disappeared, and I began sleeping better." },
+    // { author: "Margarita, 72", role: "Displaced due to the war", photo: "https://cdn.sanity.io/images/s3xmc1k6/production/50c264c288a3d96b62206f67b7aad9061cca2eb3-200x200.png", text: "I feel a boost of energy and lightness. My body relaxes, the pain fades, and I find a sense of calm I didn\u2019t know I needed." },
+    // { author: "Anastasia, 42", role: "Displaced due to the war", photo: "https://cdn.sanity.io/images/s3xmc1k6/production/5b9f04dc6fa71544449533d646b821fc97ab8bae-200x200.png", text: "I have more energy and a stronger desire to live and work. I\u2019ve started focusing on developing my skills and learning the language." },
+  ],
 
   brand: {
     name: "Re-balance", // visible brand name; "Rebalance" stays the internal code name (repo, Sanity, paths)
@@ -84,6 +92,34 @@ window.SITE_CONFIG = {
       },
     ],
   },
+
+  // ---- Local gallery photos (no Sanity needed) ------------------------------
+  // These always show on the Gallery page, in addition to anything managed in
+  // Sanity. Each item needs a src (path under assets/images/) and a label; give
+  // items in the same group a matching groupId so they form one folder tile.
+  localGalleryGroups: [
+    { _id: "sessions", title: { en: "Individual sessions", da: "Individuelle sessioner" }, hue: 150 },
+    { _id: "studio", title: { en: "The studio", da: "Studiet" }, hue: 40 },
+    { _id: "dignity", title: { en: "DIGNITY \u2013 project work", da: "DIGNITY \u2013 projektarbejde" }, hue: 10 },
+  ],
+  localGallery: [
+    ...Array.from({ length: 20 }, (_, i) => ({
+      src: "assets/images/session/session-" + String(i + 1).padStart(2, "0") + ".jpg",
+      label: { en: "Functional Relaxation session", da: "Funktionel Afspænding-session" },
+      groupId: "sessions", hue: 150,
+    })),
+    ...Array.from({ length: 6 }, (_, i) => ({
+      src: "assets/images/studio/studio-" + String(i + 1).padStart(2, "0") + ".jpg",
+      label: { en: "The studio", da: "Studiet" },
+      groupId: "studio", hue: 40,
+    })),
+    { src: "assets/images/studio/grouprest-01.jpg", label: { en: "Deep Rest group session", da: "Deep Rest-gruppesession" }, groupId: "studio", hue: 40 },
+    ...Array.from({ length: 6 }, (_, i) => ({
+      src: "assets/images/dignity/dignity-" + String(i + 1).padStart(2, "0") + ".jpg",
+      label: { en: "DIGNITY \u2013 Danish Institute Against Torture", da: "DIGNITY \u2013 Dansk Institut Mod Tortur" },
+      groupId: "dignity", hue: 10,
+    })),
+  ],
 
   // ---- Where you operate & languages you guide in --------------------------
   locations: ["Copenhagen"],

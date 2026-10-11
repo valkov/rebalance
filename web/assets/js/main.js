@@ -3,6 +3,8 @@
   "use strict";
 
   var CFG = window.SITE_CONFIG || {};
+  CFG.gallery = (CFG.localGallery || []).slice();
+  CFG.galleryGroups = (CFG.localGalleryGroups || []).slice();
 
   /* ---------- helpers ------------------------------------------------------ */
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -210,18 +212,13 @@
     list.forEach(function (s) {
       var price = loc(s.price), time = loc(s.time);
       var metaText = [time, price].filter(Boolean).join(" · "); // e.g. "60 min · 850 DKK"
-      // one BOOK action per card. group session -> slot picker; personal -> enquiry form.
-      var action = btnBook("hero_book_session", "", true);
+      // one BOOK action per card: a plain, always-working mailto enquiry —
+      // sessions are arranged by request rather than an instant self-serve calendar.
+      var brandEmail = (CFG.brand || {}).email || "";
+      var mailSubject = tr("enquiry_mail_subject") + (loc(s.title) ? " \u2013 " + loc(s.title) : "");
+      var mailHref = brandEmail ? "mailto:" + brandEmail + "?subject=" + encodeURIComponent(mailSubject) : "#contact";
+      var action = btnLink("book_request", mailHref, true);
       action.classList.add("btn--book");
-      action.setAttribute("data-mode", s.groupBooking ? "group" : "enquiry");
-      action.setAttribute("data-session", loc(s.title) || "");
-      var enTitle = (s.title && s.title.en) || loc(s.title) || "";
-      if (s.groupBooking) {
-        action.setAttribute("data-scheduler", s.schedulerUrl || "");
-        action.setAttribute("data-group-key", /morning|morgen/i.test((s.schedulerUrl || "") + " " + enTitle) ? "morning" : "evening");
-      } else {
-        action.setAttribute("data-enquiry-kind", /call|samtale|opkald/i.test(enTitle) ? "call" : "private");
-      }
       // rich text (Portable Text) or plain-text fallback
       var descEl = el("div", { class: "session-card__desc" });
       var d = loc(s.description);
@@ -249,6 +246,40 @@
     });
   }
   function renderSessions() { renderSessionsInto($("#sessions-grid"), CFG.sessions || []); }
+  /* ---------- front-page offer cards: sessions listed under each photo ------ */
+  function offerKindOf(sess) {
+    var t = ((sess.title && (sess.title.en || sess.title.da)) || "") + "";
+    if (sess.groupBooking || /group|gruppe|rest\s*&\s*digest/i.test(t)) return "group";
+    if (/call|phone|opkald|telefon|samtale/i.test(t)) return "phone";
+    return "individual";
+  }
+  function renderOfferCards() {
+    var cards = $all(".service-card[data-offer]");
+    if (!cards.length) return;
+    var list = CFG.sessions || [];
+    var brandEmail = (CFG.brand || {}).email || "";
+    cards.forEach(function (card) {
+      var kind = card.getAttribute("data-offer");
+      var mine = list.filter(function (x) { return offerKindOf(x) === kind; });
+      var body = card.querySelector(".service-card__body");
+      if (!body || !mine.length) return; // keep the static text as fallback
+      body.innerHTML = "";
+      var x = mine[0]; // one description + one button per card
+      var titleEl = card.querySelector(".service-card__phototitle");
+      var cardTitle = titleEl ? titleEl.textContent : loc(x.title);
+      var mailSubject = tr("enquiry_mail_subject") + (cardTitle ? " \u2013 " + cardTitle : "");
+      var mailHref = brandEmail ? "mailto:" + brandEmail + "?subject=" + encodeURIComponent(mailSubject) : "#booking-info";
+      var action = el("button", { class: "btn btn--solid btn--book", type: "button", "data-book": "1", "data-mode": "enquiry",
+        "data-session": cardTitle, "data-enquiry-kind": kind === "phone" ? "call" : "private", "data-i18n": "book_request", text: tr("book_request") });
+      var descEl = el("div", { class: "service-card__desc" });
+      var d = loc(x.description);
+      if (Array.isArray(d) && d.length) descEl.innerHTML = ptToHtml(d);
+      else if (typeof d === "string" && d.trim()) d.split(/\n{2,}/).forEach(function (p) { if (p.trim()) descEl.appendChild(el("p", { text: p.trim() })); });
+      var price = el("p", { class: "service-card__price", "data-i18n": "price_" + kind, text: tr("price_" + kind) });
+      body.appendChild(el("div", { class: "service-card__session" }, [descEl, price, action]));
+    });
+  }
+
   function renderGroupSessions() { renderSessionsInto($("#group-sessions-grid"), CFG.groupSessions || []); }
 
   /* ---------- gallery ------------------------------------------------------ */
@@ -589,6 +620,12 @@
     wrap.appendChild(el("h3", { class: "booking__title", text: tr("enquiry_title") }));
     if (sessionTitle) wrap.appendChild(el("p", { class: "booking__chosen", text: sessionTitle }));
     var form = el("form", { class: "booking__form" });
+    if (!sessionTitle) {
+      var sel = el("select", { name: "session" }, ["off1_title", "off2_title", "off4_title", "pkg_title", "enquiry_unsure"].map(function (k) {
+        return el("option", { value: tr(k), text: tr(k) });
+      }));
+      form.appendChild(el("label", { class: "booking__field" }, [el("span", { text: tr("enquiry_choose") }), sel]));
+    }
     function field(name, label, type) {
       return el("label", { class: "booking__field" }, [
         el("span", { text: label }),
@@ -603,18 +640,26 @@
     form.appendChild(field("email", tr("booking_email"), "email"));
     form.appendChild(field("phone", tr("booking_phone"), "tel"));
     form.appendChild(msg);
+    form.appendChild(el("p", { class: "booking__hint", text: tr("enquiry_health_note") }));
+    var agree = el("input", { type: "checkbox", name: "agree" });
+    var agreeLbl = el("span"); agreeLbl.innerHTML = tr("enquiry_agree");
+    form.appendChild(el("label", { class: "booking__check" }, [agree, agreeLbl]));
+    var news = el("input", { type: "checkbox", name: "newsletter" });
+    form.appendChild(el("label", { class: "booking__check" }, [news, el("span", { text: tr("enquiry_newsletter") })]));
     form.appendChild(err);
     form.appendChild(submit);
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       err.classList.remove("is-show");
       var data = {
-        session: sessionTitle,
+        session: sessionTitle || (form.session ? form.session.value : ""),
         firstName: form.first.value.trim(), lastName: form.last.value.trim(),
         email: form.email.value.trim(), phone: form.phone.value.trim(),
         message: form.message.value.trim(),
       };
       if (!data.firstName || !data.lastName || !data.email || !data.phone) { err.textContent = tr("booking_fill_all"); err.classList.add("is-show"); return; }
+      if (!form.agree.checked) { err.textContent = tr("enquiry_must_agree"); err.classList.add("is-show"); return; }
+      data.message = (data.message ? data.message + "\n\n" : "") + (form.newsletter.checked ? "Newsletter: YES, wants the newsletter" : "Newsletter: no");
       var ce = contactError(data.email, data.phone);
       if (ce) { err.textContent = tr(ce); err.classList.add("is-show"); return; }
       submit.disabled = true; submit.textContent = tr("enquiry_sending");
@@ -748,9 +793,9 @@
       .then(function (json) {
         var d = (json && json.result) || {};
         if (d.sessions) CFG.sessions = d.sessions.map(withImageParams);
-        if (d.gallery) CFG.gallery = d.gallery.map(withImageParams);
-        if (d.galleryGroups) CFG.galleryGroups = d.galleryGroups;
-        if (d.testimonials) CFG.testimonials = d.testimonials;
+        if (d.gallery) CFG.gallery = (CFG.localGallery || []).concat(d.gallery.map(withImageParams));
+        if (d.galleryGroups) CFG.galleryGroups = (CFG.localGalleryGroups || []).concat(d.galleryGroups);
+        if (d.testimonials && !CFG.testimonialsPinned) CFG.testimonials = d.testimonials;
       })
       .catch(function (e) { if (window.console) console.warn("CMS load failed — using built-in content.", e); });
   }
@@ -846,24 +891,20 @@
     box.innerHTML = "";
     list.forEach(function (rv) {
       var author = (rv.author || "").trim();
-      var children = [
-        el("blockquote", { class: "quote__text" }, [el("p", { text: "“" + (loc(rv.text) || "") + "”" })]),
-      ];
-      if (rv.photo || author) {
-        var by = [];
-        if (rv.photo) by.push(el("img", { class: "quote__photo", src: sani(rv.photo, 240), alt: author, loading: "lazy" }));
-        else by.push(el("span", { class: "quote__photo quote__photo--mono", "aria-hidden": "true", text: author.charAt(0).toUpperCase() }));
-        var info = [];
-        if (author) info.push(el("span", { class: "quote__name", text: author }));
-        if (rv.role) info.push(el("span", { class: "quote__role", text: rv.role }));
-        if (info.length) by.push(el("div", { class: "quote__byline" }, info));
-        children.push(el("figcaption", { class: "quote__by" }, by));
-      }
-      box.appendChild(el("figure", { class: "quote reveal" }, children));
+      var children = [];
+      if (rv.photo) children.push(el("img", { class: "quote__photo", src: sani(rv.photo, 400), alt: author, loading: "lazy" }));
+      else if (author) children.push(el("span", { class: "quote__photo quote__photo--mono", "aria-hidden": "true", text: author.charAt(0).toUpperCase() }));
+      children.push(el("blockquote", { class: "quote__text" }, [el("p", { text: "\u201C" + (loc(rv.text) || "") + "\u201D" })]));
+      var info = [];
+      if (author) info.push(el("span", { class: "quote__name", text: author }));
+      if (rv.role) info.push(el("span", { class: "quote__role", text: rv.role }));
+      if (info.length) children.push(el("figcaption", { class: "quote__by" }, [el("div", { class: "quote__byline" }, info)]));
+      box.appendChild(el("figure", { class: "quote quote--big reveal" }, children));
     });
   }
   function renderContent() {
     renderSessions();
+    renderOfferCards();
     renderGallery();
     renderFolder();
     renderReviews();
@@ -897,7 +938,7 @@
             '<span data-brand-name>Re-balance</span>' +
           '</div>' +
           '<p class="footer-tag" data-i18n="footer_blurb">Body-oriented therapy and nervous-system work — a calm, safe space to slow down and reconnect.</p>' +
-          '<a class="btn btn--book footer-cta" href="index.html#sessions" data-i18n="hero_book_session">Book a session</a>' +
+          '<a class="btn btn--book footer-cta" href="sessions.html" data-i18n="hero_book_session">Book a session</a>' +
         '</div>' +
         '<div class="footer-cols">' +
           '<div class="footer-col">' +
@@ -912,7 +953,7 @@
           '</div>' +
           '<div class="footer-col">' +
             '<h4 data-i18n="footer_explore">Explore</h4>' +
-            '<a href="index.html#sessions" data-i18n="nav_sessions">Sessions</a>' +
+            '<a href="sessions.html" data-i18n="nav_sessions">Sessions</a>' +
             '<a href="folder.html" data-i18n="nav_gallery">Gallery</a>' +
             '<a href="index.html#about" data-i18n="nav_about">About</a>' +
           '</div>' +
@@ -920,7 +961,7 @@
       '</div>' +
       '<div class="wrap footer-bottom">' +
         '<span>© <span data-year></span> <span data-brand-name>Re-balance</span>. <span data-i18n="footer_rights">All rights reserved.</span></span>' +
-        '<span class="footer-legal" data-brand-cvr></span>' +
+        '<span class="footer-legal"><a href="privacy.html" data-i18n="footer_privacy">Privacy policy</a> · <a href="terms.html" data-i18n="footer_terms">Booking terms</a> · <span data-brand-cvr></span></span>' +
       '</div>';
   }
   function render() {

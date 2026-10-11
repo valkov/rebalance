@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Mulish:wght@300;400;500;600;700;800&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=119" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=171" />
 </head>
 <body>
   <!-- HEADER -->
@@ -29,37 +29,46 @@
         <span></span><span></span><span></span>
       </button>
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <a href="index.html#sessions" data-i18n="nav_sessions">Sessions</a>
-        <a href="folder.html" data-i18n="nav_gallery">Gallery</a>
-        <a href="partners.html" data-i18n="nav_partners">Partners</a>
+        <a href="index.html" data-i18n="nav_home">Home</a>
+        <a href="sessions.html" data-i18n="nav_sessions">Sessions</a>
+        <a href="method.html" data-i18n="nav_method">Method</a>
+        <a href="projects.html" data-i18n="nav_partners">Partners</a>
         <a href="about.html" data-i18n="nav_about">About me</a>
       </nav>
     </div>
   </header>
 
   <main class="section" style="padding-top:3rem">
-    <div class="wrap about">
+    <div class="wrap about about--brief">
       <div class="about__text">
         <a href="index.html" class="detail__back" data-i18n="gallery_back_home">← Back home</a>
         <p class="eyebrow" data-i18n="about_eyebrow">Meet Tanya</p>
         <h1 data-i18n="about_heading">About me</h1>
-        <div class="about__body" data-i18n-html="about_bio"></div>
-        <h2 class="about__subheading" data-i18n="about_approach_heading">About the approach</h2>
-        <div class="about__body" data-i18n-html="about_approach"></div>
+        <div class="about__body" data-i18n-html="about_brief"></div>
         <div class="hero__cta" style="margin:1.6rem 0 0.2rem">
-          <a class="btn btn--book" href="index.html#sessions" data-i18n="hero_book_session">Book a session</a>
+          <a class="btn btn--book" href="sessions.html" data-i18n="hero_book_session">Book a session</a>
         </div>
       </div>
       <div class="about__media">
-        <img src="assets/images/about-tanya.jpg?v=3" alt="Tanya Basse" />
+        <video src="assets/images/about-session.mp4?v=3" poster="assets/images/about-session-poster.jpg?v=3" autoplay muted loop playsinline controls preload="metadata"></video>
+      </div>
+    </div>
+    <div class="wrap about-space">
+      <h2 class="about-space__title" data-i18n="space_heading">A safe space for you</h2>
+      <p class="about-space__text" data-i18n="space_text">This is the space I have created: light, quiet and calm. A place where you can arrive, lie down and let your body rest.</p>
+      <div class="about-space__grid">
+        <video src="assets/images/method/studio-tour.mp4?v=3" poster="assets/images/method/studio-tour-poster.jpg?v=3" controls muted playsinline preload="none"></video>
+        <img src="assets/images/space-pears.jpg" alt="" loading="lazy" />
+        <img src="assets/images/space-tea.jpg" alt="" loading="lazy" />
+        <video src="assets/images/method/session-head.mp4?v=2" poster="assets/images/method/session-head-poster.jpg?v=2" controls muted playsinline preload="none"></video>
       </div>
     </div>
   </main>
 
   <footer class="site-footer"></footer>
 
-  <script src="assets/js/config.js?v=23"></script>
-  <script src="assets/js/i18n.js?v=48"></script>
-  <script src="assets/js/main.js?v=66"></script>
+  <script src="assets/js/config.js?v=31"></script>
+  <script src="assets/js/i18n.js?v=89"></script>
+  <script src="assets/js/main.js?v=74"></script>
 </body>
 </html>
