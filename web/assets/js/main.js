@@ -611,6 +611,17 @@
       tr("booking_confirmed_text").replace("{when}", escapeHtml(fmtSlot(slot.starts_at))) + "</p>");
   }
 
+  /* if the request service is unreachable, hand the request over to the visitor's email app */
+  function enquiryFallback(data) {
+    var to = (CFG.brand || {}).email || "tanyabasse@gmail.com";
+    var body = [
+      (data.session ? tr("enquiry_choose") + " " + data.session : ""),
+      data.firstName + " " + data.lastName,
+      data.email, data.phone, "", data.message || ""
+    ].join("\n");
+    var href = "mailto:" + to + "?subject=" + encodeURIComponent(tr("enquiry_mail_subject") + (data.session ? " \u2013 " + data.session : "")) + "&body=" + encodeURIComponent(body);
+    bookingMsg('<p>' + tr("enquiry_fallback_text") + '</p><p><a class="btn btn--solid btn--book" href="' + href + '">' + tr("enquiry_fallback_btn") + '</a></p><p class="booking__sign">' + escapeHtml(to) + '</p>');
+  }
   /* personal (1:1) session: an enquiry form emailed to Tanya */
   function openEnquiry(sessionTitle, kind) {
     openModalShell();
@@ -668,12 +679,8 @@
           bookingMsg('<p>' + tr(kind === "call" ? "thanks_call" : "thanks_private") + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
           return;
         }
-        submit.disabled = false; submit.textContent = tr("enquiry_send");
-        err.textContent = tr("booking_error"); err.classList.add("is-show");
-      }).catch(function () {
-        submit.disabled = false; submit.textContent = tr("enquiry_send");
-        err.textContent = tr("booking_error"); err.classList.add("is-show");
-      });
+        enquiryFallback(data);
+      }).catch(function () { enquiryFallback(data); });
     });
     wrap.appendChild(form);
     modalBody.appendChild(wrap);
