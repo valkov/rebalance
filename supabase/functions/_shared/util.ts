@@ -89,14 +89,41 @@ export function confirmationHtml(name: string, whenIso: string, cancelUrl: strin
 
 // Confirmation sent to the client after a 1:1 enquiry. No date — Tanya arranges
 // the time personally afterwards.
-export function enquiryConfirmationHtml(name: string, session: string): string {
-  return WRAP(
-    `<h2 style="font-weight:700">Thank you, ${escapeHtml(name)} 🌿</h2>
-     <p>I've received your request${session ? ` for the <strong>${escapeHtml(session)}</strong>` : ""} and will be in touch personally to arrange a time that suits you.</p>
-     <p>If you have any questions in the meantime, just reply to this email or reach me directly:</p>
+const ENQUIRY_TEXT: Record<string, Record<string, string>> = {
+  en: {
+    private: "Thank you for booking a private session.",
+    group: "Thank you for booking a group session.",
+    call: "Thank you for booking a phone call.",
+    package: "Thank you for asking about the Re-balance course.",
+    general: "Thank you for your message.",
+  },
+  da: {
+    private: "Tak fordi du har booket en privat session.",
+    group: "Tak fordi du har booket en gruppesession.",
+    call: "Tak fordi du har booket en telefonsamtale.",
+    package: "Tak fordi du har spurgt om Re-balance-forløbet.",
+    general: "Tak for din henvendelse.",
+  },
+};
+
+export function enquiryConfirmationHtml(
+  name: string,
+  session: string,
+  kind = "",
+  lang = "en",
+): { subject: string; html: string } {
+  const L = lang === "da" ? "da" : "en";
+  const k = ENQUIRY_TEXT[L][kind] ? kind : (session ? "private" : "general");
+  const da = L === "da";
+  const subject = da ? "Tak for din booking hos Re-balance 🌿" : "Thank you for your booking at Re-balance 🌿";
+  const html = WRAP(
+    `<h2 style="font-weight:700">${da ? "Hej" : "Hi"} ${escapeHtml(name)} 🌿</h2>
+     <p>${ENQUIRY_TEXT[L][k]} ${da ? "Jeg kontakter dig inden for 24 timer." : "I will contact you within 24 hours."}</p>
+     <p>${da ? "Har du spørgsmål, kan du bare svare på denne mail eller kontakte mig:" : "If you have any questions, just reply to this email or contact me:"}</p>
      <p><a href="mailto:tanyabasse@gmail.com" style="color:#8a6c55">tanyabasse@gmail.com</a> · <a href="tel:+4541185096" style="color:#8a6c55">+45 41 18 50 96</a></p>
-     <p style="margin-top:20px">Warmly,<br>Tanya</p>`,
+     <p style="margin-top:20px">${da ? "Kærlig hilsen" : "Warmly"},<br>Tanya</p>`,
   );
+  return { subject, html };
 }
 
 export function cancellationHtml(name: string, whenIso: string): string {

@@ -20,6 +20,8 @@ Deno.serve(async (req) => {
     const phone = String(b.phone ?? "").trim();
     const message = String(b.message ?? "").trim();
     const session = String(b.session ?? "").trim();
+    const kind = String(b.kind ?? "").trim();
+    const lang = String(b.lang ?? "").trim() === "da" ? "da" : "en";
 
     if (!firstName || !lastName || !email || !phone) return json({ error: "missing_fields" }, 400, headers);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "bad_email" }, 400, headers);
@@ -49,12 +51,8 @@ Deno.serve(async (req) => {
 
     // 3) Best-effort confirmation to the client (no date — Tanya arranges the
     // time). Reply-to points at Tanya so replies reach her.
-    const confirmErr = await sendEmail(
-      email,
-      "Your Re-balance session request 🌿",
-      enquiryConfirmationHtml(firstName, session),
-      to,
-    );
+    const conf = enquiryConfirmationHtml(firstName, session, kind, lang);
+    const confirmErr = await sendEmail(email, conf.subject, conf.html, to);
     return json({ ok: true, notifyErr, confirmErr }, 200, headers);
   } catch (e) {
     return json({ error: String((e as Error)?.message ?? e) }, 500, headers);

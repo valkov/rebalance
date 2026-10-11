@@ -669,12 +669,14 @@
       if (!data.firstName || !data.lastName || !data.email || !data.phone) { err.textContent = tr("booking_fill_all"); err.classList.add("is-show"); return; }
       if (!form.agree.checked) { err.textContent = tr("enquiry_must_agree"); err.classList.add("is-show"); return; }
       data.message = (data.message ? data.message + "\n\n" : "") + (form.newsletter.checked ? "Newsletter: YES, wants the newsletter" : "Newsletter: no");
+      data.kind = sel ? (["private", "group", "call", "package", "general"][sel.selectedIndex] || "general") : (kind || "private");
+      data.lang = window.getLocale ? window.getLocale() : "en";
       var ce = contactError(data.email, data.phone);
       if (ce) { err.textContent = tr(ce); err.classList.add("is-show"); return; }
       submit.disabled = true; submit.textContent = tr("enquiry_sending");
       bookingApi("/create-enquiry", { method: "POST", body: data }).then(function (res) {
         if (res.status === 200 && res.body && res.body.ok) {
-          bookingMsg('<p>' + tr("thanks_" + (sel ? ["private", "group", "call", "package", "general"][sel.selectedIndex] || "general" : (kind || "private"))) + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
+          bookingMsg('<p>' + tr("thanks_" + data.kind) + '</p><p class="booking__sign">' + tr("sign_warmly") + "</p>");
           return;
         }
         enquiryFallback(data);
