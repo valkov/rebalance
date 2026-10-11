@@ -1,7 +1,7 @@
 // POST /create-enquiry { firstName, lastName, email, phone, message, session } -> { ok: true }
 // Saves a personal-session enquiry to the DB (source of truth) and, best-effort,
-// emails a notification to ENQUIRY_TO via Resend.
-import { cors, enquiryConfirmationHtml, json, sendEmail, supabase } from "../_shared/util.ts";
+// emails a notification to TANYA_EMAIL via Resend.
+import { cors, enquiryConfirmationHtml, json, sendEmail, supabase, TANYA_EMAIL } from "../_shared/util.ts";
 
 function esc(s: string): string {
   return String(s ?? "").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
@@ -32,7 +32,8 @@ Deno.serve(async (req) => {
     if (insErr) throw insErr;
 
     // 2) Best-effort email notification (won't fail the request).
-    const to = Deno.env.get("ENQUIRY_TO");
+    const to = TANYA_EMAIL;
+    let notifyErr: string | null = null;
     if (to) {
       const html =
         `<div style="font-family:Mulish,Arial,sans-serif;color:#404041;line-height:1.6">
@@ -43,18 +44,18 @@ Deno.serve(async (req) => {
           <p><strong>Phone:</strong> ${esc(phone)}</p>
           ${message ? `<p><strong>Message:</strong><br>${esc(message).replace(/\n/g, "<br>")}</p>` : ""}
         </div>`;
-      await sendEmail(to, `${session || "Session enquiry"} — ${firstName} ${lastName}`, html, email);
+      notifyErr = await sendEmail(to, `${session || "Session enquiry"} — ${firstName} ${lastName}`, html, email);
     }
 
     // 3) Best-effort confirmation to the client (no date — Tanya arranges the
     // time). Reply-to points at Tanya so replies reach her.
-    await sendEmail(
+    const confirmErr = await sendEmail(
       email,
       "Your Re-balance session request 🌿",
       enquiryConfirmationHtml(firstName, session),
-      to ?? undefined,
+      to,
     );
-    return json({ ok: true }, 200, headers);
+    return json({ ok: true, notifyErr, confirmErr }, 200, headers);
   } catch (e) {
     return json({ error: String((e as Error)?.message ?? e) }, 500, headers);
   }

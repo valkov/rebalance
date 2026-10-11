@@ -1,7 +1,7 @@
 // POST /create-booking { slot_id, name, email, phone } -> { ok: true }
 // Atomically reserves a seat (never overbooks a 1:4 slot) and emails a
 // confirmation with a cancel link.
-import { confirmationHtml, cors, json, sendEmail, supabase } from "../_shared/util.ts";
+import { confirmationHtml, cors, json, sendEmail, supabase, TANYA_EMAIL } from "../_shared/util.ts";
 
 Deno.serve(async (req) => {
   const headers = cors(req.headers.get("origin"));
@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
     // confirmation to the client (best-effort)
     await sendEmail(email, "Your Re-balance session is confirmed", confirmationHtml(name, row.starts_at, cancelUrl));
     // notification to Tanya so she sees new bookings by email too (best-effort)
-    const notify = Deno.env.get("ENQUIRY_TO");
+    const notify = TANYA_EMAIL;
     if (notify) {
       await sendEmail(notify, `Group booking — ${name}`,
         `<div style="font-family:Mulish,Arial,sans-serif;color:#404041;line-height:1.6">

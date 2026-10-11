@@ -34,7 +34,6 @@ sessions use Stripe payment links and do **not** touch this.
    supabase secrets set EMAIL_FROM="Re-balance <booking@your-domain>"
    supabase secrets set SITE_URL="https://valkov.github.io/rebalance"
    supabase secrets set ALLOWED_ORIGINS="https://valkov.github.io,http://localhost:8090"
-   supabase secrets set ENQUIRY_TO="tanyabasse@gmail.com"   # where 1:1 enquiries are sent
    ```
    `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically.
 6. **Deploy the functions** (public — the booking page calls them from the browser):
@@ -57,3 +56,5 @@ Slots for the next 8 weeks are generated automatically. See who's booked in the
 ## What the site needs
 Only the **Project URL** and **anon key** go into the site config (public, safe). The booking
 UI calls the three functions above.
+
+Notifications always go to `TANYA_EMAIL` (`supabase/functions/_shared/util.ts`); the `ENQUIRY_TO` secret is no longer used.
